@@ -1,2 +1,0 @@
-class AController < ApplicationController
-end
