@@ -35,14 +35,17 @@
                         <% end %>
 
 
-
-                        <button type="button" class="btn btn-danger btn-circle">
-                            <i class="fa fa-minus"></i>
-                        </button>
+                        <%= link_to admins_backoffice_admin_path(admin), method: :delete, class:"btn btn-danger btn-circle", data: { confirm: "Deseja realmente excluir esse administrador?"} do %>
+                                    <i class="fa fa-minus"></i>
+                        <% end %>
+                        
 
                     </td>
                 </tr>
                 <% end %>
                </tbody>
         </table>
+        <div class="text-center">
+        <%= paginate @admins %>
+        </div>
     </div>

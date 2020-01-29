@@ -119,8 +119,21 @@
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'admins_backoffice' %>
 
-    
 
+    <% if notice %>  <!-- Mensagem de cadastro atualizado, criado e etc-->
+
+    <%= javascript_tag do %> 
+    
+    $.bootstrapGrowl('<%= notice %>', {
+        type: 'success',
+        align: 'right',
+        alow_dismiss: true,
+        stackup_spacing: 10
+
+    });
+    
+    <% end %>
+<% end %>
 </body>
 
 </html>
