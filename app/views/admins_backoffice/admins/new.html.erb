@@ -1,2 +1,2 @@
 <%= render partial: 'admins_backoffice/admins/shared/form',
-           locals: {action_message: 'Novo'} %> <!--  está buscando a tela de _form-->
+           locals: {action_message: t('message.new', model: @admin.model_name.human)} %> <!--  está buscando a tela de _form-->
