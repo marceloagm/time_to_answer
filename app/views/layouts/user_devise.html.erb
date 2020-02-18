@@ -43,5 +43,21 @@
 <% end %>
 
 
+<% unless resource.errors.empty? %>  <!-- Mensagem de cadastro atualizado, criado e etc-->
+  <% resource.errors.full_messages.each do |msg| %>
+    <%= javascript_tag do %> 
+    
+      $.bootstrapGrowl('<%= msg %>', {
+        type: 'danger',
+        align: 'right',
+        alow_dismiss: true,
+        stackup_spacing: 10
+
+    });
+    
+    <% end %>
+  <% end %>
+<% end %>
+
   </body>
 </html>

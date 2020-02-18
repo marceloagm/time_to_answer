@@ -79,6 +79,16 @@ namespace :dev do
   private
 
 
+  desc "Reseta o contador dos Assuntos"
+  task reset_subject_counter: :environment do
+    show_spinner("Resetando Contador dos Assuntos") do
+    Subject.all.each do |subject|
+       Subject.reset_counters(subject.id, :questions)
+     end
+    end
+  end
+
+
     def add_answers(answers_array = [])
     
       rand(2..5).times do |j|
