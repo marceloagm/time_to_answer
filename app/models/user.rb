@@ -5,6 +5,12 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
 
+  has_one :user_profile
+
+  accepts_nested_attributes_for :user_profile, reject_if: :all_blank
+
+  #Validações
+  validates :first_name, presence: true, length: { minimum: 3 }, on: :update # quando for gravar no banco valide o primeiro nome, se ele existe
 
 
   def full_name
