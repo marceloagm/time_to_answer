@@ -30,7 +30,8 @@
             <!-- menu profile quick info -->
             <div class="profile clearfix">
               <div class="profile_pic">
-                <%= image_tag 'img.jpg', alt:"...", class:"img-circle profile_img" %>
+                
+                <%= link_to image_tag(avatar_url, alt:"...", class:"img-circle profile_img", id:"imgAvatarMd"), '#', "data-toggle":"modal", "data-target":"#avatarModal" %>
               </div>
               <div class="profile_info">
                 <span>Seja bem-vindo,</span>
@@ -91,7 +92,7 @@
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <%= image_tag 'img.jpg', alt:'' %>
+                    <%= image_tag avatar_url, alt:'', id:"imgAvatarSm" %>
                     <%= current_user.email %>
                     <span class=" fa fa-angle-down"></span>
                   </a>
@@ -203,6 +204,40 @@
 
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'users_backoffice' %>
+
+
+<!-- Modal -->
+<div class="modal fade" id="avatarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+    <%= form_with(url: users_backoffice_profile_path, model: current_user, local: true, class:"form-horizontal form-label-left") do |form| %>
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Avatar</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= form.fields_for :user_profile do |profile_form| %>
+          <div class="form-group">
+                <%= profile_form.label :avatar %>
+                <%= image_tag(avatar_url, alt:"...", class:"img-circle profile_img", id:"imgAvatarLg")%>
+                <%= profile_form.file_field :avatar %>
+              </div>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <%= form.submit "Salvar", class:"btn btn-primary" %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<!-- /Modal -->
+
+
+
+
 
   <% if notice %>  <!-- Mensagem de cadastro atualizado, criado e etc-->
 

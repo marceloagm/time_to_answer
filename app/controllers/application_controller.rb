@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
     layout :layout_by_resource
+    before_action :check_pagination
 
 
     protected 
@@ -12,4 +13,12 @@ class ApplicationController < ActionController::Base
             "application"
         end
     end
+
+    def check_pagination
+        unless user_signed_in?
+            params.extract!(:page)
+        end
+   
+    end
+
 end

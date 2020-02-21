@@ -1,0 +1,14 @@
+$('#avatarModal').modal('hide');
+
+document.getElementById('imgAvatarLg').src = "<%= url_for(@user.user_profile.avatar) %>"
+document.getElementById('imgAvatarMd').src = "<%= url_for(@user.user_profile.avatar) %>"
+document.getElementById('imgAvatarSm').src = "<%= url_for(@user.user_profile.avatar) %>"
+
+
+ $.bootstrapGrowl('Avatar Atualizado com sucesso!', {
+        type: 'success',
+        align: 'right',
+        alow_dismiss: true,
+        stackup_spacing: 10
+
+    });
