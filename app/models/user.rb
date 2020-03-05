@@ -9,11 +9,27 @@ class User < ApplicationRecord
 
   accepts_nested_attributes_for :user_profile, reject_if: :all_blank
 
+  #Callback
+  after_create :set_statistic
+  
+
   #Validações
-  validates :first_name, presence: true, length: { minimum: 3 }, on: :update # quando for gravar no banco valide o primeiro nome, se ele existe
+  validates :first_name, presence: true, length: { minimum: 3 }, on: :update, unless: :reset_password_token_present? # quando for gravar no banco valide o primeiro nome, se ele existe
 
 
   def full_name
     [self.first_name, self.last_name].join(' ') #junta os nomes e coloca um espaço no meio com o join
   end
+
+
+  private
+
+  def set_statistic
+    AdminStatistic.set_event(AdminStatistic::EVENTS[:total_users])
+  end
+  
+  def reset_password_token_present?
+    !!$global_params[:user][:reset_password_token]
+  end
+
 end
