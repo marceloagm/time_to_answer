@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+   <title>TimeToAnswer</title>
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag    'application' %>
+    <%= stylesheet_link_tag    'user_devise' %>
+      
+  </head>
+
+  <body class="login">
+
+   <%= yield %>
+
+  <%= javascript_include_tag 'application' %>
+  <%= javascript_include_tag 'user_devise' %>
+    
+
+<% if flash %>  <!-- Mensagem de cadastro atualizado, criado e etc-->
+  <% flash.each do |key, value| %>
+    <%= javascript_tag do %> 
+    
+      $.bootstrapGrowl('<%= value %>', {
+        type: 'danger',
+        align: 'right',
+        alow_dismiss: true,
+        stackup_spacing: 10
+
+    });
+    
+    <% end %>
+  <% end %>
+<% end %>
+
+
+<% unless resource.errors.empty? %>  <!-- Mensagem de cadastro atualizado, criado e etc-->
+  <% resource.errors.full_messages.each do |msg| %>
+    <%= javascript_tag do %> 
+    
+      $.bootstrapGrowl('<%= msg %>', {
+        type: 'danger',
+        align: 'right',
+        alow_dismiss: true,
+        stackup_spacing: 10
+
+    });
+    
+    <% end %>
+  <% end %>
+<% end %>
+
+  </body>
+</html>
