@@ -6,10 +6,15 @@ Rails.application.routes.draw do
     get 'welcome/index'
     get 'perfil', to: 'perfil#edit'
     patch 'perfil', to: 'perfil#update'
+    resources :equipes
+    get 'time_cartola', to: 'time_cartola#show'
+    
+    
   end
   namespace :admins_backoffice do
     get 'welcome/index' #Dashboard
     resources :admins  #Administradores
+    
   end
   devise_for :users
   devise_for :admins, skip: [:registrations]

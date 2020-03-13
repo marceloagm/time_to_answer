@@ -1,0 +1,145 @@
+
+<h1 class="text-center">MEUS TIMES</h1>
+
+<!-- Button trigger modal -->
+<div style="text-align: center;">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#timeModal">
+  Adicionar Time
+</button>
+</div>
+
+
+<!-- Tabela que lista os times -->
+<div class="x_content">
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Escudo</th>
+          <th>Nome do Time</th>
+          <th>Cartoleiro</th>          
+        </tr>
+      </thead>
+      <tbody>
+        <% @equipes.each do |equipe| %>
+        <tr>
+          
+          <td><%= equipe.escudo%></td>
+          <td><%= equipe.nome_time%></td>
+          <td><%= equipe.cartoleiro%></td>
+        </tr>       
+        <% end %> 
+      </tbody>
+    </table>
+
+  </div>
+
+<!-- Modal -->
+<div class="modal fade" id="timeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Pesquisar Time</h5>
+        
+        </button>
+      </div>
+      <div class="modal-body">
+      
+
+        <%= form_with(local: true) do |form| %>
+            <div class="form-group">
+                  <div class="input-group">
+                    
+                        <%= form.text_field :time_cartola, class:"form-control", placeholder:"Digite o nome do time", id:"time_cartola" %>
+                        
+                        
+                        <span class="input-group-btn">
+                          <%= link_to "Pesquisar", users_backoffice_time_cartola_path, remote:true, class:"btn btn-primary", id:"time-cartola-link" %>
+                        </span>
+                    </div>
+            </div>
+        <% end %>
+
+        <script>
+
+        let time_cartola_input = document.getElementById("time_cartola");
+            var time_cartola_link = document.getElementById("time-cartola-link");
+
+            time_cartola_input.addEventListener("change", function(){
+              time_cartola_link.href = '<%= users_backoffice_time_cartola_path %>/?time_cartola='+time_cartola_input.value;
+
+              
+            });
+
+
+           </script>     
+           
+          
+          
+        
+
+        <!-- REVER QUESTÃO DO TAMANHO DA DIV QUE BUSCAR O TIME (ESCUDO)-->
+       
+       <label id="time_encontrado" for="exemplo">  </label>
+       
+        
+        <%= form_with(url: users_backoffice_equipes_path, scope: :equipe, model: @equipe , local: true) do |f| %>
+        
+        <div class="card mb-3", style="background: white" >
+        <div class="row no-gutters">
+            <div class="col-md-4">
+            <div style="margin: 10%">
+             <h5 class="card-title"><b>ESCUDO: </b><%= f.text_field :escudo, class:"form-control bg-info",readonly: true, style:"background: white;
+                  border: transparent;", id:"escudo" %></h5>                     
+            <!--
+            <%= image_tag 'escudo.png', alt:'', style:"width: 95px; height: 95px;" %>
+            <h1> TIME</h1> -->
+            </div>
+            </div>
+            <div class="col-md-4">
+            <div class="card-body">                
+                <h5 class="card-title"><b>TIME: </b><%= f.text_field :nome_time, class:"form-control", readonly: true, style:"background: white;
+                  border: transparent; outline: none;", id:"nome_time" %></h5>
+                  
+                <h5 class="card-title"><b>CARTOLEIRO: </b><%= f.text_field :cartoleiro, class:"form-control ",readonly: true,  style:"background: white;
+                  border: transparent;", id:"cartoleiro" %>  </h5>
+
+                  <%= f.hidden_field :user_id, :value => current_user.id %>
+
+                  <%= f.hidden_field :slug, id:"slug" %>
+                  
+                                            
+            </div>
+            </div>
+        
+        </div>
+        </div>   
+        
+      
+      </div>
+      <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal" id="fechar-modal">Fechar</button>
+         <button type="submit" class="btn btn-primary">Adicionar</button>
+        
+      </div>
+    </div>
+      <% end %>
+
+      <script>
+
+      var botao = document.getElementById('fechar-modal');
+      botao.addEventListener("click", function(){
+        document.getElementById('escudo').value='';
+        document.getElementById('nome_time').value='';
+        document.getElementById('cartoleiro').value='';
+        document.getElementById('time_cartola').value='';
+        document.getElementById('time_encontrado').innerHTML='';
+        });  
+            
+        
+        </script>
+         
+  </div>
+</div>
+
+
