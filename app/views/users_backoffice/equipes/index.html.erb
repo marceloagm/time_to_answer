@@ -15,18 +15,27 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Escudo</th>
-          <th>Nome do Time</th>
-          <th>Cartoleiro</th>          
+          <th style="text-align: center; ">Escudo</th>
+          <th style="text-align: center; ">Nome do Time</th>
+          <th style="text-align: center; ">Cartoleiro</th>     
+          <th style="text-align: center; ">Remover</th>      
         </tr>
       </thead>
       <tbody>
+      
         <% @equipes.each do |equipe| %>
         <tr>
           
-          <td><%= equipe.escudo%></td>
-          <td><%= equipe.nome_time%></td>
-          <td><%= equipe.cartoleiro%></td>
+  
+
+          <td style="text-align: center; "><%= equipe.escudo%></td>
+          <td style="text-align: center; "><%= equipe.nome_time%></td>
+          <td style="text-align: center; "><%= equipe.cartoleiro%></td>
+          <td style="width: 100px; text-align: center; ">
+          <%= link_to users_backoffice_equipe_path(equipe), method: :delete, class:"btn btn-danger btn-round ", data: { confirm: "Deseja realmente excluir o time: #{equipe.nome_time}" }  do %>
+            <i class="fa fa-close"></i>
+          <% end %>
+        </td>
         </tr>       
         <% end %> 
       </tbody>

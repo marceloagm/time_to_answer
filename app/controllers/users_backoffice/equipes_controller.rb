@@ -1,5 +1,6 @@
 class UsersBackoffice::EquipesController < UsersBackofficeController
     before_action :set_user
+    before_action :set_equipe, only: [:destroy]
         
     def new
         @equipe = Equipe.new
@@ -19,6 +20,14 @@ class UsersBackoffice::EquipesController < UsersBackofficeController
           end 
     end
 
+    def destroy
+        if @equipe.destroy
+          redirect_to users_backoffice_equipes_path, notice: "Time excluído com sucesso"
+        else
+            redirect_to users_backoffice_equipes_path
+        end 
+      
+      end
 
     private
 
@@ -26,6 +35,11 @@ class UsersBackoffice::EquipesController < UsersBackofficeController
         @user = User.find(current_user.id)
         
     end
+
+    def set_equipe
+        @equipe = Equipe.find(params[:id])
+    end
+
     def params_equipe
         params.require(:equipe).permit(:nome_time, :cartoleiro, :slug, :user_id, :escudo)
                

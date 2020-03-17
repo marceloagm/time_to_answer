@@ -8,6 +8,13 @@ Rails.application.routes.draw do
     patch 'perfil', to: 'perfil#update'
     resources :equipes
     get 'time_cartola', to: 'time_cartola#show'
+    resources :apostas
+    get "rodada_atual", to: 'apostas#rodada_atual'
+    post "rodada_atual", to: 'apostas/rodada_atual#create'
+    get "rodada_prox", to: 'apostas#rodada_prox'
+    get "rodada_dprox", to: 'apostas#rodada_dprox'
+    get "rodada_ddprox", to: 'apostas#rodada_ddprox'
+
     
     
   end
