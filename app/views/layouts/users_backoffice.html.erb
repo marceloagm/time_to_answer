@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -56,8 +57,12 @@
                       <i class="fa fa-user"></i>Minha Conta</a>
                     <% end %>
                    </li>
-                  <li><a href="javascript:void(0)"><i class="fa fa-money"></i>Minhas Apostas</a></li>
-                 
+                  <li>
+                  <li>
+                    <%= link_to users_backoffice_minhas_apostas_path do %>
+                      <i class="fa fa-money"></i>Minhas Apostas</a>
+                    <% end %>
+                   </li>
                   <li>
                     <%= link_to users_backoffice_equipes_path do %>
                       <i class="fa fa-soccer-ball-o"></i>Meus Times</a>
@@ -182,7 +187,7 @@
         <!-- page content -->
         <div class="right_col" role="main">
           <div class="">
-            <div class="page-title">
+            <div class="page-title">            
                <%= yield %>
             </div>
           </div>
@@ -202,20 +207,37 @@
 
     <%= javascript_include_tag 'application' %>
     <%= javascript_include_tag 'users_backoffice' %>
-
-    <% if notice %>  <!-- Mensagem de cadastro atualizado, criado e etc-->
-
-    <%= javascript_tag do %> 
     
-    $.bootstrapGrowl('<%= notice %>', {
+
+  <% if flash %>  <!-- Mensagem de cadastro atualizado, criado e etc-->
+  <% flash.each do |name, msg| %>
+  
+    <%= javascript_tag do %> 
+      
+       <% if name == "notice" %>
+       $.bootstrapGrowl('<%= msg %>', {
         type: 'success',
         align: 'right',
         alow_dismiss: true,
         stackup_spacing: 10
+       
+       <% else %>
+       $.bootstrapGrowl('<%= msg %>', {
+        type: '<%= name%>',
+        align: 'right',
+        alow_dismiss: true,
+        stackup_spacing: 10
+       <%end%>
+       
+        
 
     });
     
     <% end %>
-<% end %>
+  <% end %>
+  <% end %>
+  
+
+
   </body>
 </html>

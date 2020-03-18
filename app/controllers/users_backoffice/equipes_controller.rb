@@ -8,21 +8,30 @@ class UsersBackoffice::EquipesController < UsersBackofficeController
    
     def index
         @equipes = Equipe.all.where(user_id: @user)
+        
     end
 
     def create
-        
-        @equipe = Equipe.new(params_equipe)
-        if @equipe.save
-            redirect_to users_backoffice_equipes_path, notice: "Time Adicionado com Sucesso"
-          else
+        unless Equipe.exists?(nome_time: params_equipe[:nome_time])
+            
+            @equipe = Equipe.new(params_equipe)
+                if @equipe.save
+                    flash[:success] = "Time Adicionado com Sucesso"
+                    redirect_to users_backoffice_equipes_path
+                    
+                else
+                    redirect_to users_backoffice_equipes_path
+                end 
+        else            
             redirect_to users_backoffice_equipes_path
-          end 
+            flash[:danger] = "Esse time já está cadastrado"
+        end
     end
 
     def destroy
         if @equipe.destroy
-          redirect_to users_backoffice_equipes_path, notice: "Time excluído com sucesso"
+          flash[:success] = "Time excluído com sucesso"
+          redirect_to users_backoffice_equipes_path 
         else
             redirect_to users_backoffice_equipes_path
         end 

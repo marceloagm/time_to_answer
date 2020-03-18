@@ -1,7 +1,7 @@
 class UsersBackoffice::ApostasController < UsersBackofficeController
     before_action :rodadas  
     before_action :set_user
-    before_action :set_equipe
+    before_action :set_equipe 
     before_action :set_equipe_rodada_atual, only: [:create]
     before_action :set_action, only: [:create]
     
@@ -10,37 +10,52 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     end
 
     def create
+        
+        unless Apostum.exists?(equipe_id: set_equipe_rodada_atual[:equipe_id], rodada: set_equipe_rodada_atual[:rodada])
         @aposta = Apostum.new(set_equipe_rodada_atual)
         if @aposta.save
-            redirect_to "/users_backoffice/#{set_action[:action]}", notice: "Você está participando da aposta"
+            flash[:success] = "Você está participando dessa aposta"
+            redirect_to "/users_backoffice/#{set_action[:action]}"
           else
             
             redirect_to redirect_to "/users_backoffice/#{set_action[:action]}"
          end 
+
+        else
+            flash[:danger] = "Esse time já está participando dessa aposta"
+            redirect_to "/users_backoffice/#{set_action[:action]}"
+        end
+       
+    end
+
+    def minhas_apostas        
+        
+        @apostas = Apostum.includes(:equipe).all.where(equipe_id: set_equipe)
+          
     end
 
     def rodada_atual
         
         @rodada = @rodada_prox0 
-        @apostas = Apostum.all.where(rodada: @rodada)
-          
+        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
+        
     end
 
     def rodada_prox
         @rodada = @rodada_prox1 
-        @apostas = Apostum.all.where(rodada: @rodada)
+        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
         
     end
 
     def rodada_dprox
         
         @rodada = @rodada_prox2
-        @apostas = Apostum.all.where(rodada: @rodada)
+        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
     end
     
     def rodada_ddprox
         @rodada = @rodada_prox3 
-        @apostas = Apostum.all.where(rodada: @rodada)
+        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
     end
     
     private

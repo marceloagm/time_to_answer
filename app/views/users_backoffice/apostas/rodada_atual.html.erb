@@ -1,4 +1,6 @@
 <h1 class="text-center"> APOSTA RODADA <%= @rodada %> </h1>
+<%= @apostar%>
+
 
 <!-- Botão para acionar modal -->
 <div style="text-align: center;">
@@ -56,6 +58,7 @@
                <%= f.select 'equipe_id', options_for_select(@equipes.collect{ |u| [u.nome_time, u.id] }), {}, {class:"form-control"}  %>
                <%= f.hidden_field :rodada, :value => @rodada %>
                 <%= f.hidden_field :action, :value => params[:action] %>
+                
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>

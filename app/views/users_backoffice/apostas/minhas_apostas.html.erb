@@ -1,0 +1,35 @@
+<h1 class="text-center"> MINHAS APOSTAS </h1>
+<%= @apostas%>
+
+<!-- Tabela que lista os times -->
+<div class="x_content">
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th style="text-align: center; ">Rodada</th>  
+          <th style="text-align: center; ">Nome do Time</th>
+          <th style="text-align: center; ">Cartoleiro</th>    
+          <th style="text-align: center; ">Status Pagamento</th> 
+              
+        </tr>
+      </thead>
+      <tbody>
+      
+        <% @apostas.each do |aposta| %>
+        <tr>
+          
+  
+
+          <td style="text-align: center; "><%= aposta.rodada%></td>
+          <td style="text-align: center; "><%= aposta.equipe.nome_time%></td>
+          <td style="text-align: center; "><%= aposta.equipe.cartoleiro%></td>
+          <td style="text-align: center; color: green;">Aprovado</td>
+        
+        </td>
+        </tr>       
+        <% end %> 
+      </tbody>
+    </table>
+
+  </div>
