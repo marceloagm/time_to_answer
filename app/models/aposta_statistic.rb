@@ -1,0 +1,3 @@
+class ApostaStatistic < ApplicationRecord
+    
+end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_17_182449) do
+ActiveRecord::Schema.define(version: 2020_03_19_171009) do
 
   create_table "admins", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -30,6 +30,13 @@ ActiveRecord::Schema.define(version: 2020_03_17_182449) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["equipe_id"], name: "index_aposta_on_equipe_id"
+  end
+
+  create_table "aposta_statistics", force: :cascade do |t|
+    t.string "rodada"
+    t.integer "total", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "equipes", force: :cascade do |t|

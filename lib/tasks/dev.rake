@@ -12,6 +12,7 @@ namespace :dev do
       show_spinner("Criando o Administrador padrão...") { %x(rails dev:add_default_admin) }
       show_spinner("Criando o Administradores extras...") { %x(rails dev:add_extras_admins) }
       show_spinner("Criando o Usuário padrão...") { %x(rails dev:add_default_user) }
+      show_spinner("Adiciona o valor total das rodadas...") { %x(rails dev:add_default_value_aposta) }
     else
       puts "Você não está em ambiente de desenvolvimento!"
     end
@@ -25,6 +26,8 @@ namespace :dev do
          password_confirmation: DEFAULT_PASSWORD
       )
    end
+
+  
 
    desc "Adiciona o administradores extras"
    task add_extras_admins: :environment do
@@ -45,6 +48,16 @@ namespace :dev do
       )
     end
 
+    desc "Adiciona o valor total das rodadas"
+    task add_default_value_aposta: :environment do
+      
+       for contador in 1..38 do 
+        ApostaStatistic.create!(
+           rodada: "#{contador}",
+           total: 0
+        )
+     end
+    end
 
   private
 

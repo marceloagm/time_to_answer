@@ -14,6 +14,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         unless Apostum.exists?(equipe_id: set_equipe_rodada_atual[:equipe_id], rodada: set_equipe_rodada_atual[:rodada])
         @aposta = Apostum.new(set_equipe_rodada_atual)
         if @aposta.save
+            set_total_rodada(set_equipe_rodada_atual[:rodada])
             flash[:success] = "Você está participando dessa aposta"
             redirect_to "/users_backoffice/#{set_action[:action]}"
           else
@@ -38,6 +39,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         
         @rodada = @rodada_prox0 
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
+        @total_aposta = ApostaStatistic.all.where(rodada: @rodada_prox0)
+
         
     end
 
@@ -86,4 +89,10 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     params.require(:aposta).permit(:action)
     
     end
+    def set_total_rodada(rodada)
+        aposta_statistic = ApostaStatistic.find_or_create_by(rodada: rodada)
+        aposta_statistic.total += 1
+        aposta_statistic.save
+    end
+
 end
