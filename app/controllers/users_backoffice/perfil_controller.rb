@@ -10,7 +10,7 @@ class UsersBackoffice::PerfilController < UsersBackofficeController
     def update
              
         if @user.update(params_user)
-          flash[:success] = "Usuário atualizado com sucesso"
+          flash[:success] = "Usuário atualizado com sucesso."
           redirect_to users_backoffice_perfil_path
         else
           render :edit

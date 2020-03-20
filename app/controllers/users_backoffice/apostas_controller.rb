@@ -15,7 +15,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @aposta = Apostum.new(set_equipe_rodada_atual)
         if @aposta.save
             set_total_rodada(set_equipe_rodada_atual[:rodada])
-            flash[:success] = "Você está participando dessa aposta"
+            flash[:success] = "Você está participando dessa aposta."
             redirect_to "/users_backoffice/#{set_action[:action]}"
           else
             
@@ -23,7 +23,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
          end 
 
         else
-            flash[:danger] = "Esse time já está participando dessa aposta"
+            flash[:danger] = "Esse time já está participando dessa aposta."
             redirect_to "/users_backoffice/#{set_action[:action]}"
         end
        

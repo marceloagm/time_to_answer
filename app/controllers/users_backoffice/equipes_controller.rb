@@ -12,29 +12,41 @@ class UsersBackoffice::EquipesController < UsersBackofficeController
     end
 
     def create
-        unless Equipe.exists?(nome_time: params_equipe[:nome_time])
-            
-            @equipe = Equipe.new(params_equipe)
-                if @equipe.save
-                    flash[:success] = "Time Adicionado com Sucesso"
-                    redirect_to users_backoffice_equipes_path
-                    
-                else
-                    redirect_to users_backoffice_equipes_path
-                end 
-        else            
+        unless params_equipe[:nome_time].blank?
+            unless Equipe.exists?(nome_time: params_equipe[:nome_time])
+                
+                @equipe = Equipe.new(params_equipe)
+                    if @equipe.save
+                        flash[:success] = "Time Adicionado com Sucesso."
+                        redirect_to users_backoffice_equipes_path
+                        
+                    else
+                        redirect_to users_backoffice_equipes_path
+                    end 
+            else            
+                redirect_to users_backoffice_equipes_path
+                flash[:danger] = "Esse time já está cadastrado"
+            end
+
+        else
+            flash[:danger] = "Por favor todos os campos devem está preenchidos."
             redirect_to users_backoffice_equipes_path
-            flash[:danger] = "Esse time já está cadastrado"
         end
+
     end
 
     def destroy
-        if @equipe.destroy
-          flash[:success] = "Time excluído com sucesso"
-          redirect_to users_backoffice_equipes_path 
-        else
+        unless Apostum.exists?(equipe_id: @equipe)
+            if @equipe.destroy
+            flash[:success] = "Time excluído com sucesso"
+            redirect_to users_backoffice_equipes_path 
+            else
+                redirect_to users_backoffice_equipes_path
+            end 
+         else
             redirect_to users_backoffice_equipes_path
-        end 
+            flash[:danger] = "Esse time está participando de uma aposta, para exclui-lo entre em contato conosco."
+         end
       
       end
 

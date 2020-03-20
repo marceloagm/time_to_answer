@@ -15,7 +15,7 @@ class AdminsBackoffice::AdminsController < AdminsBackofficeController
   def create
     @admin = Admin.new(params_admin)
     if @admin.save()
-      redirect_to admins_backoffice_admins_path, notice: "Administrador cadastrado com sucesso"
+      redirect_to admins_backoffice_admins_path, notice: "Administrador cadastrado com sucesso."
     else
       render :new
     end 
@@ -29,7 +29,7 @@ class AdminsBackoffice::AdminsController < AdminsBackofficeController
   def update
              
         if @admin.update(params_admin)
-          redirect_to admins_backoffice_admins_path, notice: "Administrador atualizado com sucesso"
+          redirect_to admins_backoffice_admins_path, notice: "Administrador atualizado com sucesso."
         else
           render :edit
         end 
@@ -37,7 +37,7 @@ class AdminsBackoffice::AdminsController < AdminsBackofficeController
 
   def destroy
     if @admin.destroy
-      redirect_to admins_backoffice_admins_path, notice: "Administrador excluído com sucesso"
+      redirect_to admins_backoffice_admins_path, notice: "Administrador excluído com sucesso."
     else
       render :index
     end 
