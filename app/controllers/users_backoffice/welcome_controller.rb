@@ -8,6 +8,7 @@ class UsersBackoffice::WelcomeController < UsersBackofficeController
     @rodada_prox2 = @rodada_atual + 2
     @rodada_prox3 = @rodada_atual + 3
 
+    # calculo do valor da aposta
     @total_aposta0 = ApostaStatistic.all.where(rodada: @rodada_prox0).first.attributes["total"]
     @total_aposta1 = ApostaStatistic.all.where(rodada: @rodada_prox1).first.attributes["total"]
     @total_aposta2 = ApostaStatistic.all.where(rodada: @rodada_prox2).first.attributes["total"]
@@ -28,6 +29,15 @@ class UsersBackoffice::WelcomeController < UsersBackofficeController
     @valor_total31 = (@total_aposta3*10).to_f
     @valor_total32 = ((@valor_total31*15)/100).to_f
     @valor_total_aposta3 = @valor_total31 - @valor_total32
+
+    #Mercado aberto ou fechado
+
+    @mercado = 0
+    if @mercado == 1
+        @mercado_path = users_backoffice_rodada_atual_path
+    else
+      @mercado_path = "#"
+    end
     
 end
 

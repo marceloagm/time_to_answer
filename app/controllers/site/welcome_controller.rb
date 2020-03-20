@@ -30,7 +30,13 @@ class Site::WelcomeController < SiteController
     @valor_total32 = ((@valor_total31*15)/100).to_f
     @valor_total_aposta3 = @valor_total31 - @valor_total32
 
-    
+    @mercado = 0
+    if @mercado == 1
+        @mercado_path = users_backoffice_rodada_atual_path
+    else
+      @mercado_path = "#"
+    end
+
 end
 
 end

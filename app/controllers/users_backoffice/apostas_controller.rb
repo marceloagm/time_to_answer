@@ -4,6 +4,9 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     before_action :set_equipe 
     before_action :set_equipe_rodada_atual, only: [:create]
     before_action :set_action, only: [:create]
+    before_action :set_mercado, only: [:rodada_atual]
+
+
     
     def index
         
@@ -45,6 +48,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     end
 
     def rodada_prox
+        
         @rodada = @rodada_prox1 
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
         
@@ -57,12 +61,15 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     end
     
     def rodada_ddprox
+        
         @rodada = @rodada_prox3 
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
     end
     
     private
-
+    def set_mercado
+        @mercado = 0
+    end
     def set_equipe
         @equipes = Equipe.all.where(user_id: @user)
     end
