@@ -22,7 +22,9 @@
                
                 <%= f.submit "Entrar", class:"btn btn-default submit", style:"float: none; margin-left:0px; width: 40%;" %>
                  <%= link_to 'Esqueceu a sua senha?', new_user_password_path, class:"reset_pass" %>
-              </div>
+                </div>
+            
+              <%= link_to 'Não tem conta? Cadastre-se.', new_user_registration_path, class:"reset_pass", style:"text-align: center;" %>
 
               <div class="clearfix"></div>
 

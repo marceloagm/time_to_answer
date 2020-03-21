@@ -3,7 +3,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     before_action :set_user
     before_action :set_equipe 
     before_action :set_equipe_rodada_atual, only: [:create]
-    before_action :set_action, only: [:create]
+    before_action :set_action, only: [:create, :index]
     before_action :set_mercado, only: [:rodada_atual]
 
 
@@ -39,11 +39,14 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     end
 
     def rodada_atual
-        
+        unless @mercado == 1
+            redirect_to users_backoffice_welcome_index_path #redirect para tela de resultados dessa aposta
+        end  
+
         @rodada = @rodada_prox0 
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
         @total_aposta = ApostaStatistic.all.where(rodada: @rodada_prox0)
-
+           
         
     end
 
@@ -68,7 +71,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     
     private
     def set_mercado
-        @mercado = 0
+        @mercado = 1
     end
     def set_equipe
         @equipes = Equipe.all.where(user_id: @user)

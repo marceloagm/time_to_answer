@@ -32,11 +32,15 @@ class UsersBackoffice::WelcomeController < UsersBackofficeController
 
     #Mercado aberto ou fechado
 
-    @mercado = 0
+    @mercado = 1
     if @mercado == 1
         @mercado_path = users_backoffice_rodada_atual_path
+        @botao_text = "Participar"
+        @botao_cor = "primary"
     else
-      @mercado_path = "#"
+        @mercado_path = "#"
+        @botao_text = "Acompanhar Resultados"
+        @botao_cor = "success"
     end
     
 end

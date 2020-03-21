@@ -11,12 +11,9 @@
             <h5 class="card-title text-center">Rodada <%= @rodada_prox0 %> </h5>
             <p class="card-text text-center"><%= @total_aposta0 %> Participante(s)</p>
             <p class="card-text text-center">Valor arrecadado: R$ <%= @valor_total_aposta0.to_f%>0</p>
+            
+            <%= link_to @botao_text, @mercado_path , class:"btn btn-#{@botao_cor}", style:"width: 100%;"  %>
 
-            <% if @mercado == 1%>
-            <%= link_to "Participar", @mercado_path , class:"btn btn-primary", style:"width: 100%;"  %>
-            <% else %>
-            <%= link_to "Acompanhar Resultados", @mercado_path , class:"btn btn-success", style:"width: 100%;"  %>
-            <% end %>
 
         </div>
         </div>
