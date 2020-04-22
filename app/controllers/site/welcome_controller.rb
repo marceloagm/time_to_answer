@@ -1,6 +1,11 @@
 class Site::WelcomeController < SiteController
   
   def index
+    
+    if user_signed_in?
+        redirect_to users_backoffice_welcome_index_path
+    end
+
     @rodada_atual = 6 #será uma consulta a API
 
     @rodada_prox0 = @rodada_atual 

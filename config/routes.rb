@@ -1,9 +1,13 @@
 Rails.application.routes.draw do
   namespace :site do
     get 'welcome/index'
+    get 'resultados/index'
+    get 'resultados/visualizar_resultados'
   end
   namespace :users_backoffice do
     get 'welcome/index'
+    get 'resultados/index'
+    get 'resultados/visualizar_resultados'
     get 'perfil', to: 'perfil#edit'
     patch 'perfil', to: 'perfil#update'
     resources :equipes
@@ -14,7 +18,7 @@ Rails.application.routes.draw do
     get "rodada_dprox", to: 'apostas#rodada_dprox'
     get "rodada_ddprox", to: 'apostas#rodada_ddprox'
     get "minhas_apostas", to: 'apostas#minhas_apostas'
-
+   
     
     
   end
