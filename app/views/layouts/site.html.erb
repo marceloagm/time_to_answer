@@ -8,7 +8,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     
 
-     <title>TimeToAnswer</title>
+     <title>Aposte no Cartola</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -39,7 +39,8 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-           <%= link_to 'Aposte no Cartola', root_path, class:"navbar-brand" %>
+           <%= link_to 'Início', root_path, class:"navbar-brand" %>
+           
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav"></ul>
@@ -47,8 +48,10 @@
             
               <ul class="nav navbar-nav navbar-right">
               <% unless user_signed_in? %>
+              <li><%= link_to 'Resultados', site_resultados_index_path, class:"navbar-brand" %></li>
               <li><%= link_to 'Entrar', new_user_session_path %></li>              
               <li><%= link_to 'Cadastrar-se', new_user_registration_path %></li>  
+              
               <% else %>
                <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= current_user.email %> <span class="caret"></span></a>

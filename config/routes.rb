@@ -7,12 +7,14 @@ Rails.application.routes.draw do
   namespace :users_backoffice do
     get 'welcome/index'
     get 'resultados/index'
+    get 'apostas/index'
     get 'resultados/visualizar_resultados'
     get 'perfil', to: 'perfil#edit'
     patch 'perfil', to: 'perfil#update'
     resources :equipes
     get 'time_cartola', to: 'time_cartola#show'
     resources :apostas
+    
     get "rodada_atual", to: 'apostas#rodada_atual'
     get "rodada_prox", to: 'apostas#rodada_prox'
     get "rodada_dprox", to: 'apostas#rodada_dprox'

@@ -83,7 +83,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     end
 
     def rodadas
-        @rodada_atual = 6  #será uma consulta a API em qual rodada está
+        @rodada_atual = 1  #será uma consulta a API em qual rodada está
     
         @rodada_prox0 = @rodada_atual 
         @rodada_prox1 = @rodada_atual + 1
