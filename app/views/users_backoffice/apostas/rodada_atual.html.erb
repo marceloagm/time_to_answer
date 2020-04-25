@@ -1,5 +1,18 @@
 <h1 class="text-center"> APOSTA RODADA <%= @rodada %> </h1>
 
+
+<%= @total_pag%>
+<%= @apostador.length%>
+
+
+
+<form action="/processar_pagamento" method="POST">
+            <script
+            src="https://www.mercadopago.com.br/integrations/v1/web-payment-checkout.js"
+            data-preference-id="<%= @preference_id %>">
+            </script>
+          </form>
+
 <!-- Botão para acionar modal -->
 <div style="text-align: center;">
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo">
@@ -26,7 +39,7 @@
           
   
 
-          <td style="text-align: center; ">1</td>
+          <td style="text-align: center; "><%= aposta.equipe.id%></td>
           <td style="text-align: center; "><%= aposta.equipe.nome_time%></td>
           <td style="text-align: center; "><%= aposta.equipe.cartoleiro%></td>
           <td style="text-align: center; ">50</td>
@@ -53,18 +66,20 @@
       
        <%= form_with(url: users_backoffice_apostas_path, scope: :aposta, method: :post, local:true) do |f| %>
             
-               <%= f.select 'equipe_id', options_for_select(@equipes.collect{ |u| [u.nome_time, u.id] }), {}, {class:"form-control"}  %>
+               <%= f.select 'equipe_id', options_for_select(@equipes_final.collect{ |u| [u.nome_time, u.id] }), {}, {class:"form-control"}  %>
                <%= f.hidden_field :rodada, :value => @rodada %>
                 <%= f.hidden_field :action, :value => params[:action] %>
-                
-                
-
+   
                 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
         
+
         <%= f.submit "Salvar", class:"btn btn-primary" %>
+        
+             
+          
        
       </div>
     </div>

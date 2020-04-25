@@ -52,7 +52,7 @@
       
        <%= form_with(url: users_backoffice_apostas_path, scope: :aposta, method: :post, local:true) do |f| %>
             
-               <%= f.select 'equipe_id', options_for_select(@equipes.collect{ |u| [u.nome_time, u.id] }), {}, {class:"form-control"}  %>
+               <%= f.select 'equipe_id', options_for_select(@equipes_final.collect{ |u| [u.nome_time, u.id] }), {}, {class:"form-control"}  %>
                <%= f.hidden_field :rodada, :value => @rodada %>
                 <%= f.hidden_field :action, :value => params[:action] %>
       </div>
