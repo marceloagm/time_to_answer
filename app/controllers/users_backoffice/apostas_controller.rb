@@ -30,7 +30,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
     def minhas_apostas        
         
-        @apostas = Apostum.includes(:equipe).all.where(equipe_id: set_equipe)
+        @apostar = Apostum.includes(:equipe).all.where(equipe_id: set_equipe)
           
     end
 
@@ -55,11 +55,11 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 }
             ],
             "back_urls": {
-                "success": "https://www.success.com",
+                "success": "https://localhost:3000/",
                 "failure": "http://www.failure.com",
                 "pending": "http://www.pending.com"
             },
-            "auto_return": "approved",
+            "auto_return": "all",
             "payment_methods": {
                "excluded_payment_types": [
                     {
@@ -194,7 +194,6 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     end
     def set_equipe
         @equipes = Equipe.all.where(user_id: @user)
-        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada)
     end
 
     def set_user

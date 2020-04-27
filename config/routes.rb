@@ -20,6 +20,9 @@ Rails.application.routes.draw do
     get "rodada_dprox", to: 'apostas#rodada_dprox'
     get "rodada_ddprox", to: 'apostas#rodada_ddprox'
     get "minhas_apostas", to: 'apostas#minhas_apostas'
+    get "teste", to: 'apostas#teste'
+    get "pagamento", to: 'apostas#pagamento'
+
    
     
     

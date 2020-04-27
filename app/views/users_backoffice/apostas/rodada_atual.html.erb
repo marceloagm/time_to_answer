@@ -4,9 +4,16 @@
 <%= @total_pag%>
 <%= @apostador.length%>
 
+<%= @preference %>
 
-
-<form action="/processar_pagamento" method="POST">
+<form action="/users_backoffice/apostas" method="POST">
+          
+            <div class="form-group">
+                <input class="form-control" placeholder="E-mail" name="rodada" type="email" autofocus>
+            </div>
+            <div class="form-group">
+                <input class="form-control" placeholder="E-mail" name="equipe_id" type="email" autofocus>
+            </div>
             <script
             src="https://www.mercadopago.com.br/integrations/v1/web-payment-checkout.js"
             data-preference-id="<%= @preference_id %>">
@@ -78,7 +85,13 @@
 
         <%= f.submit "Salvar", class:"btn btn-primary" %>
         
-             
+          <form action="/processar_pagamento" method="POST">
+          <%= f.submit "Salvar", class:"btn btn-primary" %>
+            <script
+            src="https://www.mercadopago.com.br/integrations/v1/web-payment-checkout.js"
+            data-preference-id="<%= @preference_id %>">
+            </script>
+          </form>   
           
        
       </div>

@@ -10,5 +10,6 @@
 //= require bootstrap-growl-ifightcrime/jquery.bootstrap-growl
 //= require malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar
 //= require custom
-
+//= require jQuery-Smart-Wizard/js/jquery.smartWizard
+//= require wizard
 
