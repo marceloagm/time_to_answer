@@ -6,10 +6,6 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     before_action :set_mercado, only: [:rodada_atual]
 
     
-    def index
-        
-    end
-
     def create
         action_salvar = params["pagina"]
         status_pagamento = params["payment_status"]
@@ -39,16 +35,17 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     end
 
     def rodada_atual
-                                
+                
+        unless @mercado == 1
+            redirect_to users_backoffice_welcome_index_path #redirect para tela de resultados dessa aposta
+        end  
+        
+        #Criar a preferencia que é os dados da aposta
         @preference = $mp.create_preference(set_preference)
         
         # Este valor substituirá a string "<%= @preference_id %>" no seu HTML
         @preference_id = @preference["response"]["id"]
 
-
-        unless @mercado == 1
-            redirect_to users_backoffice_welcome_index_path #redirect para tela de resultados dessa aposta
-        end  
 
         @rodada = @rodada_prox0 
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
