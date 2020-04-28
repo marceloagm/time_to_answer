@@ -50,6 +50,14 @@
         </button>
       </div>
       <div class="modal-body">
+      <% if  @equipes_final == [] %>
+                    <h4 class="modal-title" id="exampleModalLabel" style="color: red; text-align: center;"> <b>Atenção</b></h4>
+              <h5 class="modal-title" id="exampleModalLabel"><b> Você não consegue participar dessa aposta por um dos motivos a seguir:</b></h5>
+              <h5 class="modal-title" id="exampleModalLabel"> 1º Seu(s) Time(s) já está(ão) participando dessa aposta;</h5>
+              <h5 class="modal-title" id="exampleModalLabel"> 2º Você não tem time(s) adicionado(s) a sua conta, para adicionar vá até o menu lateral "Meus Times" ou senão clique no botão a seguir: </h5>
+              <%= link_to "Adicionar TIme", users_backoffice_equipes_path, class:"btn btn-primary", type:"submit" %>
+
+   <% else %>
       <h4 style="color: black;">1º Passo </h4>
       <h4 class="modal-title" id="exampleModalLabel">Selecione o Time:</h4>
       <%= form_with(url: users_backoffice_apostas_path, method: "post", local:true) do |f| %>
@@ -58,8 +66,7 @@
               <%= f.hidden_field :pagina, :value => "rodada_ddprox" %>
              
        <div class="modal-footer">
-                
-      </div>
+      </div>      
       <h4 style="color: black;">2º Passo </h4>
       <h4 class="modal-title" id="exampleModalLabel"> Realize o Pagamento:</h4>
       <h1></h1>
@@ -70,14 +77,14 @@
           </script>
           <%= image_tag 'logo-mercadopago.png', alt:"Responsive image", class:"card-img-top", style:"width: 15rem;float: right; " %>
        <h1><h1> 
-      
       </div>
       <h style="font-size: 10px;">  *será acrescentado R$ 0,50 no valor final por causa do juros do mercado pago.</h>
-      <div class="modal-footer">
+       <% end %>
+       <% end %>
+       
+       <div class="modal-footer">      
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-      </div>
-      
+      </div>      
+    </div> 
     </div>
-    <% end %>
-  </div>
 </div>
