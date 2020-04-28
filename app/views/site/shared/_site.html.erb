@@ -10,9 +10,9 @@
         <%= image_tag 'img.jpg', alt:"Responsive image", class:"card-img-top" %>
         <div class="card-body">
             <h5 class="card-title text-center">Rodada <%= @rodada_prox0 %> </h5>
-            <p class="card-text text-center"><%= @total_aposta0 %> Participante(s)</p>
-            <p class="card-text text-center">Valor arrecadado: R$ <%= @valor_total_aposta0.to_f%>0</p>
-            
+            <h5 class="card-text text-center">Valor R$ 10,00</h5>
+            <h5 class="card-text text-center"><%= @total_aposta0 %> Participante(s)</h5>            
+            <h5 class="card-text text-center">Valor arrecadado: R$ <%= @valor_total_aposta0.to_f%>0</h5>  
             <%= link_to @botao_text, @mercado_path , class:"btn btn-#{@botao_cor}", style:"width: 100%;"  %>
 
 
@@ -25,8 +25,9 @@
         <%= image_tag 'img.jpg', alt:"Responsive image", class:"card-img-top" %>
         <div class="card-body">
             <h5 class="card-title text-center">Rodada <%= @rodada_prox1 %> </h5>
-            <p class="card-text text-center"><%= @total_aposta1 %> Participante(s)</p>
-            <p class="card-text text-center">Valor arrecadado: R$ <%= @valor_total_aposta1.to_f%>0</p>
+            <h5 class="card-text text-center">Valor R$ 10,00</h5>
+            <h5 class="card-text text-center"><%= @total_aposta1 %> Participante(s)</h5>
+            <h5 class="card-text text-center">Valor arrecadado: R$ <%= @valor_total_aposta1.to_f%>0</h5>
             <%= link_to "Participar", users_backoffice_rodada_prox_path, class:"btn btn-primary", style:"width: 100%;" %>
         </div>
         </div>
@@ -38,8 +39,9 @@
         <%= image_tag 'img.jpg', alt:"Responsive image", class:"card-img-top" %>
         <div class="card-body">
             <h5 class="card-title text-center"> Rodada <%= @rodada_prox2 %> </h5>
-            <p class="card-text text-center"><%= @total_aposta2 %> Participante(s)</p>
-            <p class="card-text text-center">Valor arrecadado: R$ <%= @valor_total_aposta2.to_f%>0</p>
+            <h5 class="card-text text-center">Valor R$ 10,00</h5>
+            <h5 class="card-text text-center"><%= @total_aposta2 %> Participante(s)</h5>
+            <h5 class="card-text text-center">Valor arrecadado: R$ <%= @valor_total_aposta2.to_f%>0</h5>
             <%= link_to "Participar", users_backoffice_rodada_dprox_path, class:"btn btn-primary", style:"width: 100%;" %>
         </div>
         </div>
@@ -52,8 +54,9 @@
         <%= image_tag 'img.jpg', alt:"Responsive image", class:"card-img-top" %>
         <div class="card-body">
             <h5 class="card-title text-center">Rodada <%= @rodada_prox3 %></h5>
-            <p class="card-text text-center"><%= @total_aposta3 %> Participante(s)</p>
-            <p class="card-text text-center">Valor arrecadado: R$ <%= @valor_total_aposta3.to_f%>0</p>
+            <h5 class="card-text text-center">Valor R$ 10,00</h5>
+            <h5 class="card-text text-center"><%= @total_aposta3 %> Participante(s)</h5>
+            <h5 class="card-text text-center">Valor arrecadado: R$ <%= @valor_total_aposta3.to_f%>0</h5>
             <%= link_to "Participar", users_backoffice_rodada_ddprox_path, class:"btn btn-primary", style:"width: 100%;" %>
         </div>
         </div>

@@ -1,25 +1,5 @@
 <h1 class="text-center"> APOSTA RODADA <%= @rodada %> </h1>
 
-
-<%= @total_pag%>
-<%= @apostador.length%>
-
-<%= @preference %>
-
-<form action="/users_backoffice/apostas" method="POST">
-          
-            <div class="form-group">
-                <input class="form-control" placeholder="E-mail" name="rodada" type="email" autofocus>
-            </div>
-            <div class="form-group">
-                <input class="form-control" placeholder="E-mail" name="equipe_id" type="email" autofocus>
-            </div>
-            <script
-            src="https://www.mercadopago.com.br/integrations/v1/web-payment-checkout.js"
-            data-preference-id="<%= @preference_id %>">
-            </script>
-          </form>
-
 <!-- Botão para acionar modal -->
 <div style="text-align: center;">
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalExemplo">
@@ -64,38 +44,40 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Título do modal</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Participar da Aposta</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-      
-       <%= form_with(url: users_backoffice_apostas_path, scope: :aposta, method: :post, local:true) do |f| %>
-            
-               <%= f.select 'equipe_id', options_for_select(@equipes_final.collect{ |u| [u.nome_time, u.id] }), {}, {class:"form-control"}  %>
-               <%= f.hidden_field :rodada, :value => @rodada %>
-                <%= f.hidden_field :action, :value => params[:action] %>
-   
+      <h4 style="color: black;">1º Passo </h4>
+      <h4 class="modal-title" id="exampleModalLabel">Selecione o Time:</h4>
+      <%= form_with(url: users_backoffice_apostas_path, method: "post", local:true) do |f| %>
+              <%= f.select 'equipe_id', options_for_select(@equipes_final.collect{ |u| [u.nome_time, u.id] }), {}, {class:"form-control"}  %>
+              <%= f.hidden_field :rodada, :value => @rodada %>
+              <%= f.hidden_field :pagina, :value => "rodada_atual" %>
+             
+       <div class="modal-footer">
                 
       </div>
+      <h4 style="color: black;">2º Passo </h4>
+      <h4 class="modal-title" id="exampleModalLabel"> Realize o Pagamento:</h4>
+      <h1></h1>
+         <script
+             src="https://www.mercadopago.com.br/integrations/v1/web-payment-checkout.js"
+             data-preference-id="<%= @preference_id %>">
+                  
+          </script>
+          <%= image_tag 'logo-mercadopago.png', alt:"Responsive image", class:"card-img-top", style:"width: 15rem;float: right; " %>
+       <h1><h1> 
+      
+      </div>
+      <h style="font-size: 10px;">  *será acrescentado R$ 0,50 no valor final por causa do juros do mercado pago.</h>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-        
-
-        <%= f.submit "Salvar", class:"btn btn-primary" %>
-        
-          <form action="/processar_pagamento" method="POST">
-          <%= f.submit "Salvar", class:"btn btn-primary" %>
-            <script
-            src="https://www.mercadopago.com.br/integrations/v1/web-payment-checkout.js"
-            data-preference-id="<%= @preference_id %>">
-            </script>
-          </form>   
-          
-       
       </div>
+      
     </div>
-    <%end%>
+    <% end %>
   </div>
 </div>
