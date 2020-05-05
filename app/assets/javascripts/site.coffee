@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 
-//= require jquery/dist/jquery
+//= require jquery-site
 //= require bootstrap/dist/js/bootstrap
 //= require surface-fix
 //= require bootstrap-growl-ifightcrime/jquery.bootstrap-growl

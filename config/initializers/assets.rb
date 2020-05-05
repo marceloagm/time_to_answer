@@ -22,8 +22,17 @@ Rails.application.config.assets.precompile += %w( admins_backoffice.js admins_ba
 Rails.application.config.assets.precompile += %w( sb-admin-2.js sb-admin-2.css 
                                                    custom.js custom.css img.jpg
                                                    surface-fix.js surface-fix.css
-                                                   navbar.css wizard.js wizard.css)
+                                                   feather.css google.css icofont.css
+                                                   jquery.mCustomScrollbar.css navbar.css
+                                                    prism.css style.css themify-icons.css
+                                                    css-scrollbars.js custom-prism.js google.js
+                                                    jquery.mCustomScrollbar.concat.min.js
+                                                    jquery.slimscroll.js menu-sidebar-static.js
+                                                    modernizr.js pcoded.min.js popper.min.js script.js
+                                                    jquery-site.js bootstrap-site.js bootstrap-site.css
+                                                    font-site.css excanvas.js)
 
+Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
 # /vendor/assets
 Rails.application.config.assets.precompile += %w( jquery-2.2.3/dist/jquery.js )
 

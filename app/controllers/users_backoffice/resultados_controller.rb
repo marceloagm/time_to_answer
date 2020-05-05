@@ -15,6 +15,6 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
     end
     private
     def set_rodada
-        @rodada_atual = 1
+        @rodada_atual = 38
     end
 end

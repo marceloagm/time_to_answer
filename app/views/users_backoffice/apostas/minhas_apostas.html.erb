@@ -2,35 +2,23 @@
 <!-- FINAL FORMULARIO BOTAO PAGSEGURO -->
 
 
-<!-- Tabela que lista os times -->
-<div class="x_content">
-
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th style="text-align: center; ">Rodada</th>  
-          <th style="text-align: center; ">Nome do Time</th>
-          <th style="text-align: center; ">Cartoleiro</th>    
-          <th style="text-align: center; ">Status Pagamento</th> 
+<div class="row">
+  <% @apostar.each do |aposta| %>
+  <div class="col-md-6 col-lg-3">
+      <div class="card statustic-card">
+          <div class="card-header" style="text-align:center;">
+              <h5 >Time : <%= aposta.equipe.nome_time%></h5>
+          </div>
+          <div class="card-block text-center">
+              <p class="m-b-0">Rodada</p>
+              <span class="d-block text-c-green f-36"><%= aposta.rodada%></span>
               
-        </tr>
-      </thead>
-      <tbody>
-      
-        <% @apostar.each do |aposta| %>
-        <tr>
-          
-  
-
-          <td style="text-align: center; "><%= aposta.rodada%></td>
-          <td style="text-align: center; "><%= aposta.equipe.nome_time%></td>
-          <td style="text-align: center; "><%= aposta.equipe.cartoleiro%></td>
-          <td style="text-align: center; color: green;">Aprovado</td>
-        
-        </td>
-        </tr>       
-        <% end %> 
-      </tbody>
-    </table>
-
+              
+          </div>
+          <div class="card-footer bg-c-green">
+              <h6 class="text-white m-b-0" style="text-align:center;">Pagamento Aprovado</h6>
+          </div>
+      </div>
   </div>
+  <% end %>
+</div>

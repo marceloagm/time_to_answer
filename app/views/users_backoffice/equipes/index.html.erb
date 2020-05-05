@@ -1,4 +1,3 @@
-
 <h1 class="text-center">MEUS TIMES</h1>
 
 <!-- Button trigger modal -->
@@ -8,41 +7,34 @@
 </button>
 </div>
 
+<h1></h1>
 
-<!-- Tabela que lista os times -->
-<div class="x_content">
+<div class="row">
+<% @equipes.each do |equipe| %>
+<div class="col-xl-4 col-md-6">
+    <div class="card social-card bg-simple-c-blue">
+        <div class="card-block">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <%= image_tag "avatar-2.jpg" ,  alt:"User-Image" %>
+                </div>
+                <div class="col">
+                    <h6 class="m-b-0">Time</h6>
+                    <p><%= equipe.nome_time%></p>
 
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-        
-          <th style="text-align: center; ">Escudo</th>
-          <th style="text-align: center; ">Nome do Time</th>
-          <th style="text-align: center; ">Cartoleiro</th>     
-          <th style="text-align: center; ">Remover</th>      
-        </tr>
-      </thead>
-      <tbody>
-      
-        <% @equipes.each do |equipe| %>
-        <tr>
-          
-  
-          
-          <td style="text-align: center; "><%= equipe.escudo%></td>
-          <td style="text-align: center; "><%= equipe.nome_time%></td>
-          <td style="text-align: center; "><%= equipe.cartoleiro%></td>
-          <td style="width: 100px; text-align: center; ">
-          <%= link_to users_backoffice_equipe_path(equipe), method: :delete, class:"btn btn-danger btn-round ", data: { confirm: "Deseja realmente excluir o time: #{equipe.nome_time}" }  do %>
-            <i class="fa fa-close"></i>
-          <% end %>
-        </td>
-        </tr>       
-        <% end %> 
-      </tbody>
-    </table>
+                    <h6 class="m-b-0">Cartoleiro</h6>
+                    <p><%= equipe.cartoleiro%></p>
+                </div>
+            </div>
+        </div>
+         <%= link_to users_backoffice_equipe_path(equipe), method: :delete, class:"download-icon red", style:"color:red;", data: { confirm: "Deseja realmente excluir o time: #{equipe.nome_time}" }  do %>
+      <i class="icofont icofont-error"></i>
+    <% end %>
+    </div>
+</div>
+<% end %>
+</div>
 
-  </div>
 
 <!-- Modal -->
 <div class="modal fade" id="timeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
