@@ -1,4 +1,5 @@
 Rails.application.configure do
+  config.exceptions_app = self.routes
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Devise Config
@@ -12,8 +13,8 @@ Rails.application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
-  # Show full error reports.
-  config.consider_all_requests_local = true
+  # Show full error reports. - erro quando a pagina não existe
+  #config.consider_all_requests_local = true
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.

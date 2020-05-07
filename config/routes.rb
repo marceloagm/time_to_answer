@@ -23,8 +23,7 @@ Rails.application.routes.draw do
     get "minhas_apostas", to: 'apostas#minhas_apostas'
     get "teste", to: 'apostas#teste'
     get "pagamento", to: 'apostas#pagamento'
-    
-   
+     
     
     
   end
@@ -33,6 +32,11 @@ Rails.application.routes.draw do
     resources :admins  #Administradores
     
   end
+
+  get '/404', to: 'errors#not_found'
+  get '/422', to: 'errors#unacceptable'
+  get '/500', to: 'errors#server_errors'
+
   devise_for :users
   devise_for :admins, skip: [:registrations]
   
