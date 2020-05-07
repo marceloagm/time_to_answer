@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   namespace :users_backoffice do
     get 'welcome/index'
     get 'resultados/index'
+    get 'search', to: 'search#time'
     get 'apostas/index'
     get 'resultados/visualizar_resultados'
     get 'perfil', to: 'perfil#edit'
@@ -22,7 +23,7 @@ Rails.application.routes.draw do
     get "minhas_apostas", to: 'apostas#minhas_apostas'
     get "teste", to: 'apostas#teste'
     get "pagamento", to: 'apostas#pagamento'
-
+    
    
     
     

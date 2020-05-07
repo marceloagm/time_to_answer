@@ -30,7 +30,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
     def minhas_apostas        
         
-        @apostar = Apostum.includes(:equipe).all.where(equipe_id: set_equipe)
+        @apostar = Apostum.includes(:equipe).all.where(equipe_id: set_equipe).page(params[:page]).per(8)
           
     end
 
@@ -48,8 +48,16 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
 
         @rodada = @rodada_prox0 
-        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
-                 
+        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
+
+                
+        @ppp = params["page"].to_i 
+        if @ppp == 0
+            @contador = 1
+        else
+            @contador = (params["page"].to_i * 20) - 19
+        end
+        
         @equipes_total = Equipe.all.where(user_id: @user)
                 
         @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_id: @equipes_total)
@@ -67,6 +75,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                         
     end
 
+
     def rodada_prox
         @preference = $mp.create_preference(set_preference)
         
@@ -74,7 +83,15 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @preference_id = @preference["response"]["id"]
         
         @rodada = @rodada_prox1 
-        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
+        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
+
+                
+        @ppp = params["page"].to_i 
+        if @ppp == 0
+            @contador = 1
+        else
+            @contador = (params["page"].to_i * 20) - 19
+        end
 
         @equipes_total = Equipe.all.where(user_id: @user)
                 
@@ -93,6 +110,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @equipes_final = @equipes_total - @equipe_resultado
         
     end
+
 
     def rodada_dprox
         @preference = $mp.create_preference(set_preference)
@@ -101,7 +119,15 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @preference_id = @preference["response"]["id"]
 
         @rodada = @rodada_prox2
-        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
+        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
+
+                
+        @ppp = params["page"].to_i 
+        if @ppp == 0
+            @contador = 1
+        else
+            @contador = (params["page"].to_i * 20) - 19
+        end
 
         @equipes_total = Equipe.all.where(user_id: @user)
                 
@@ -120,6 +146,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @equipes_final = @equipes_total - @equipe_resultado
     end
     
+
     def rodada_ddprox
        @preference = $mp.create_preference(set_preference)
         
@@ -127,7 +154,16 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @preference_id = @preference["response"]["id"]
         
         @rodada = @rodada_prox3 
-        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
+
+        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
+
+                
+        @ppp = params["page"].to_i 
+        if @ppp == 0
+            @contador = 1
+        else
+            @contador = (params["page"].to_i * 20) - 19
+        end
         @equipes_total = Equipe.all.where(user_id: @user)
                 
         @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_id: @equipes_total)
@@ -145,6 +181,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @equipes_final = @equipes_total - @equipe_resultado
     end
     
+
     private
     def set_mercado
         @mercado = 1
@@ -153,7 +190,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @equipes = Equipe.all.where(user_id: @user)
     end
 
-    def set_preference
+     def set_preference
         # SDK de Mercado Pago
         require 'mercadopago.rb'
 

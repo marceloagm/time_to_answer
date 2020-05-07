@@ -7,7 +7,7 @@ class UsersBackoffice::EquipesController < UsersBackofficeController
     end
    
     def index
-        @equipes = Equipe.all.where(user_id: @user)
+        @equipes = Equipe.all.where(user_id: @user).page(params[:page]).per(6)
         
     end
 

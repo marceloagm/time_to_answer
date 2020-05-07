@@ -31,8 +31,10 @@
       <i class="icofont icofont-error"></i>
     <% end %>
     </div>
+    
 </div>
 <% end %>
+
 </div>
 
 
@@ -48,22 +50,31 @@
       <div class="modal-body">
       
 
-        <%= form_with(local: true) do |form| %>
-            <div class="form-group">
-                  <div class="input-group">
-                    
-                        <%= form.text_field :time_cartola, class:"form-control", placeholder:"Digite o nome do time", id:"time_cartola" %>
-                        
-                        
-                        <span class="input-group-btn">
-                          <%= link_to "Pesquisar", users_backoffice_time_cartola_path, remote:true, class:"btn btn-primary", id:"time-cartola-link" %>
-                        </span>
-                    </div>
-            </div>
+        <%= form_with(local: true, html: {id: :pesquisar_time}) do |form| %>
+        
+                  
+        <div class="row">
+              <div class="col-sm-12">
+                  <div class="input-group input-group-button">
+                      <%= form.text_field :time_cartola, class:"form-control", placeholder:"Digite o nome do time", id:"time_cartola" %>
+                      <span class="input-group-addon btn btn-primary">
+                        <%= link_to "Pesquisar", users_backoffice_time_cartola_path, remote:true, class:"btn btn-primary", id:"time-cartola-link" %>
+
+                          
+                      </span>
+                  </div>
+              </div>
+          </div>
+          
+           
         <% end %>
-
+        <!-- desabilitar enter no formulario de pesquisar time   -->
         <script>
-
+         
+        document.getElementById("pesquisar_time").onsubmit = function () {
+            return false;
+        };
+        
         let time_cartola_input = document.getElementById("time_cartola");
             var time_cartola_link = document.getElementById("time-cartola-link");
 
@@ -71,10 +82,10 @@
               time_cartola_link.href = '<%= users_backoffice_time_cartola_path %>/?time_cartola='+time_cartola_input.value;
 
               
-            });
+        });
 
 
-           </script>     
+        </script>     
            
           
           
@@ -138,10 +149,15 @@
         document.getElementById('time_encontrado').innerHTML='';
         });  
             
+            
         
         </script>
        
   </div>
+  
 </div>
 
 
+ <div class="pagination justify-content-center">
+    <%= paginate @equipes %>
+ </div>

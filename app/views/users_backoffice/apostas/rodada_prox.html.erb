@@ -6,7 +6,22 @@
   Participar
 </button>
 </div>
-<%= @preference%>
+
+<h1></h1>
+
+<div class="d-flex flex-row-reverse bd-highlight">
+  <%= form_with(url: users_backoffice_search_path, local: true, method: :get) do |time| %>
+  <div class="p-3 bd-highlight">
+    <div class="input-group input-group-button col-sm-12 col-xl-12">
+        <%= time.text_field :term, class:"form-control", placeholder:"Pesquisar Time" %>
+        <%= time.hidden_field :rodada, :value => @rodada %>
+          <button type="submit" class="input-group-addon btn btn-primary" id="basic-addon10">
+            <span class=""><i class="icofont icofont-ui-search"></i></span>
+        </button>
+    </div>
+</div>
+ <% end %>
+</div>
 
 <div class="col-md-12 col-xl-12">
     <div class="card widget-card-1">
@@ -30,13 +45,13 @@
 </div>
 
 
-<% x=1 %>
-<% while x < @apostas.length %>
+
+
 <% @apostas.each do |aposta| %>
 <div class="col-md-12 col-xl-12" style="height:80%;">
     <div class="card widget-card-1">
         <div class="card-block-small">
-            <i class=" bg-c-blue card1-icon"><%= x %></i>
+            <i class=" bg-c-blue card1-icon"><%= @contador %></i>
                     <div class="row">
                     <div class="col-6">
                     
@@ -52,11 +67,13 @@
             </div>
         </div>
     </div>
-
-
-<% x= x+1 %>
+    <% @contador = @contador + 1 %>
 <% end %>
-<% end %>
+
+<div class="pagination justify-content-center">
+    <%= paginate @apostas %>
+ </div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="modalExemplo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -94,7 +111,7 @@
              data-preference-id="<%= @preference_id %>">
                   
           </script>
-          <%= image_tag 'logo-mercadopago.png', alt:"Responsive image", class:"card-img-top", style:"width: 15rem;float: right; " %>
+          <%= image_tag 'logo-mercadopago.png', alt:"Responsive image", class:"card-img-top", style:"width: 70%;float: right; " %>
        <h1><h1> 
       </div>
       <h style="font-size: 10px;">  *será acrescentado R$ 0,50 no valor final por causa do juros do mercado pago.</h>
