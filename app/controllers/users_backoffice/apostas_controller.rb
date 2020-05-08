@@ -12,7 +12,11 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         equipe_salvar = Hash["equipe_id"=> params["equipe_id"], "rodada"=> params["rodada"]]
         rodada_salvar = params["rodada"]
 
+        
         if status_pagamento == "approved"
+            equipe_pagamento_aprovado = Hash["equipe_id"=> params["equipe_id"], "rodada"=> params["rodada"], "status"=> "Aprovado"]
+            pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+            pagamento_aprovado.save
             @aposta = Apostum.new(equipe_salvar)
                 if @aposta.save
                     set_total_rodada(rodada_salvar)
@@ -22,6 +26,9 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                     redirect_to "/users_backoffice/#{action_salvar}"
                 end 
         else
+            equipe_pagamento_recusado = Hash["equipe_id"=> params["equipe_id"], "rodada"=> params["rodada"], "status"=> "Recusado"]
+            pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+            pagamento_recusado.save
             flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
             redirect_to "/users_backoffice/#{action_salvar}"
         end
@@ -30,7 +37,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
     def minhas_apostas        
         
-        @apostar = Apostum.includes(:equipe).all.where(equipe_id: set_equipe).page(params[:page]).per(8)
+        @pagamento = StatusPagamento.all.includes(:equipe).all.where(equipe_id: set_equipe).page(params[:page]).per(8)
           
     end
 
@@ -195,7 +202,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         require 'mercadopago.rb'
 
         # Configura credenciais
-        $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
+        $mp = MercadoPago.new('APP_USR-4686041618151195-042516-3596122e2cbb25dc4d3c0c5d3c5cbbc6-198441614')
 
         preference_data = {
             "items": [

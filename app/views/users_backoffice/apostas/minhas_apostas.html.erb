@@ -1,28 +1,33 @@
 <h1 class="text-center"> MINHAS APOSTAS </h1>
 <!-- FINAL FORMULARIO BOTAO PAGSEGURO -->
 
-
 <div class="row">
-  <% @apostar.each do |aposta| %>
+  <% @pagamento.each do |pagamento| %>
   <div class="col-md-6 col-lg-3">
       <div class="card statustic-card">
           <div class="card-header" style="text-align:center;">
-              <h5 >Time : <%= aposta.equipe.nome_time%></h5>
+              <h5 >Time : <%= pagamento.equipe.nome_time%></h5>
           </div>
           <div class="card-block text-center">
               <p class="m-b-0">Rodada</p>
-              <span class="d-block text-c-green f-36"><%= aposta.rodada%></span>
+              <span class="d-block text-c f-36"><%= pagamento.rodada%></span>
               
               
           </div>
+          <% if pagamento.status == "Aprovado"%>
           <div class="card-footer bg-c-green">
-              <h6 class="text-white m-b-0" style="text-align:center;">Pagamento Aprovado</h6>
+              <h6 class="text-white m-b-0" style="text-align:center;">Pagamento <%= pagamento.status%></h6>
           </div>
+          <% else %>
+          <div class="card-footer bg-c-pink">
+              <h6 class="text-white m-b-0" style="text-align:center;">Pagamento <%= pagamento.status%></h6>
+          </div>
+          <% end %>
       </div>
   </div>
   <% end %>
 </div>
 
 <div class="pagination justify-content-center">
-    <%= paginate @apostar %>
+    <%= paginate @pagamento %>
  </div>
