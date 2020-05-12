@@ -27,15 +27,15 @@
 
 
 <% @apostas.each do |aposta| %>
-<div class="col-md-12 col-xl-12" style="height:80%;">
-    <div class="card widget-card-1">
+<%= link_to  users_backoffice_visualizar_time_time_path(:time => "#{aposta.equipe.nome_time}"), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
+      <div class="card widget-card-1">
         <div class="card-block-small">
             <i class=" bg-c-blue card1-icon"><%= @contador %></i>
                     <div class="row">
                     <div class="col-6">
                     
                     <h4 style="color: white">.</h4>
-                    <h4><%= aposta.equipe.nome_time%></h4>
+                    <h4><%= aposta.equipe.nome_time %></h4>
                     </div>
                     <div class="col-6">
                     
@@ -45,9 +45,13 @@
                 </div>
             </div>
         </div>
-    </div>
+  <% end %>
     <% @contador = @contador + 1 %>
 <% end %>
+
+
+
+
 
 <div class="pagination justify-content-center">
     <%= paginate @apostas %>

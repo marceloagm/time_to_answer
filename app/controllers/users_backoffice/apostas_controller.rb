@@ -17,6 +17,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             equipe_pagamento_aprovado = Hash["equipe_id"=> params["equipe_id"], "rodada"=> params["rodada"], "status"=> "Aprovado"]
             pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
             pagamento_aprovado.save
+            
             @aposta = Apostum.new(equipe_salvar)
                 if @aposta.save
                     set_total_rodada(rodada_salvar)
@@ -28,6 +29,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         else
             equipe_pagamento_recusado = Hash["equipe_id"=> params["equipe_id"], "rodada"=> params["rodada"], "status"=> "Recusado"]
             pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+            
             pagamento_recusado.save
             flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
             redirect_to "/users_backoffice/#{action_salvar}"
@@ -38,7 +40,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     def minhas_apostas        
         
         @pagamento = StatusPagamento.all.includes(:equipe).all.where(equipe_id: set_equipe).page(params[:page]).per(8)
-          
+         
     end
 
     def rodada_atual

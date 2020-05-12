@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     get 'welcome/index'
     get 'resultados/index'
     get 'resultados/visualizar_resultados'
+    get 'visualizar_time/time'
   end
   namespace :users_backoffice do
     get 'welcome/index'
@@ -10,6 +11,7 @@ Rails.application.routes.draw do
     get 'search', to: 'search#time'
     get 'apostas/index'
     get 'resultados/visualizar_resultados'
+    get 'visualizar_time/time'
     get 'perfil', to: 'perfil#edit'
     patch 'perfil', to: 'perfil#update'
     resources :equipes
