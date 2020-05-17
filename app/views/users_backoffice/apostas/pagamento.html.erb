@@ -1,46 +1,32 @@
-<div class="row">
-<div class="col-md-6 col-xl-3">
-    <div class="card user-widget-card bg-c-blue">
-        <div class="card-block">
-            <i class="feather icon-user bg-simple-c-blue card1-icon"></i>
-            <h4>652</h4>
-            <p>Latest User</p>
-            <a href="#!" class="more-info">More Info</a>
-        </div>
-    </div>
-</div>
-<div class="col-md-6 col-xl-3">
-    <div class="card user-widget-card bg-c-blue">
-        <div class="card-block">
-            <i class="feather icon-user bg-simple-c-blue card1-icon"></i>
-            <h4>652</h4>
-            <p>Latest User</p>
-            <a href="#!" class="more-info">More Info</a>
-        </div>
-    </div>
+
+
+<div class="col-xl-4 col-md-6">
+   <div class="card social-card bg-simple-c-blue">
+         <div class="card-block">
+            <div class="row align-items-center">
+               <div class="col-auto">
+                     <i class="feather icon-mail f-34 text-c-blue social-icon"></i>
+               </div>
+               <div class="col">
+                     <h6 class="m-b-0">Mail</h6>
+                     <p>231.2w downloads</p>
+                     <p class="m-b-0">Lorem Ipsum is simply dummy text of the printing</p>
+               </div>
+            </div>
+         </div>
+         <a href="#!" class="download-icon"><i class="feather icon-arrow-down"></i></a>
+   </div>
 </div>
 
-<div class="col-md-6 col-xl-3">
-    <div class="card user-widget-card bg-c-blue">
-        <div class="card-block">
-            <i class="feather icon-user bg-simple-c-blue card1-icon"></i>
-            <h4>652</h4>
-            <p>Latest User</p>
-            <a href="#!" class="more-info">More Info</a>
-        </div>
-    </div>
-</div>
-
-<div class="col-md-6 col-xl-3">
-    <div class="card user-widget-card bg-c-blue">
-        <div class="card-block">
-            <i class="icofont icofont-football-alt bg-simple-c-blue card1-icon"></i>
-            <h4>652</h4>
-            <p>Latest User</p>
-            <a href="#!" class="more-info">More Info</a>
-        </div>
-    </div>
-</div>
-
-</div>
-
+<h4 style="color: black;">2º Passo </h4>
+      <h4 class="modal-title" id="exampleModalLabel"> Realize o Pagamento:</h4>
+      <h1></h1>
+         <script
+             src="https://www.mercadopago.com.br/integrations/v1/web-payment-checkout.js"
+             data-preference-id="<%= @preference_id %>">
+                  
+          </script>
+          
+       <h1><h1> 
+      </div>
+      <h style="font-size: 10px;">  *será acrescentado R$ 0,50 no valor final por causa do juros do mercado pago.</h>

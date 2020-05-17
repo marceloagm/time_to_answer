@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    
+    <%= favicon_link_tag(source = "favicon.ico") %>
 
-     <title>Aposte no Cartola</title>
+     <title>Aposte no CFC</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -28,7 +28,8 @@
   <body>
     <div class="container">
       <nav class="navbar navbar-expand-lg navbar-light bg-light bg-primary" >
-      <%= link_to 'Aposte no CFC', root_path, class:"navbar-brand", style:"color: white;"%>
+     
+        <%= link_to image_tag("logo-site.png", alt:"Aposte no CFC", class:"img-fluid"), site_welcome_index_path	%>
       
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>

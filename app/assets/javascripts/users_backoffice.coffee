@@ -8,7 +8,7 @@
 
 
 //= require jquery/dist/jquery
-//= require jquery-ui-1.12.1/jquery-ui
+//= require rails/ujs/lib/assets/compiled/rails-ujs
 //= require popper.min
 //= require bootstrap/dist/js/bootstrap
 //= require jquery.slimscroll

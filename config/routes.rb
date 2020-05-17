@@ -19,13 +19,18 @@ Rails.application.routes.draw do
     resources :apostas
     
     get "rodada_atual", to: 'apostas#rodada_atual'
+    post "rodada_atual", to: 'apostas#rodada_atual'
     get "rodada_prox", to: 'apostas#rodada_prox'
+    post "rodada_prox", to: 'apostas#rodada_prox'
     get "rodada_dprox", to: 'apostas#rodada_dprox'
+    post "rodada_dprox", to: 'apostas#rodada_dprox'
     get "rodada_ddprox", to: 'apostas#rodada_ddprox'
+    post "rodada_ddprox", to: 'apostas#rodada_ddprox'
     get "minhas_apostas", to: 'apostas#minhas_apostas'
+    get "escolher_time", to: 'apostas#escolher_time'    
     get "teste", to: 'apostas#teste'
-    get "pagamento", to: 'apostas#pagamento'
-     
+    post "teste", to: 'apostas#teste'
+        
     
     
   end

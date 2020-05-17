@@ -1,0 +1,8 @@
+
+var botao_pagar = document.getElementById("pagar");
+
+if(<%= @equipe_verificar.length %> > 0){
+    botao_pagar.href = "<%= @preference_link %>";
+}else{
+    botao_pagar.href = "#";
+}

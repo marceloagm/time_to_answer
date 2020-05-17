@@ -1,0 +1,31 @@
+
+   <%= form_with( local:true, method: "get", class:"cascata") do |f| %>
+              <%= f.select 'equipe_id', options_for_select(@equipes_final.collect{ |u| [u.nome_time, u.id] }), {include_blank: 'Selecione o Time'}, {class:"form-control", id:"time"}  %>
+              <%= f.hidden_field :rodada, :value => @rodada %>
+              <%= f.hidden_field :pagina, :value => "rodada_ddprox" %>
+    <% end %>
+<%= link_to "Pagar", "#", disabled: true , class:"btn btn-primary", id:"escudo" %>
+
+
+<%= javascript_include_tag 'application' %>
+
+ <script>
+         
+      $(document).ready(function(){
+
+        $(".cascata #time").change(function(){
+          
+           $.ajax({
+              method: "POST",
+              url: "teste",
+              data: $("#time").serialize(),
+              dataType: "script",
+              }).done( function(response) {
+                
+                
+              })
+          
+        })
+      });
+
+     </script>
