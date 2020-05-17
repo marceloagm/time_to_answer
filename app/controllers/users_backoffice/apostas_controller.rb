@@ -35,26 +35,6 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         end
        
     end
-    def pagamento
-    
-        
-    end
-    def escolher_time
-        @equipes_total = Equipe.all.where(user_id: @user)
-                
-        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_id: @equipes_total)
-        # descobre quais equipes do usuario já está na aposta
-        x = 0  
-        @equipes_aposta = Array.new
-        while x < @apostador.length 
-            @equipes_aposta[x] = @apostador[x]["equipe_id"]
-            x = x + 1
-        end
-
-        @equipe_resultado = Equipe.all.where(id: @equipes_aposta)
-
-        @equipes_final = @equipes_total - @equipe_resultado
-    end
     
     def minhas_apostas        
         
@@ -71,6 +51,41 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
 
         @rodada = @rodada_prox0 
+        status_pagamento = params["collection_status"]
+        equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada]
+        
+
+        unless status_pagamento.blank?
+            unless status_pagamento == "null"
+                if status_pagamento == "approved"
+                    unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
+                            @aposta = Apostum.new(equipe_salvar)
+                                if @aposta.save
+                                    equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
+                                    pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                    pagamento_aprovado.save
+                                    set_total_rodada(@rodada)
+                                    flash[:success] = "Você está participando dessa aposta."
+                                    redirect_to "/users_backoffice/rodada_atual"
+                                else
+                                    redirect_to "/users_backoffice/rodada_atual"
+                                end 
+                        else
+                            flash[:danger] = "Você já está participando dessa aposta."
+                            redirect_to "/users_backoffice/rodada_atual"
+                        end
+                else
+                    equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
+                    pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                    
+                    pagamento_recusado.save
+                    flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
+                    redirect_to "/users_backoffice/rodada_atual"
+                end
+            end
+        end
+        
+
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
 
                 
@@ -120,7 +135,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             "items": [
                 {   
                     "id": "1",
-                    "title": "PPP #{params[:equipe_id]}",
+                    "title": "Pagamento de Aposta",
                     "description": "TESTE",
                     "quantity": 1,
                     "unit_price": 10.5,
@@ -128,9 +143,9 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 }
             ],
             "back_urls": {
-                "success": "http://localhost:3000/users_backoffice/apostas",
-                "failure": "http://www.failure.com",
-                "pending": "http://www.pending.com"
+                "success": "http://localhost:3000/users_backoffice/rodada_atual",
+                "failure": "http://localhost:3000/users_backoffice/rodada_atual",
+                "pending": "http://localhost:3000/users_backoffice/rodada_atual"
             },
             "auto_return": "all",
             "payment_methods": {
@@ -148,7 +163,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 "installments": 1
             },
             
-            "external_reference": "#{params[:equipe_id]}#{@rodada}",
+            "external_reference": "#{params[:equipe_id]}",
             "expires": true,
             "expiration_date_from": "2016-02-01T12:00:00.000-04:00",
             "expiration_date_to": "#{@hora}"  # Após descobrir o horario que o mercado vai fechar
@@ -163,9 +178,43 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
 
     def rodada_prox
+
+        @rodada = @rodada_prox1
+        status_pagamento = params["collection_status"]
+        equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada]
         
+
+        unless status_pagamento.blank?
+            unless status_pagamento == "null"
+                if status_pagamento == "approved"
+                    unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
+                            @aposta = Apostum.new(equipe_salvar)
+                                if @aposta.save
+                                    equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
+                                    pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                    pagamento_aprovado.save
+                                    set_total_rodada(@rodada)
+                                    flash[:success] = "Você está participando dessa aposta."
+                                    redirect_to "/users_backoffice/rodada_prox"
+                                else
+                                    redirect_to "/users_backoffice/rodada_prox"
+                                end 
+                        else
+                            flash[:danger] = "Você já está participando dessa aposta."
+                            redirect_to "/users_backoffice/rodada_prox"
+                        end
+                else
+                    equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
+                    pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                    
+                    pagamento_recusado.save
+                    flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
+                    redirect_to "/users_backoffice/rodada_prox"
+                end
+            end
+        end
                 
-        @rodada = @rodada_prox1 
+        
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
 
                 
@@ -203,7 +252,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             "items": [
                 {   
                     "id": "1",
-                    "title": "PPP #{params[:equipe_id]}",
+                    "title": "Pagamento de Aposta",
                     "description": "TESTE",
                     "quantity": 1,
                     "unit_price": 10.5,
@@ -211,9 +260,9 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 }
             ],
             "back_urls": {
-                "success": "http://localhost:3000/users_backoffice/apostas",
-                "failure": "http://www.failure.com",
-                "pending": "http://www.pending.com"
+                "success": "http://localhost:3000/users_backoffice/rodada_prox",
+                "failure": "http://localhost:3000/users_backoffice/rodada_prox",
+                "pending": "http://localhost:3000/users_backoffice/rodada_prox"
             },
             "auto_return": "all",
             "payment_methods": {
@@ -231,7 +280,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 "installments": 1
             },
             
-            "external_reference": "#{params[:equipe_id]}#{@rodada}",
+            "external_reference": "#{params[:equipe_id]}",
             
             
         }
@@ -246,6 +295,42 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         
 
         @rodada = @rodada_prox2
+
+        status_pagamento = params["collection_status"]
+        equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada]
+        
+
+        unless status_pagamento.blank?
+            unless status_pagamento == "null"
+                if status_pagamento == "approved"
+                    unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
+                            @aposta = Apostum.new(equipe_salvar)
+                                if @aposta.save
+                                    equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
+                                    pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                    pagamento_aprovado.save
+                                    set_total_rodada(@rodada)
+                                    flash[:success] = "Você está participando dessa aposta."
+                                    redirect_to "/users_backoffice/rodada_dprox"
+                                else
+                                    redirect_to "/users_backoffice/rodada_dprox"
+                                end 
+                        else
+                            flash[:danger] = "Você já está participando dessa aposta."
+                            redirect_to "/users_backoffice/rodada_dprox"
+                        end
+                else
+                    equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
+                    pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                    
+                    pagamento_recusado.save
+                    flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
+                    redirect_to "/users_backoffice/rodada_dprox"
+                end
+            end
+        end
+        
+
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
 
                 
@@ -282,7 +367,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             "items": [
                 {   
                     "id": "1",
-                    "title": "PPP #{params[:equipe_id]}",
+                    "title": "Pagamento de Aposta",
                     "description": "TESTE",
                     "quantity": 1,
                     "unit_price": 10.5,
@@ -290,9 +375,9 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 }
             ],
             "back_urls": {
-                "success": "http://localhost:3000/users_backoffice/apostas",
-                "failure": "http://www.failure.com",
-                "pending": "http://www.pending.com"
+                "success": "http://localhost:3000/users_backoffice/rodada_dprox",
+                "failure": "http://localhost:3000/users_backoffice/rodada_dprox",
+                "pending": "http://localhost:3000/users_backoffice/rodada_dprox"
             },
             "auto_return": "all",
             "payment_methods": {
@@ -310,7 +395,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 "installments": 1
             },
             
-            "external_reference": "#{params[:equipe_id]}#{@rodada}",
+            "external_reference": "#{params[:equipe_id]}",
             
             
         }
@@ -325,6 +410,40 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     def rodada_ddprox
          @rodada = @rodada_prox3 
          
+        status_pagamento = params["collection_status"]
+        equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada]
+        
+
+        unless status_pagamento.blank?
+            unless status_pagamento == "null"
+                if status_pagamento == "approved"
+                    unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
+                            @aposta = Apostum.new(equipe_salvar)
+                                if @aposta.save
+                                    equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
+                                    pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                    pagamento_aprovado.save
+                                    set_total_rodada(@rodada)
+                                    flash[:success] = "Você está participando dessa aposta."
+                                    redirect_to "/users_backoffice/rodada_ddprox"
+                                else
+                                    redirect_to "/users_backoffice/rodada_ddprox"
+                                end 
+                        else
+                            flash[:danger] = "Você já está participando dessa aposta."
+                            redirect_to "/users_backoffice/rodada_ddprox"
+                        end
+                else
+                    equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
+                    pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                    
+                    pagamento_recusado.save
+                    flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
+                    redirect_to "/users_backoffice/rodada_ddprox"
+                end
+            end
+        end
+        
        
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
 
@@ -361,7 +480,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             "items": [
                 {   
                     "id": "1",
-                    "title": "PPP #{params[:equipe_id]}",
+                    "title": "Pagamento de Aposta",
                     "description": "TESTE",
                     "quantity": 1,
                     "unit_price": 10.5,
@@ -369,9 +488,9 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 }
             ],
             "back_urls": {
-                "success": "http://localhost:3000/users_backoffice/apostas",
-                "failure": "http://www.failure.com",
-                "pending": "http://www.pending.com"
+                "success": "http://localhost:3000/users_backoffice/rodada_ddprox",
+                "failure": "http://localhost:3000/users_backoffice/rodada_ddprox",
+                "pending": "http://localhost:3000/users_backoffice/rodada_ddprox"
             },
             "auto_return": "all",
             "payment_methods": {
@@ -389,7 +508,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 "installments": 1
             },
             
-            "external_reference": "#{params[:equipe_id]}#{@rodada}",
+            "external_reference": "#{params[:equipe_id]}",
             
             
         }
