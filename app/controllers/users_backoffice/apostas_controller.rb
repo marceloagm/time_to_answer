@@ -5,36 +5,6 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     before_action :set_mercado, only: [:rodada_atual]
 
     
-    def create
-        action_salvar = params["pagina"]
-        status_pagamento = params["payment_status"]
-        equipe_salvar = Hash["equipe_id"=> params["equipe_id"], "rodada"=> params["rodada"]]
-        rodada_salvar = params["rodada"]
-
-        
-        if status_pagamento == "approved"
-            equipe_pagamento_aprovado = Hash["equipe_id"=> params["equipe_id"], "rodada"=> params["rodada"], "status"=> "Aprovado"]
-            pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
-            pagamento_aprovado.save
-            
-            @aposta = Apostum.new(equipe_salvar)
-                if @aposta.save
-                    set_total_rodada(rodada_salvar)
-                    flash[:success] = "Você está participando dessa aposta."
-                    redirect_to "/users_backoffice/#{action_salvar}"
-                else
-                    redirect_to "/users_backoffice/#{action_salvar}"
-                end 
-        else
-            equipe_pagamento_recusado = Hash["equipe_id"=> params["equipe_id"], "rodada"=> params["rodada"], "status"=> "Recusado"]
-            pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
-            
-            pagamento_recusado.save
-            flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
-            redirect_to "/users_backoffice/#{action_salvar}"
-        end
-       
-    end
     
     def minhas_apostas        
         
@@ -43,38 +13,51 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     end
 
     def rodada_atual
-                
+         # SDK de Mercado Pago
+         require 'mercadopago.rb'
+
+         # Configura credenciais
+         $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
+
         unless @mercado == 1
             redirect_to users_backoffice_welcome_index_path #redirect para tela de resultados dessa aposta
         end  
         
-
+        
 
         @rodada = @rodada_prox0 
         status_pagamento = params["collection_status"]
         equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada]
-        
+        id_pagamento = params["collection_id"] 
 
         unless status_pagamento.blank?
             unless status_pagamento == "null"
                 if status_pagamento == "approved"
-                    unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
+                        unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
                             @aposta = Apostum.new(equipe_salvar)
                                 if @aposta.save
                                     equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
                                     pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
                                     pagamento_aprovado.save
                                     set_total_rodada(@rodada)
-                                    flash[:success] = "Você está participando dessa aposta."
+                                    flash[:success] = "Parabéns! Você está participando dessa aposta."
                                     redirect_to "/users_backoffice/rodada_atual"
                                 else
                                     redirect_to "/users_backoffice/rodada_atual"
                                 end 
                         else
-                            flash[:danger] = "Você já está participando dessa aposta."
+                            flash[:success] = "Parabéns! Você já está participando dessa aposta."
                             redirect_to "/users_backoffice/rodada_atual"
                         end
-                else
+                end
+
+                if status_pagamento == "pending" || status_pagamento == "in_process"
+                    preapproval = $mp.cancel_payment(id_pagamento)
+                    flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
+                    redirect_to "/users_backoffice/rodada_atual"
+                end
+
+                if status_pagamento == "rejected"
                     equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
                     pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
                     
@@ -88,7 +71,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
 
-                
+        #define a numeração das posições        
         @ppp = params["page"].to_i 
         if @ppp == 0
             @contador = 1
@@ -96,10 +79,11 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             @contador = (params["page"].to_i * 20) - 19
         end
         
+        # descobre quais equipes do usuario já está na aposta
         @equipes_total = Equipe.all.where(user_id: @user)
                 
         @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_id: @equipes_total)
-        # descobre quais equipes do usuario já está na aposta
+      
         x = 0  
         @equipes_aposta = Array.new
         while x < @apostador.length 
@@ -111,26 +95,24 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
         @equipes_final = @equipes_total - @equipe_resultado
 
+        #verificação para a tela JS
         @equipe_verificar = params[:equipe_id]
 
+        #verifica na api o fechamento do mercado para poder bloquear pagamento após esse horário
         dia = 31
         mes = 12
         ano = 2020
         hora = 14 
         hora_final= hora - 1
         minuto = 0
-       # "2016-02-28T12:00:00.000-04:00"
-        if dia <= 9
+       if dia <= 9
         @hora = "#{ano}-#{mes}-0#{dia}T#{hora_final}:#{minuto}0:00.000-04:00"
         else
         @hora = "#{ano}-#{mes}-#{dia}T#{hora_final}:#{minuto}0:00.000-04:00"   
         end
-        # SDK de Mercado Pago
-        require 'mercadopago.rb'
 
-        # Configura credenciais
-        $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
-
+        #criar a preferencia, que gera o pagamento do mercadopago
+       
         preference_data = {
             "items": [
                 {   
@@ -165,45 +147,59 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             
             "external_reference": "#{params[:equipe_id]}",
             "expires": true,
-            "expiration_date_from": "2016-02-01T12:00:00.000-04:00",
+            "expiration_date_from": "2020-05-20T12:00:00.000-04:00",
             "expiration_date_to": "#{@hora}"  # Após descobrir o horario que o mercado vai fechar
 
             
             
         }
+        @preapproval = $mp.get_payment("25853346")
         @preference = $mp.create_preference(preference_data)
-        
+        #link para poder passar para o botão após escolher o time
         @preference_link = @preference["response"]["sandbox_init_point"] 
     end
 
 
     def rodada_prox
+        # SDK de Mercado Pago
+        require 'mercadopago.rb'
+
+        # Configura credenciais
+        $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
 
         @rodada = @rodada_prox1
         status_pagamento = params["collection_status"]
         equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada]
-        
+        id_pagamento = params["collection_id"] 
 
         unless status_pagamento.blank?
             unless status_pagamento == "null"
                 if status_pagamento == "approved"
-                    unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
+                        unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
                             @aposta = Apostum.new(equipe_salvar)
                                 if @aposta.save
                                     equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
                                     pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
                                     pagamento_aprovado.save
                                     set_total_rodada(@rodada)
-                                    flash[:success] = "Você está participando dessa aposta."
+                                    flash[:success] = "Parabéns! Você está participando dessa aposta."
                                     redirect_to "/users_backoffice/rodada_prox"
                                 else
                                     redirect_to "/users_backoffice/rodada_prox"
                                 end 
                         else
-                            flash[:danger] = "Você já está participando dessa aposta."
+                            flash[:success] = "Parabéns! Você já está participando dessa aposta."
                             redirect_to "/users_backoffice/rodada_prox"
                         end
-                else
+                end
+
+                if status_pagamento == "pending" || status_pagamento == "in_process"
+                    preapproval = $mp.cancel_payment(id_pagamento)                    
+                    flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
+                    redirect_to "/users_backoffice/rodada_prox"
+                end
+
+                if status_pagamento == "rejected"
                     equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
                     pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
                     
@@ -241,12 +237,6 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
         @equipes_final = @equipes_total - @equipe_resultado
 
-
-
-        require 'mercadopago.rb'
-
-        # Configura credenciais
-        $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
 
         preference_data = {
             "items": [
@@ -292,34 +282,46 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
 
     def rodada_dprox
-        
+        # SDK de Mercado Pago
+        require 'mercadopago.rb'
+
+        # Configura credenciais
+        $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
 
         @rodada = @rodada_prox2
 
         status_pagamento = params["collection_status"]
         equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada]
-        
+        id_pagamento = params["collection_id"] 
 
         unless status_pagamento.blank?
             unless status_pagamento == "null"
                 if status_pagamento == "approved"
-                    unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
+                        unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
                             @aposta = Apostum.new(equipe_salvar)
                                 if @aposta.save
                                     equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
                                     pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
                                     pagamento_aprovado.save
                                     set_total_rodada(@rodada)
-                                    flash[:success] = "Você está participando dessa aposta."
+                                    flash[:success] = "Parabéns! Você está participando dessa aposta."
                                     redirect_to "/users_backoffice/rodada_dprox"
                                 else
                                     redirect_to "/users_backoffice/rodada_dprox"
                                 end 
                         else
-                            flash[:danger] = "Você já está participando dessa aposta."
+                            flash[:success] = "Parabéns! Você já está participando dessa aposta."
                             redirect_to "/users_backoffice/rodada_dprox"
                         end
-                else
+                end
+
+                if status_pagamento == "pending" || status_pagamento == "in_process"
+                    preapproval = $mp.cancel_payment(id_pagamento)
+                    flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
+                    redirect_to "/users_backoffice/rodada_dprox"
+                end
+
+                if status_pagamento == "rejected"
                     equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
                     pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
                     
@@ -358,10 +360,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @equipes_final = @equipes_total - @equipe_resultado
 
         @equipe_verificar = params[:equipe_id]
-        require 'mercadopago.rb'
-
-        # Configura credenciais
-        $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
+        
 
         preference_data = {
             "items": [
@@ -408,41 +407,55 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
 
     def rodada_ddprox
+        # SDK de Mercado Pago
+        require 'mercadopago.rb'
+
+        # Configura credenciais
+        $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
+
          @rodada = @rodada_prox3 
          
-        status_pagamento = params["collection_status"]
-        equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada]
-        
-
-        unless status_pagamento.blank?
-            unless status_pagamento == "null"
-                if status_pagamento == "approved"
-                    unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
-                            @aposta = Apostum.new(equipe_salvar)
-                                if @aposta.save
-                                    equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
-                                    pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
-                                    pagamento_aprovado.save
-                                    set_total_rodada(@rodada)
-                                    flash[:success] = "Você está participando dessa aposta."
-                                    redirect_to "/users_backoffice/rodada_ddprox"
-                                else
-                                    redirect_to "/users_backoffice/rodada_ddprox"
-                                end 
-                        else
-                            flash[:danger] = "Você já está participando dessa aposta."
-                            redirect_to "/users_backoffice/rodada_ddprox"
-                        end
-                else
-                    equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
-                    pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
-                    
-                    pagamento_recusado.save
-                    flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
-                    redirect_to "/users_backoffice/rodada_ddprox"
-                end
-            end
-        end
+         status_pagamento = params["collection_status"]
+         equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada]
+         id_pagamento = params["collection_id"] 
+ 
+         unless status_pagamento.blank?
+             unless status_pagamento == "null"
+                 if status_pagamento == "approved"
+                         unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
+                             @aposta = Apostum.new(equipe_salvar)
+                                 if @aposta.save
+                                     equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
+                                     pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                     pagamento_aprovado.save
+                                     set_total_rodada(@rodada)
+                                     flash[:success] = "Parabéns! Você está participando dessa aposta."
+                                     redirect_to "/users_backoffice/rodada_ddprox"
+                                 else
+                                     redirect_to "/users_backoffice/rodada_ddprox"
+                                 end 
+                         else
+                             flash[:success] = "Parabéns! Você já está participando dessa aposta."
+                             redirect_to "/users_backoffice/rodada_ddprox"
+                         end
+                 end
+ 
+                 if status_pagamento == "pending" || status_pagamento == "in_process"
+                     preapproval = $mp.cancel_payment(id_pagamento)
+                     flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
+                     redirect_to "/users_backoffice/rodada_ddprox"
+                 end
+ 
+                 if status_pagamento == "rejected"
+                     equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
+                     pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                     
+                     pagamento_recusado.save
+                     flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
+                     redirect_to "/users_backoffice/rodada_ddprox"
+                 end
+             end
+         end
         
        
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
@@ -471,11 +484,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @equipes_final = @equipes_total - @equipe_resultado
 
         @equipe_verificar = params[:equipe_id]
-        require 'mercadopago.rb'
-
-        # Configura credenciais
-        $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
-
+        
         preference_data = {
             "items": [
                 {   
