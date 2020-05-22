@@ -13,8 +13,7 @@ class UsersBackoffice::EquipesController < UsersBackofficeController
 
     def create
         unless params_equipe[:nome_time].blank?
-            unless Equipe.exists?(nome_time: params_equipe[:nome_time])
-                
+            unless Equipe.exists?(nome_time: params_equipe[:nome_time], user_id: @user)
                 @equipe = Equipe.new(params_equipe)
                     if @equipe.save
                         flash[:success] = "Time Adicionado com Sucesso."
@@ -23,21 +22,24 @@ class UsersBackoffice::EquipesController < UsersBackofficeController
                     else
                         redirect_to users_backoffice_equipes_path
                     end 
-            else            
+            else
                 redirect_to users_backoffice_equipes_path
-                flash[:danger] = "Esse time já está cadastrado"
+                flash[:danger] = "Esse time já está cadastrado na sua conta."
             end
-
         else
             flash[:danger] = "Por favor todos os campos devem está preenchidos."
             redirect_to users_backoffice_equipes_path
         end
-
     end
+
+           
 
     def destroy
         unless Apostum.exists?(equipe_id: @equipe)
             if @equipe.destroy
+            admin_statistic = AdminStatistic.find_or_create_by(event: "TOTAL_EQUIPES")
+            admin_statistic.value += -1
+            admin_statistic.save
             flash[:success] = "Time excluído com sucesso"
             redirect_to users_backoffice_equipes_path 
             else

@@ -22,17 +22,18 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         unless @mercado == 1
             redirect_to users_backoffice_welcome_index_path #redirect para tela de resultados dessa aposta
         end  
-        
-        
+                
 
         @rodada = @rodada_prox0 
         status_pagamento = params["collection_status"]
-        equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada]
         id_pagamento = params["collection_id"] 
 
         unless status_pagamento.blank?
             unless status_pagamento == "null"
                 if status_pagamento == "approved"
+                    equipe_verificar_salvar = Equipe.all.where(id: params["external_reference"])
+                    equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
+                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar]
                         unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
                             @aposta = Apostum.new(equipe_salvar)
                                 if @aposta.save
@@ -52,7 +53,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 end
 
                 if status_pagamento == "pending" || status_pagamento == "in_process"
-                    preapproval = $mp.cancel_payment(id_pagamento)
+                    preapproval = $mp.cancel_payment(id_pagamento)                    
                     flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
                     redirect_to "/users_backoffice/rodada_atual"
                 end
@@ -81,20 +82,28 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         
         # descobre quais equipes do usuario já está na aposta
         @equipes_total = Equipe.all.where(user_id: @user)
-                
-        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_id: @equipes_total)
+
+        y = 0  
+        @equipes_nome = Array.new
+        while y < @equipes_total.length 
+            @equipes_nome[y] = @equipes_total[y]["nome_time"]
+            y = y + 1
+        end
+                        
+        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_nome: @equipes_nome)
       
         x = 0  
         @equipes_aposta = Array.new
         while x < @apostador.length 
-            @equipes_aposta[x] = @apostador[x]["equipe_id"]
+            @equipes_aposta[x] = @apostador[x]["equipe_nome"]
             x = x + 1
         end
 
-        @equipe_resultado = Equipe.all.where(id: @equipes_aposta)
+        @equipe_resultado = Equipe.all.where(nome_time: @equipes_aposta)
 
         @equipes_final = @equipes_total - @equipe_resultado
 
+        
         #verificação para a tela JS
         @equipe_verificar = params[:equipe_id]
 
@@ -153,7 +162,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             
             
         }
-        @preapproval = $mp.get_payment("25853346")
+       
         @preference = $mp.create_preference(preference_data)
         #link para poder passar para o botão após escolher o time
         @preference_link = @preference["response"]["sandbox_init_point"] 
@@ -169,12 +178,14 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
         @rodada = @rodada_prox1
         status_pagamento = params["collection_status"]
-        equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada]
         id_pagamento = params["collection_id"] 
 
         unless status_pagamento.blank?
             unless status_pagamento == "null"
                 if status_pagamento == "approved"
+                    equipe_verificar_salvar = Equipe.all.where(id: params["external_reference"])
+                    equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
+                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar]
                         unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
                             @aposta = Apostum.new(equipe_salvar)
                                 if @aposta.save
@@ -213,30 +224,38 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
 
-                
+        #define a numeração das posições        
         @ppp = params["page"].to_i 
         if @ppp == 0
             @contador = 1
         else
             @contador = (params["page"].to_i * 20) - 19
         end
-
-        @equipes_total = Equipe.all.where(user_id: @user)
-                
-        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_id: @equipes_total)
-
+        
         # descobre quais equipes do usuario já está na aposta
+        @equipes_total = Equipe.all.where(user_id: @user)
+
+        y = 0  
+        @equipes_nome = Array.new
+        while y < @equipes_total.length 
+            @equipes_nome[y] = @equipes_total[y]["nome_time"]
+            y = y + 1
+        end
+                        
+        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_nome: @equipes_nome)
+      
         x = 0  
         @equipes_aposta = Array.new
         while x < @apostador.length 
-            @equipes_aposta[x] = @apostador[x]["equipe_id"]
+            @equipes_aposta[x] = @apostador[x]["equipe_nome"]
             x = x + 1
         end
 
-        @equipe_resultado = Equipe.all.where(id: @equipes_aposta)
+        @equipe_resultado = Equipe.all.where(nome_time: @equipes_aposta)
 
         @equipes_final = @equipes_total - @equipe_resultado
 
+        @equipe_verificar = params[:equipe_id]
 
         preference_data = {
             "items": [
@@ -277,7 +296,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @preference = $mp.create_preference(preference_data)
         
         @preference_link = @preference["response"]["sandbox_init_point"] 
-        @equipe_verificar = params[:equipe_id]
+        
     end
 
 
@@ -332,35 +351,40 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             end
         end
         
-
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
 
-                
+        #define a numeração das posições        
         @ppp = params["page"].to_i 
         if @ppp == 0
             @contador = 1
         else
             @contador = (params["page"].to_i * 20) - 19
         end
-
-        @equipes_total = Equipe.all.where(user_id: @user)
-                
-        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_id: @equipes_total)
-
+        
         # descobre quais equipes do usuario já está na aposta
+        @equipes_total = Equipe.all.where(user_id: @user)
+
+        y = 0  
+        @equipes_nome = Array.new
+        while y < @equipes_total.length 
+            @equipes_nome[y] = @equipes_total[y]["nome_time"]
+            y = y + 1
+        end
+                        
+        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_nome: @equipes_nome)
+      
         x = 0  
         @equipes_aposta = Array.new
         while x < @apostador.length 
-            @equipes_aposta[x] = @apostador[x]["equipe_id"]
+            @equipes_aposta[x] = @apostador[x]["equipe_nome"]
             x = x + 1
         end
 
-        @equipe_resultado = Equipe.all.where(id: @equipes_aposta)
+        @equipe_resultado = Equipe.all.where(nome_time: @equipes_aposta)
 
         @equipes_final = @equipes_total - @equipe_resultado
-
-        @equipe_verificar = params[:equipe_id]
         
+        @equipe_verificar = params[:equipe_id]
 
         preference_data = {
             "items": [
@@ -458,30 +482,38 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
          end
         
        
-        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
+         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
 
-                
-        @ppp = params["page"].to_i 
-        if @ppp == 0
-            @contador = 1
-        else
-            @contador = (params["page"].to_i * 20) - 19
-        end
-        @equipes_total = Equipe.all.where(user_id: @user)
-                
-        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_id: @equipes_total)
-
-        # descobre quais equipes do usuario já está na aposta
-        x = 0  
-        @equipes_aposta = Array.new
-        while x < @apostador.length 
-            @equipes_aposta[x] = @apostador[x]["equipe_id"]
-            x = x + 1
-        end
-
-        @equipe_resultado = Equipe.all.where(id: @equipes_aposta)
-
-        @equipes_final = @equipes_total - @equipe_resultado
+         #define a numeração das posições        
+         @ppp = params["page"].to_i 
+         if @ppp == 0
+             @contador = 1
+         else
+             @contador = (params["page"].to_i * 20) - 19
+         end
+         
+         # descobre quais equipes do usuario já está na aposta
+         @equipes_total = Equipe.all.where(user_id: @user)
+ 
+         y = 0  
+         @equipes_nome = Array.new
+         while y < @equipes_total.length 
+             @equipes_nome[y] = @equipes_total[y]["nome_time"]
+             y = y + 1
+         end
+                         
+         @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_nome: @equipes_nome)
+       
+         x = 0  
+         @equipes_aposta = Array.new
+         while x < @apostador.length 
+             @equipes_aposta[x] = @apostador[x]["equipe_nome"]
+             x = x + 1
+         end
+ 
+         @equipe_resultado = Equipe.all.where(nome_time: @equipes_aposta)
+ 
+         @equipes_final = @equipes_total - @equipe_resultado
 
         @equipe_verificar = params[:equipe_id]
         

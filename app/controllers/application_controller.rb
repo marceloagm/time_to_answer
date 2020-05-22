@@ -3,8 +3,9 @@ class ApplicationController < ActionController::Base
     
     add_flash_types :danger, :info, :warning, :success
 
+    
     protected 
-
+    
     def layout_by_resource
 
         if devise_controller?

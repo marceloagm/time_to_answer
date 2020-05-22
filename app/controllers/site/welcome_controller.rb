@@ -5,7 +5,11 @@ class Site::WelcomeController < SiteController
     if user_signed_in?
         redirect_to users_backoffice_welcome_index_path
     end
-
+    
+    if admin_signed_in?
+        redirect_to admins_backoffice_welcome_index_path
+    end
+    
     @rodada_atual = 1 #será uma consulta a API
 
     @rodada_prox0 = @rodada_atual 

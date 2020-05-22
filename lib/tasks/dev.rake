@@ -10,8 +10,8 @@ namespace :dev do
       show_spinner("Criando BD...") { %x(rails db:create) }
       show_spinner("Migrando BD...") { %x(rails db:migrate) }
       show_spinner("Criando o Administrador padrão...") { %x(rails dev:add_default_admin) }
-      show_spinner("Criando o Administradores extras...") { %x(rails dev:add_extras_admins) }
       show_spinner("Criando o Usuário padrão...") { %x(rails dev:add_default_user) }
+      show_spinner("Criando o Equipe padrão...") { %x(rails dev:add_default_equipe) }
       show_spinner("Adiciona o valor total das rodadas...") { %x(rails dev:add_default_value_aposta) }
     else
       puts "Você não está em ambiente de desenvolvimento!"
@@ -26,25 +26,24 @@ namespace :dev do
          password_confirmation: DEFAULT_PASSWORD
       )
    end
-
-  
-
-   desc "Adiciona o administradores extras"
-   task add_extras_admins: :environment do
-        10.times do |i|
-          Admin.create!(
-           email: Faker::Internet.email,
-           password: DEFAULT_PASSWORD,
-           password_confirmation: DEFAULT_PASSWORD
-       )
-    end
-  end
+ 
    desc "Adiciona o usuário padrão"
     task add_default_user: :environment do
       User.create!(
         email: 'user@user.com',
         password: DEFAULT_PASSWORD,
         password_confirmation: DEFAULT_PASSWORD
+      )
+    end
+
+    desc "Adiciona o equipe padrao"
+    task add_default_equipe: :environment do
+      Equipe.create!(
+        nome_time: "Ligas do Cartola Teste Site",
+        cartoleiro: "Admin Padrao",
+        slug: "admin",
+        user_id: 1,
+        escudo: "Admin"
       )
     end
 

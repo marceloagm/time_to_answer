@@ -1,0 +1,35 @@
+<h1 class="text-center"> EQUIPES </h1>
+
+<div class="card-block table-border-style">
+<div class="table-responsive">
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th style="text-align: center;">Time</th>
+            <th style="text-align: center;">Cartoleiro</th>
+            <th style="text-align: center;">Usuário</th>
+            <th style="text-align: center;">Deletar</th>
+        </tr>
+    </thead>
+    <tbody>
+       <% @equipes.each do |equipe| %>
+        <tr>
+            <th scope="row" style="text-align: center;"><%= equipe.nome_time %></th>
+            <td style="text-align: center;"><%= equipe.cartoleiro %>  </td>
+            <td style="text-align: center;"><%= equipe.user.email %>  </td>
+           <td style="text-align: center;"> 
+          <%= link_to admins_backoffice_equipes_path(:id => equipe), class:"btn btn-danger btn-icon", style:""  do %>
+                        
+                        <i class="icofont icofont-ui-remove justify-content-center"></i>
+        <% end %>          
+                </td>    
+        </tr>
+     <% end %>
+    </tbody>
+</table>
+<h1></h1>
+<div class="pagination justify-content-center">
+    <%= paginate @equipes %>
+ </div>
+</div>
+</div>

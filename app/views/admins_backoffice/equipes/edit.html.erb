@@ -1,0 +1,70 @@
+
+<%= @equipe.inspect%>
+ <div class="card-block">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+            <div class="x_title">
+            <h2 style="text-align: center;">Dados da Equipe </h2>
+            <ul class="nav navbar-right panel_toolbox">
+                                             
+            </ul>
+            <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+           
+                <%= form_with(url: admins_backoffice_equipes_path, model: @equipe, local: true, class:"form-horizontal form-label-left") do |form| %>
+                    <div class="form-group row">
+                            <%= form.label :id, class:"col-sm-2 col-form-label" %>
+                            <div class="col-sm-10">
+                            <%= form.text_field :id, class:"form-control",readonly:true %>
+                            </div>
+                    </div>
+
+                    <div class="form-group row">
+                            <%= form.label :nome_time, class:"col-sm-2 col-form-label" %>
+                            <div class="col-sm-10">
+                            <%= form.text_field :nome_time, class:"form-control" %>
+                            </div>
+                    </div>
+
+                    <div class="form-group row">
+                            <%= form.label :cartoleiro, class:"col-sm-2 col-form-label" %>
+                            <div class="col-sm-10">
+                            <%= form.text_field :cartoleiro, class:"form-control", readonly:true %>
+                            </div>
+                    </div>
+
+                    <div class="form-group row">
+                            <%= form.label :slug, class:"col-sm-2 col-form-label" %>
+                            <div class="col-sm-10">
+                            <%= form.text_field :slug, class:"form-control ", readonly:true %>
+                            </div>
+                    </div>
+
+                    <div class="form-group row">
+                            <%= form.label :user_id, class:"col-sm-2 col-form-label" %>
+                            <div class="col-sm-10">
+                            <%= form.text_field :user_id, class:"form-control " %>
+                            </div>
+                        </div>
+                    <div class="form-group row">
+                            <%= form.label :escudo, class:"col-sm-2 col-form-label" %>
+                            <div class="col-sm-10">
+                            <%= form.text_field :escudo, class:"form-control ", readonly:true %>
+                            </div>
+                        </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                    <div style="text-align: center;"class="">
+                        <button type="submit" class="btn btn-success">Salvar</button>
+                    </div>
+                    </div>
+
+            <% end %>
+            </div>
+        </div>
+        </div>
+    </div>
+
+

@@ -10,7 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_08_120743) do
+ActiveRecord::Schema.define(version: 2020_05_22_185639) do
+
+  create_table "admin_statistics", force: :cascade do |t|
+    t.string "event"
+    t.integer "value", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "admins", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -29,6 +36,7 @@ ActiveRecord::Schema.define(version: 2020_05_08_120743) do
     t.integer "equipe_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "equipe_nome"
     t.index ["equipe_id"], name: "index_aposta_on_equipe_id"
   end
 
@@ -48,11 +56,6 @@ ActiveRecord::Schema.define(version: 2020_05_08_120743) do
     t.datetime "updated_at", null: false
     t.text "escudo"
     t.index ["user_id"], name: "index_equipes_on_user_id"
-  end
-
-  create_table "preferences", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "status_pagamentos", force: :cascade do |t|

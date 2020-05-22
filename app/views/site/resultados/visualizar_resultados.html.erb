@@ -24,7 +24,7 @@
 
 
 <% @apostas.each do |aposta| %>
-<%= link_to  site_visualizar_time_time_path(:time => "#{aposta.equipe.nome_time}"), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
+<%= link_to  site_visualizar_time_time_path(:time => "#{aposta.equipe.id}"), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
       <div class="card widget-card-1">
         <div class="card-block-small">
             <i class=" bg-c-blue card1-icon"><%= @contador %></i>

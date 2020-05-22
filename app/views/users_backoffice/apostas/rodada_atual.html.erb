@@ -1,5 +1,5 @@
 
-<%= @preapproval["response"]["status"] %>
+
 <h1 class="text-center"> APOSTA RODADA <%= @rodada %> </h1>
 
 <!-- Botão para acionar modal -->
@@ -49,7 +49,7 @@
 
 
 <% @apostas.each do |aposta| %>
-<%= link_to  users_backoffice_visualizar_time_time_path(:time => "#{aposta.equipe.nome_time}"), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
+<%= link_to  users_backoffice_visualizar_time_time_path(:time => "#{aposta.equipe.id}"), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
       <div class="card widget-card-1">
         <div class="card-block-small">
             <i class=" bg-c-blue card1-icon"><%= @contador %></i>
@@ -90,7 +90,8 @@
                     <h4 class="modal-title" id="exampleModalLabel" style="color: red; text-align: center;"> <b>Atenção</b></h4>
               <h5 class="modal-title" id="exampleModalLabel"><b> Você não consegue participar dessa aposta por um dos motivos a seguir:</b></h5>
               <h5 class="modal-title" id="exampleModalLabel"> 1º Seu(s) Time(s) já está(ão) participando dessa aposta;</h5>
-              <h5 class="modal-title" id="exampleModalLabel"> 2º Você não tem time(s) adicionado(s) a sua conta, para adicionar vá até o menu lateral "Meus Times" ou senão clique no botão a seguir: </h5>
+              <h5 class="modal-title" id="exampleModalLabel"> 2º Outra pessoa adicionou seu time a conta dele e está participando dessa aposta, caso seja isso, entre em contato conosco.</h5>
+              <h5 class="modal-title" id="exampleModalLabel"> 3º Você não tem time(s) adicionado(s) a sua conta, para adicionar vá até o menu lateral "Meus Times" ou senão clique no botão a seguir: </h5>
               <%= link_to "Adicionar TIme", users_backoffice_equipes_path, class:"btn btn-primary", type:"submit" %>
 
    <% else %>

@@ -1,0 +1,29 @@
+<h1 class="text-center"> APOSTA RODADA <%= params["rodada"] %> </h1>
+
+<div class="card-block table-border-style">
+<div class="table-responsive">
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th style="text-align: center;">Time</th>
+            <th style="text-align: center;">Entrou na Aposta</th>
+        </tr>
+    </thead>
+    <tbody>
+       <% @apostas.each do |aposta| %>
+        <tr>
+            <th scope="row" style="text-align: center;"><%= aposta.equipe.nome_time %></th>
+            
+            <td style="text-align: center;"><%= aposta.created_at %>  </td>
+                    
+                   
+        </tr>
+     <% end %>
+    </tbody>
+</table>
+<h1></h1>
+<div class="pagination justify-content-center">
+    <%= paginate @apostas %>
+ </div>
+</div>
+</div>

@@ -1,0 +1,37 @@
+<h1 class="text-center"> LISTA DE USUÁRIOS </h1>
+
+<div class="card-block table-border-style">
+<div class="table-responsive">
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>E-mail</th>
+            <th>Deletar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @usuarios.each do |user| %>
+        <tr>
+            <th scope="row"><%= user.id%></th>
+           
+                    <td> <%= user.email%> </td>
+                    <td style="width: 100px; text-align: center;">
+                        
+                        <%= link_to admins_backoffice_users_path(:user => user), method: :delete, class:"btn btn-danger btn-icon", style:"", data: { confirm: "Deseja realmente excluir o time: #{user.email}" }  do %>
+                        
+                        <i class="icofont icofont-ui-remove justify-content-center"></i>
+                        <% end %>
+                        
+                      
+                    </td>
+        </tr>
+     <% end %>
+    </tbody>
+</table>
+<h1></h1>
+<div class="pagination justify-content-center">
+    <%= paginate @usuarios %>
+ </div>
+</div>
+</div>
