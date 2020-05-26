@@ -9,7 +9,7 @@ class AdminsBackoffice::EquipesController < AdminsBackofficeController
     def update
         @equipe = Equipe.find(params_equipe[:id])
         if @equipe.update(params_equipe)
-            flash[:success] = "Usuário atualizado com sucesso."
+            flash[:success] = "Equipe atualizada com sucesso."
             redirect_to admins_backoffice_equipes_path(:id =>params_equipe[:id])
           else
             render :edit

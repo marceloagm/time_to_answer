@@ -49,10 +49,10 @@
 
 
 <% @apostas.each do |aposta| %>
-<%= link_to  users_backoffice_visualizar_time_time_path(:time => "#{aposta.equipe.nome_time}"), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
+<%= link_to  users_backoffice_visualizar_time_time_path(:time => "#{aposta.equipe.id}"), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
       <div class="card widget-card-1">
         <div class="card-block-small">
-            <i class=" bg-c-blue card1-icon"><%= @contador %></i>
+            <i class=" bg-c-blue card1-icon"><h5><%= @contador %></h5></i>
                     <div class="row">
                     <div class="col-6">
                     

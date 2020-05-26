@@ -35,20 +35,25 @@ class UsersBackoffice::EquipesController < UsersBackofficeController
            
 
     def destroy
-        unless Apostum.exists?(equipe_id: @equipe)
-            if @equipe.destroy
-            admin_statistic = AdminStatistic.find_or_create_by(event: "TOTAL_EQUIPES")
-            admin_statistic.value += -1
-            admin_statistic.save
-            flash[:success] = "Time excluído com sucesso"
-            redirect_to users_backoffice_equipes_path 
+        unless @equipe.blank?
+            unless Apostum.exists?(equipe_id: @equipe)
+                if @equipe.destroy
+                admin_statistic = AdminStatistic.find_or_create_by(event: "TOTAL_EQUIPES")
+                admin_statistic.value += -1
+                admin_statistic.save
+                flash[:success] = "Time excluído com sucesso"
+                redirect_to users_backoffice_equipes_path 
+                else
+                    redirect_to users_backoffice_equipes_path
+                end 
             else
                 redirect_to users_backoffice_equipes_path
-            end 
-         else
+                flash[:danger] = "Esse time está participando de uma aposta, para exclui-lo entre em contato conosco."
+            end
+        else
             redirect_to users_backoffice_equipes_path
-            flash[:danger] = "Esse time está participando de uma aposta, para exclui-lo entre em contato conosco."
-         end
+            flash[:danger] = "Time excluído com sucesso"
+        end
       
       end
 

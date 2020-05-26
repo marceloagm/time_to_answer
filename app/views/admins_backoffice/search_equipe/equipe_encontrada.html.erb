@@ -1,29 +1,18 @@
-<h1 class="text-center"> EQUIPES </h1>
-<div class="d-flex flex-row-reverse bd-highlight">
-  <%= form_with(url: admins_backoffice_search_equipe_path, local: true, method: :get) do |equipe| %>
-  <div class="p-3 bd-highlight">
-    <div class="input-group input-group-button col-sm-12 col-xl-12">
-        <%= equipe.text_field :term, class:"form-control", placeholder:"Pesquisar Equipe" %>
-          <button type="submit" class="input-group-addon btn btn-primary" id="basic-addon10">
-            <span class=""><i class="icofont icofont-ui-search"></i></span>
-        </button>
-    </div>
-</div>
- <% end %>
-</div>
+<% unless @equipe_encontrada == []%>
+<h1 class="text-center"> EQUIPE ENCONTRADA </h1>
 <div class="card-block table-border-style">
 <div class="table-responsive">
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th style="text-align: center;">Time</th>
+           <th style="text-align: center;">Time</th>
             <th style="text-align: center;">Cartoleiro</th>
             <th style="text-align: center;">Usuário</th>
             <th style="text-align: center;">Deletar</th>
         </tr>
     </thead>
     <tbody>
-       <% @equipes.each do |equipe| %>
+        <% @equipe_encontrada.each do |equipe| %>
         <tr>
             <th scope="row" style="text-align: center;"><%= equipe.nome_time %></th>
             <td style="text-align: center;"><%= equipe.cartoleiro %>  </td>
@@ -39,9 +28,13 @@
     </tbody>
 </table>
 <h1></h1>
-<div class="pagination justify-content-center">
-    <%= paginate @equipes %>
- </div>
+
 </div>
 </div>
 
+
+<% else %>
+<h1 class="text-center" style="color: red;"><b> ATENÇÃO </b></h1>
+<h2 class="text-center"> Não encontramos a equipe <b><%= @equipe %></b>, por favor verifique se digitou o nome correto. </h2>
+
+<% end %>

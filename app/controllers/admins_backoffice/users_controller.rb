@@ -1,21 +1,34 @@
 class AdminsBackoffice::UsersController < AdminsBackofficeController
-    def destroy
-      user = params[:user]
-        deletar = User.destroy(user)
-        if deletar.destroy
-            redirect_to admins_backoffice_exibir_usuarios_path, notice: "Usuário excluído com sucesso."
-            admin_statistic = AdminStatistic.find_or_create_by(event: "TOTAL_USERS")
-            admin_statistic.value += -1
-            admin_statistic.save
-        else
-            redirect_to admins_backoffice_exibir_usuarios_path, notice: "Usuário não excluído com sucesso."
-        end
+    before_action :set_user, only: [:edit]
 
-    end  
+
+    def edit
+    end
+  
+    def update
+        @user = User.find(params_user[:id])    
+          if @user.update(params_user)
+            redirect_to admins_backoffice_users_path(:user =>params_user[:id])
+            flash[:success] = "Usuário atualizado com sucesso."
+          else
+            redirect_to admins_backoffice_users_path
+          end 
+    end
 
     def exibir_usuarios
         
         @usuarios = User.all.page(params[:page]).per(20)
+    end
+
+    private
+
+    def params_user
+      params.require(:user).permit(:id, :email)
+    end
+
+
+    def set_user
+        @user = User.find(params[:user])
     end
 
 end

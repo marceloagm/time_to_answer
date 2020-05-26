@@ -37,12 +37,15 @@ Rails.application.routes.draw do
   namespace :admins_backoffice do
     get 'welcome/index' #Dashboard
     get "exibir_usuarios", to: 'users#exibir_usuarios' 
-    delete "users", to: 'users#destroy' 
     get 'resultados/index'
     get 'resultados/visualizar_resultados'
     get 'equipes/visualizar_equipes'
     get 'equipes', to: 'equipes#edit'
     patch 'equipes', to: 'equipes#update' 
+    get 'users', to: 'users#edit'
+    patch 'users', to: 'users#update' 
+    get 'search_user', to: 'search_user#usuario_encontrado'
+    get 'search_equipe', to: 'search_equipe#equipe_encontrada'
     
   
     resources :admins  #Administradores

@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-         <%= link_to users_backoffice_equipe_path(equipe), method: :delete, class:"download-icon red", style:"color:red;", data: { confirm: "Deseja realmente excluir o time: #{equipe.nome_time}" }  do %>
+         <%= link_to users_backoffice_equipe_path(equipe), method: :delete, class:"download-icon red", style:"color:red;", data: {commit: 'Sim', cancel: 'Cancelar', title: 'Você tem certeza?', confirm: "Deseja realmente excluir o time: <b> #{equipe.nome_time} </b>" }  do %>
       <i class="icofont icofont-error"></i>
     <% end %>
     </div>

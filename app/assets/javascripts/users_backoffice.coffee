@@ -7,7 +7,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 
-//= require jquery/dist/jquery
+
 //= require rails/ujs/lib/assets/compiled/rails-ujs
 //= require popper.min
 //= require bootstrap/dist/js/bootstrap
@@ -26,6 +26,6 @@
 //= require malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar
 //= require custom
 //= require excanvas
-
+//= require data-confirm-modal
 
 

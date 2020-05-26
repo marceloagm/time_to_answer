@@ -1,18 +1,5 @@
-<h1 class="text-center"> LISTA DE USUÁRIOS </h1>
-<div class="d-flex flex-row-reverse bd-highlight">
-  <%= form_with(url: admins_backoffice_search_user_path, local: true, method: :get) do |user| %>
-  <div class="p-3 bd-highlight">
-    <div class="input-group input-group-button col-sm-12 col-xl-12">
-        <%= user.text_field :term, class:"form-control", placeholder:"Pesquisar Usuário" %>
-          <button type="submit" class="input-group-addon btn btn-primary" id="basic-addon10">
-            <span class=""><i class="icofont icofont-ui-search"></i></span>
-        </button>
-    </div>
-</div>
- <% end %>
-</div>
-
-
+<% unless @user_encontrado == []%>
+<h1 class="text-center"> USUÁRIO ENCONTRADO </h1>
 <div class="card-block table-border-style">
 <div class="table-responsive">
 <table class="table table-bordered">
@@ -24,7 +11,7 @@
         </tr>
     </thead>
     <tbody>
-        <% @usuarios.each do |user| %>
+        <% @user_encontrado.each do |user| %>
         <tr>
             <th scope="row"><%= user.id%></th>
            
@@ -43,8 +30,13 @@
     </tbody>
 </table>
 <h1></h1>
-<div class="pagination justify-content-center">
-    <%= paginate @usuarios %>
- </div>
+
 </div>
 </div>
+
+
+<% else %>
+<h1 class="text-center" style="color: red;"><b> ATENÇÃO </b></h1>
+<h2 class="text-center"> Não encontramos o usuário <b><%= @user %></b>, por favor verifique se digitou o e-mail correto. </h2>
+
+<% end %>
