@@ -1,8 +1,14 @@
 class UsersBackoffice::ApostasController < UsersBackofficeController
+    
+    require 'net/http'
+    require 'uri'
+    require 'json'
+    
     before_action :rodadas  
     before_action :set_user
     before_action :set_equipe 
     before_action :set_mercado, only: [:rodada_atual]
+    before_action :headers, only: [:rodada_atual]
 
         
     def minhas_apostas        
@@ -12,6 +18,30 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     end
 
     def rodada_atual
+
+        uri = URI.parse("https://appws.picpay.com/ecommerce/public/payments")
+        request = Net::HTTP::Post.new(uri)
+        request.content_type = "application/json"
+        request["X-Picpay-Token"] = "5b008cef7f321d00ef2367b2"
+        request.body = JSON.dump({
+          "referenceId" => "102030",
+          "callbackUrl" => "http://localhost:3000/users_backoffice/rodada_atual",
+          "returnUrl" => "http://localhost:3000/users_backoffice/rodada_atual",
+          "value" => 20.51,
+          "expiresAt" => "2022-05-01T16:00:00-03:00"
+        })
+        
+        req_options = {
+          use_ssl: uri.scheme == "https",
+        }
+        
+        @response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+          http.request(request)
+        end
+
+
+
+
          # SDK de Mercado Pago
          require 'mercadopago.rb'
 
@@ -165,6 +195,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @preference = $mp.create_preference(preference_data)
         #link para poder passar para o botão após escolher o time
         @preference_link = @preference["response"]["sandbox_init_point"] 
+
+       
     end
 
 
@@ -582,7 +614,12 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @user = User.find(current_user.id)
         
     end
-
+     def headers
+      header = [
+          'Content-Type': 'application/json',
+          'x-picpay-token': '5b008cef7f321d00ef2367b2',
+      ]
+    end
     def rodadas
         @rodada_atual = 1  #será uma consulta a API em qual rodada está
     

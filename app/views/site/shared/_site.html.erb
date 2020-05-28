@@ -7,8 +7,8 @@
                 
                 <h5 class="m-b-10"><b> Valor: </b>R$ 10,00</h5>
                 <h5 class="m-b-10"><b> Participante(s): </b><%= @total_aposta0 %> </h5>
-                <h5 class="m-b-10"><b>Valor arrecadado: </b>R$ <%= @valor_total_aposta0.to_f%>0</h5>
-                <%= link_to @botao_text, @mercado_path , class:"btn btn-#{@botao_cor} btn-sm btn-round f-20"  %>
+                <h5 class="m-b-10"><b>Valor arrecadado: </b><%= @valor_total_aposta0%></h5>
+                <%= link_to @botao_text, @mercado_path , class:"btn btn-#{@botao_cor} btn-sm btn-round f-#{@f}", style:"white-space: normal;"  %>
                 
             </div>
         </div>
@@ -22,7 +22,7 @@
                 
                 <h5 class="m-b-10"><b> Valor: </b>R$ 10,00</h5>
                 <h5 class="m-b-10"><b> Participante(s): </b><%= @total_aposta1 %> </h5>
-                <h5 class="m-b-10"><b>Valor arrecadado: </b>R$ <%= @valor_total_aposta1.to_f%>0</h5>
+                <h5 class="m-b-10"><b>Valor arrecadado: </b><%= @valor_total_aposta1%></h5>
                 <%= link_to "Participar", users_backoffice_rodada_prox_path, class:"btn btn-primary btn-sm btn-round f-20" %>
             
                 
@@ -37,7 +37,7 @@
                 <h6 class=" f-80"> <%= @rodada_prox2 %> </h6>                
                 <h5 class="m-b-10"><b> Valor: </b>R$ 10,00</h5>
                 <h5 class="m-b-10"><b> Participante(s): </b><%= @total_aposta2 %> </h5>
-                <h5 class="m-b-10"><b>Valor arrecadado: </b>R$ <%= @valor_total_aposta2.to_f%>0</h5>
+                <h5 class="m-b-10"><b>Valor arrecadado: </b><%= @valor_total_aposta2%></h5>
                 <%= link_to "Participar", users_backoffice_rodada_dprox_path, class:"btn btn-primary btn-sm btn-round f-20" %>
                 
             </div>
@@ -51,7 +51,7 @@
                 <h6 class=" f-80"> <%= @rodada_prox3 %> </h6>                
                 <h5 class="m-b-10"><b> Valor: </b>R$ 10,00</h5>
                 <h5 class="m-b-10"><b> Participante(s): </b><%= @total_aposta3 %> </h5>
-                <h5 class="m-b-10"><b>Valor arrecadado: </b>R$ <%= @valor_total_aposta3.to_f%>0</h5>
+                <h5 class="m-b-10"><b>Valor arrecadado: </b><%= @valor_total_aposta3%></h5>
                 <%= link_to "Participar", users_backoffice_rodada_ddprox_path, class:"btn btn-primary btn-sm btn-round f-20" %>
                 
             </div>

@@ -1,4 +1,4 @@
-<h1 class="text-center"> APOSTA RODADA <%= @rodada %> </h1>
+<h1 class="text-center"> LIGA RODADA <%= @rodada %> </h1>
 
 <!-- Botão para acionar modal -->
 <div style="text-align: center;">
@@ -62,7 +62,7 @@
                     <div class="col-6">
                     
                     <h4 style="color: white">.</h4>
-                    <h4>Pontos</h4>
+                    <h4>0</h4>
                     </div>
                 </div>
             </div>
@@ -102,7 +102,29 @@
 <h4 style="color: black;">2º Passo </h4>
       <h4 class="modal-title" id="exampleModalLabel"> Realize o Pagamento:</h4>
       <h1></h1>
-<%= link_to "Pagar", "#", class:"btn btn-primary", id:"pagar" %>
+      <div class="row">
+
+          <div class="col-6">
+            <%= link_to  "#", class:"btn btn-primary btn-round btn-outline-primary btn-block", id:"pagar", style:"width: 100%; " do %>
+
+            <%= image_tag("mercado-pago-logo.png", alt:"Ligas do CFC", class:"img-fluid") %> 
+
+            <% end %>
+          </div>
+          <h1></h1>
+          <div class="col-6">
+            <%= link_to  "#", class:"btn btn-success btn-round btn-outline-success btn-block", id:"pagar-pay", style:"width: 100%; " do %>
+
+            <%= image_tag("picpay-logo.png", alt:"Ligas do CFC", class:"img-fluid") %> 
+
+            <% end %>
+          </div>
+          <h1></h1>
+          <div>
+          <h1></h1>
+          <p class="" style="text-align: justify;"> OBS: Após realizar o pagamento via <b>Mercado Pago</b>, independente do status do pagamento (aprovado, pendente ou rejeitado), clique na opção <b>Voltar ao Site</b> para que suas informações sejam salvas no nosso sistema. </p>
+          </div>
+      </div>
       <%= javascript_include_tag 'application' %>
 
  <script>
