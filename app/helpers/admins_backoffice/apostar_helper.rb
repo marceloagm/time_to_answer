@@ -1,0 +1,2 @@
+module AdminsBackoffice::ApostarHelper
+end

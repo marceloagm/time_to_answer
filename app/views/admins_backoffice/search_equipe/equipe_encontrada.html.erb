@@ -5,6 +5,7 @@
 <table class="table table-bordered">
     <thead>
         <tr>
+            <th style="text-align: center;">ID</th>
            <th style="text-align: center;">Time</th>
             <th style="text-align: center;">Cartoleiro</th>
             <th style="text-align: center;">Usuário</th>
@@ -14,7 +15,8 @@
     <tbody>
         <% @equipe_encontrada.each do |equipe| %>
         <tr>
-            <th scope="row" style="text-align: center;"><%= equipe.nome_time %></th>
+            <th scope="row" style="text-align: center;"><%= equipe.id %></th>
+            <td style="text-align: center;"><%= equipe.nome_time %>  </td>
             <td style="text-align: center;"><%= equipe.cartoleiro %>  </td>
             <td style="text-align: center;"><%= equipe.user.email %>  </td>
            <td style="text-align: center;"> 

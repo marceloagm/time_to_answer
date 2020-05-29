@@ -46,7 +46,8 @@ Rails.application.routes.draw do
     patch 'users', to: 'users#update' 
     get 'search_user', to: 'search_user#usuario_encontrado'
     get 'search_equipe', to: 'search_equipe#equipe_encontrada'
-    
+    get "apostar", to: 'apostar#apostar_manual'
+    post "apostar", to: 'apostar#apostar_manual'
   
     resources :admins  #Administradores
    
