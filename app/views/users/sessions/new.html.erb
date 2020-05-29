@@ -1,35 +1,69 @@
-<div>
-      <a class="hiddenanchor" id="signin"></a>
 
-      <div class="login_wrapper">
-        <div class="animate form login_form">
-          <section class="login_content">
-            <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-              <h1>Login</h1>
-                            
-              <div>
-                <%= f.email_field :email, autofocus: true, placeholder:"Email", class:"form-control" %>
-              </div>
-
-              <div>
-                 <%= f.password_field :password, placeholder:"Password", class:"form-control" %>
-              </div>
-
-              <div>
-               
-                <%= f.submit "Entrar", class:"btn btn-default submit", style:"float: none; margin-left:0px; width: 40%;" %>
-                 
+   
+    <section class="login-block">
+    
+        <!-- Container-fluid starts -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                
+                    <!-- Authentication card start -->
+                      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+                       
+                            <div class="text-center" >
+                                <%= image_tag 'logo.png', alt:"Responsive image", class:"" %>
+                            </div>
+                            <div class="auth-box card">
+                                <div class="card-block">
+                                    <div class="row m-b-20">
+                                        <div class="col-md-12">
+                                            <h3 class="text-center">Login</h3>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-primary">
+                                        <%= f.email_field :email, autofocus: true, placeholder:"Email", class:"form-control" %>
+                                        <span class="form-bar"></span>
+                                    </div>
+                                    <div class="form-group form-primary">
+                                        <%= f.password_field :password, placeholder:"Senha", class:"form-control" %>
+                                        <span class="form-bar"></span>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-12">
+                                            <div class="forgot-phone text-center">
+                                            <%= link_to 'Esqueceu a sua senha?', new_user_password_path, class:"text-right f-w-600" %>
+                                           </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="forgot-phone text-center">
+                                            <%= link_to 'Não tem conta? Cadastre-se.', new_user_registration_path, class:"text-right f-w-600" %>
+                                        </div>
+                                        <div class="row m-t-30">
+                                        <div class="col-md-12">
+                                          <%= f.submit "Entrar", class:"btn btn-primary btn-md btn-block waves-effect waves-light text-center m-b-20" %>
+                                  
+                                        </div>
+                                    </div>
+                                                                       
+                                </div>
+                            </div>
+                       <% end %>
+                        <!-- end of form -->
                 </div>
-              <%= link_to 'Esqueceu a sua senha?', new_user_password_path, class:"reset_pass" %>
-              
-
-              <div class="clearfix"></div>
-             <%= link_to 'Não tem conta? Cadastre-se.', new_user_registration_path, class:"reset_pass", style:"text-align: center;" %>
-              <div class="separator"></div>
-              
-            <% end %>
-          </section>
+                <!-- end of col-sm-12 -->
+            </div>
+            <!-- end of row -->
         </div>
-        
-      </div>
-    </div>
+        <!-- end of container-fluid -->
+    </section>
+    
+  
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-23581568-13');
+</script>

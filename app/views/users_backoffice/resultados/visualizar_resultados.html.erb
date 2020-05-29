@@ -101,9 +101,13 @@
                                           
                                           <h4 style="color: white">.</h4>
                                           <% if params["page"].blank? %>
-                                          <h4><%= @valor_aposta[@contador2] %></h4>
+                                             <% if @valor_aposta == nil %>
+                                                <h4></h4>
+                                             <% else %>
+                                                <h4><%= @valor_aposta[@contador2] %></h4>
+                                             <% end %>
                                           <% else %>
-                                          <h4> </h4>
+                                           <h4> </h4>
                                           <% end %>
                                           </div>
                                        </div>

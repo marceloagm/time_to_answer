@@ -34,3 +34,25 @@
         </div>
     </div>
 </div>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th style="text-align: center;">Rodada</th>
+            <th style="text-align: center;">Lucro</th>
+           
+        </tr>
+    </thead>
+    <tbody>
+       <% @total_aposta.each do |aposta| %>
+        <tr>
+            <th scope="row" style="text-align: center;"><%= aposta.rodada %></th>
+            <td style="text-align: center;"> <%= @total_valores[@contador]  %></td>
+            
+                </td>    
+        </tr>
+        <% @contador = @contador + 1 %>
+     <% end %>
+    </tbody>
+</table>

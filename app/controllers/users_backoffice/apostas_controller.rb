@@ -81,6 +81,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                         end
                 end
 
+
                 if status_pagamento == "pending" || status_pagamento == "in_process"
                     preapproval = $mp.cancel_payment(id_pagamento)                    
                     flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
@@ -137,16 +138,34 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @equipe_verificar = params[:equipe_id]
 
         #verifica na api o fechamento do mercado para poder bloquear pagamento após esse horário
-        dia = 31
+        dia = 29
         mes = 12
         ano = 2020
-        hora = 14 
-        hora_final= hora - 1
-        minuto = 0
-       if dia <= 9
-        @hora = "#{ano}-#{mes}-0#{dia}T#{hora_final}:#{minuto}0:00.000-04:00"
+        hora = 14
+        minuto = 5
+
+        if minuto >= 0 && minuto <= 9
+            minuto_final = "0#{minuto}"
         else
-        @hora = "#{ano}-#{mes}-#{dia}T#{hora_final}:#{minuto}0:00.000-04:00"   
+            minuto_final = minuto
+        end
+
+        if hora >= 0 && hora <= 9
+            hora_final = "0#{hora}"
+        else
+            hora_final = hora
+        end
+
+        if mes >= 1 && mes <= 9
+            mes_final = "0#{mes}"
+        else
+            mes_final = mes
+        end
+
+       if dia>=1 && dia <= 9
+            @hora = "#{ano}-#{mes}-0#{dia}T#{hora_final}:#{minuto_final}:00.000-03:00"
+        else
+            @hora = "#{ano}-#{mes}-#{dia}T#{hora_final}:#{minuto_final}:00.000-03:00"   
         end
 
         #criar a preferencia, que gera o pagamento do mercadopago
@@ -185,7 +204,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             
             "external_reference": "#{params[:equipe_id]}",
             "expires": true,
-            "expiration_date_from": "2020-05-20T12:00:00.000-04:00",
+            "expiration_date_from": "2020-05-20T12:00:00.000-03:00",
             "expiration_date_to": "#{@hora}"  # Após descobrir o horario que o mercado vai fechar
 
             

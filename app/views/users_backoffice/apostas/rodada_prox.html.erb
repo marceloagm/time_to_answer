@@ -76,7 +76,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="modalExemplo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog " role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Participar da Aposta</h5>
@@ -86,27 +86,29 @@
       </div>
       <div class="modal-body">
       <% if  @equipes_final == [] %>
-                    <h4 class="modal-title" id="exampleModalLabel" style="color: red; text-align: center;"> <b>Atenção</b></h4>
+              <h4 class="modal-title" id="exampleModalLabel" style="color: red; text-align: center;"> <b>Atenção</b></h4>
               <h5 class="modal-title" id="exampleModalLabel"><b> Você não consegue participar dessa aposta por um dos motivos a seguir:</b></h5>
               <h5 class="modal-title" id="exampleModalLabel"> 1º Seu(s) Time(s) já está(ão) participando dessa aposta;</h5>
               <h5 class="modal-title" id="exampleModalLabel"> 2º Você não tem time(s) adicionado(s) a sua conta, para adicionar vá até o menu lateral "Meus Times" ou senão clique no botão a seguir: </h5>
               <%= link_to "Adicionar TIme", users_backoffice_equipes_path, class:"btn btn-primary", type:"submit" %>
 
    <% else %>
-   <h4 style="color: black;">1º Passo </h4>
-    <h4 class="modal-title" id="exampleModalLabel">Escolha seu time:</h4>
+   
+   <h6 style="color: black;"><b>1º Passo </b> </h6>
+    <h6 class="modal-title" id="exampleModalLabel">Escolha seu time:</h6>
       <%= form_with( local:true, method: "get", class:"cascata") do |f| %>
               <%= f.select 'equipe_id', options_for_select(@equipes_final.collect{ |u| [u.nome_time, u.id] }), {include_blank: 'Selecione o time...'}, {class:"custom-select mr-sm-2", id:"time"}  %>
       <% end %>
-<h4 style="color: black;">2º Passo </h4>
-      <h4 class="modal-title" id="exampleModalLabel"> Realize o Pagamento:</h4>
+      <h6></h6>
+    <h6 style="color: black;"><b>2º Passo</b> </h6>
+      <h6 class="modal-title" id="exampleModalLabel"> Realize o Pagamento:</h6>
       <h1></h1>
       <div class="row">
 
           <div class="col-6">
             <%= link_to  "#", class:"btn btn-primary btn-round btn-outline-primary btn-block", id:"pagar", style:"width: 100%; " do %>
 
-            <%= image_tag("mercado-pago-logo.png", alt:"Ligas do CFC", class:"img-fluid") %> 
+            <%= image_tag("mercado-pago-logo.png", alt:"Ligas do CFC", class:"img-fluid", style:"width: 50%;") %> 
 
             <% end %>
           </div>
@@ -114,14 +116,18 @@
           <div class="col-6">
             <%= link_to  "#", class:"btn btn-success btn-round btn-outline-success btn-block", id:"pagar-pay", style:"width: 100%; " do %>
 
-            <%= image_tag("picpay-logo.png", alt:"Ligas do CFC", class:"img-fluid") %> 
+            <%= image_tag("picpay-logo.png", alt:"Ligas do CFC", class:"img-fluid", style:"width: 50%;") %> 
 
             <% end %>
           </div>
           <h1></h1>
           <div>
           <h1></h1>
-          <p class="" style="text-align: justify;"> OBS: Após realizar o pagamento via <b>Mercado Pago</b>, independente do status do pagamento (aprovado, pendente ou rejeitado), clique na opção <b>Voltar ao Site</b> para que suas informações sejam salvas no nosso sistema. </p>
+          <p class="" style="text-align: justify;"> OBS: Após realizar o pagamento via <b>Mercado Pago</b>, caso o pagamento for:</p>
+          <p class="" style="text-align: justify;"> <b style="color: green;">Aprovado: </b> Clique em <b> Voltar para o site </b> ou espere 5 segundos ser redirecionado para o site.<br>
+          <b style="color: #FF8000;">Pendente: </b> Clique em <b> Ok, Entendi </b> para que suas informações sejam salvas no nosso sistema.<br>
+          <b style="color: red;">Recusado:  </b>Revise seus dados de pagamento e tente pagar novamente ou Clique em <b> Voltar para o site </b> para que suas informações sejam salvas no nosso sistema. </p>
+           
           </div>
       </div>
       <%= javascript_include_tag 'application' %>

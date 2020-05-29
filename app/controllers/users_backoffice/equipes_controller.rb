@@ -50,9 +50,7 @@ class UsersBackoffice::EquipesController < UsersBackofficeController
                 redirect_to users_backoffice_equipes_path
                 flash[:danger] = "Esse time está participando de uma aposta, para exclui-lo entre em contato conosco."
             end
-        else
-            redirect_to users_backoffice_equipes_path
-            flash[:danger] = "Time excluído com sucesso"
+        
         end
       
       end
