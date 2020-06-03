@@ -52,7 +52,7 @@ namespace :dev do
     desc "Adiciona o valor total das rodadas"
     task add_default_value_aposta: :environment do
       
-       for contador in 1..38 do 
+       for contador in 1..39 do 
         ApostaStatistic.create!(
            rodada: "#{contador}",
            total: 0

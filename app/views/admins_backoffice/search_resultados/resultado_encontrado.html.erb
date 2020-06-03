@@ -1,21 +1,5 @@
-<h1 class="text-center"> LIGA RODADA <%= params["rodada"] %> </h1>
-
-
-<div class="d-flex flex-row-reverse bd-highlight">
-  <%= form_with(url: admins_backoffice_search_resultados_path, local: true, method: :get) do |time| %>
-  <div class="p-3 bd-highlight">
-    <div class="input-group input-group-button col-sm-12 col-xl-12">
-        <%= time.text_field :term, class:"form-control", placeholder:"Pesquisar Time" %>
-        <%= time.hidden_field :rodada, :value => params["rodada"] %>
-          <button type="submit" class="input-group-addon btn btn-primary" id="basic-addon10">
-            <span class=""><i class="icofont icofont-ui-search"></i></span>
-        </button>
-    </div>
-</div>
- <% end %>
-</div>
-
-
+<% unless @apostador == []%>
+<h1 class="text-center"> EQUIPE ENCONTRADA RODADA <%= params["rodada"] %></h1>
 <div class="card-block table-border-style">
 <div class="table-responsive">
 <table class="table table-bordered">
@@ -29,7 +13,7 @@
         </tr>
     </thead>
     <tbody>
-       <% @apostas.each do |aposta| %>
+       <% @apostador.each do |aposta| %>
         <tr>
             <th scope="row" style="text-align: center;"><%= aposta.equipe.id %></th>
             <th scope="row" style="text-align: center;"><%= aposta.equipe.nome_time %></th>
@@ -49,9 +33,11 @@
      <% end %>
     </tbody>
 </table>
-<h1></h1>
-<div class="pagination justify-content-center">
-    <%= paginate @apostas %>
- </div>
+
 </div>
 </div>
+<% else %>
+<h1 class="text-center" style="color: red;"><b> ATENÇÃO </b></h1>
+<h2 class="text-center"> Não encontramos a equipe <b><%= @equipe %></b> nesta rodada, por favor verifique se digitou o nome correto. </h2>
+
+<% end %>

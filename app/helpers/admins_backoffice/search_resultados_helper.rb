@@ -1,0 +1,2 @@
+module AdminsBackoffice::SearchResultadosHelper
+end
