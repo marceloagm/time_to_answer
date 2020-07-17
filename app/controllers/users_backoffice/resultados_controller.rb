@@ -166,7 +166,9 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
         
     end
     private
+
+
     def set_rodada
-        @rodada_atual = 38
+        @rodada_atual = 38 # consulta API
     end
 end

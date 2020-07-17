@@ -12,14 +12,14 @@
 
 ActiveRecord::Schema.define(version: 2020_05_22_185639) do
 
-  create_table "admin_statistics", force: :cascade do |t|
+  create_table "admin_statistics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "event"
     t.integer "value", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "admins", force: :cascade do |t|
+  create_table "admins", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -31,35 +31,35 @@ ActiveRecord::Schema.define(version: 2020_05_22_185639) do
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
-  create_table "aposta", force: :cascade do |t|
+  create_table "aposta", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "rodada"
-    t.integer "equipe_id"
+    t.bigint "equipe_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "equipe_nome"
     t.index ["equipe_id"], name: "index_aposta_on_equipe_id"
   end
 
-  create_table "aposta_statistics", force: :cascade do |t|
+  create_table "aposta_statistics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "rodada"
     t.integer "total", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "equipes", force: :cascade do |t|
+  create_table "equipes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "nome_time", null: false
     t.string "cartoleiro", null: false
     t.string "slug", null: false
-    t.integer "user_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "escudo"
     t.index ["user_id"], name: "index_equipes_on_user_id"
   end
 
-  create_table "status_pagamentos", force: :cascade do |t|
-    t.integer "equipe_id"
+  create_table "status_pagamentos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "equipe_id"
     t.string "rodada"
     t.string "status"
     t.datetime "created_at", null: false
@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 2020_05_22_185639) do
     t.index ["equipe_id"], name: "index_status_pagamentos_on_equipe_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -82,4 +82,7 @@ ActiveRecord::Schema.define(version: 2020_05_22_185639) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "aposta", "equipes"
+  add_foreign_key "equipes", "users"
+  add_foreign_key "status_pagamentos", "equipes"
 end

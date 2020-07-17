@@ -1,5 +1,8 @@
 <h1 class="text-center"> MINHAS APOSTAS </h1>
-<!-- FINAL FORMULARIO BOTAO PAGSEGURO -->
+
+<% if @pagamento == [] %>
+    <h5 class="text-center" style="color: red;"> Ops! Você ainda não está participando de uma aposta. </h5>
+<% else %>
 
 <div class="row">
   <% @pagamento.each do |pagamento| %>
@@ -26,7 +29,7 @@
   </div>
   <% end %>
 </div>
-
+<% end %>
 <div class="pagination justify-content-center">
     <%= paginate @pagamento %>
  </div>

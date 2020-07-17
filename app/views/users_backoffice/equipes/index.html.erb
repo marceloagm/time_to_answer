@@ -8,8 +8,11 @@
 </div>
 
 <h1></h1>
-
+<% if @equipes == [] %>
+    <h5 class="text-center" style="color: red;"> Ops! Você ainda não tem equipe adicionada a sua conta. </h5>
+<% else %>
 <div class="row">
+
 <% @equipes.each do |equipe| %>
 <div class="col-xl-4 col-md-6">
     <div class="card social-card bg-simple-c-blue">
@@ -34,7 +37,7 @@
     
 </div>
 <% end %>
-
+<% end %>
 </div>
 
 
