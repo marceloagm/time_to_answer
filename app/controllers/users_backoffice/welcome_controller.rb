@@ -1,8 +1,16 @@
 class UsersBackoffice::WelcomeController < UsersBackofficeController
     include ActionView::Helpers::NumberHelper
-  def index
-    @rodada_atual = 1 #será uma consulta a API
+    require 'rest-client'
+    require 'json'
 
+
+  def index
+
+    url = 'https://api.cartolafc.globo.com/mercado/status'
+    @resp = RestClient.get "#{url}"    
+
+       
+    @rodada_atual = JSON.parse(@resp.body)["rodada_atual"]
     @rodada_prox0 = @rodada_atual 
     @rodada_prox1 = @rodada_atual + 1
     @rodada_prox2 = @rodada_atual + 2
@@ -37,7 +45,7 @@ class UsersBackoffice::WelcomeController < UsersBackofficeController
 
     #Mercado aberto ou fechado
 
-    @mercado = 1
+    @mercado = JSON.parse(@resp.body)["status_mercado"]
     if @mercado == 1
         @mercado_path = users_backoffice_rodada_atual_path
         @botao_text = "Participar"

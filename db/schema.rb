@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_22_185639) do
+ActiveRecord::Schema.define(version: 2020_07_23_105723) do
 
   create_table "admin_statistics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "event"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 2020_05_22_185639) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "equipe_nome"
+    t.string "slug"
     t.index ["equipe_id"], name: "index_aposta_on_equipe_id"
   end
 

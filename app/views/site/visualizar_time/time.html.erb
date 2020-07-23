@@ -1,23 +1,50 @@
 
+
+<% if @mercado == 1 && @rodada == @rodada_atual %>
 <% @times.each do |time| %>
+<div class="justify-content-center">
  <div class="row h-100 justify-content-center align-items-center">
     <div class="col-md-6 col-lg-3">
         <div class="card">
             <div class="card-block user-radial-card">
-                <div data-label="50%" class="radial-bar radial-bar-90 radial-bar-lg radial-bar-danger">
-                    <%= image_tag("avatar-2.jpg", alt:"User-Image") %>
+                <div class="col" >
+                  <div>
+                  <%= image_tag "#{time.escudo}" , style: "width:90%;", alt:"User-Image" %>
+                  </div>                     
                 </div>
-                <span class="f-20 text-c-black"><%= time.nome_time %></span>
+                <h6 style="color: white;">.</h6>
+                 <span class="f-20 text-c-black"><%= time.nome_time %></span>
                 <p><%= time.cartoleiro %></p>
             </div>
         </div>
     </div>
+    </div>
 <% end %>
+   <h5 class="text-center" style="color: red;"> Ops! Está muito cedo, assim que o mercado fechar poderemos ver as parciais deste time. </h5>
+<%else %>
+
+
+ <div class="row h-100 justify-content-center align-items-center">
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-block user-radial-card">
+                <div class="col" >
+                  <div>
+                  <%= image_tag "#{@nome_escudo_slug}" , style: "width:90%;", alt:"User-Image" %>
+                  </div>                     
+                </div>
+                <h6 style="color: white;">.</h6>
+                 <span class="f-20 text-c-black"><%= @nome_time_slug %></span>
+                <p><%= @nome_cartoleiro_slug %></p>
+            </div>
+        </div>
+    </div>
+<!-- AQUI IRAR RECEBER UMA VARIAVEL COM TODOS OS JOGADORES, UMA CONDIÇÃO SE A VARIAVEL FOR NULL NÃO MOSTRA SE FOR DIFERENTE DE NULL MOSTRA -->
   
-    <!-- AQUI IRAR RECEBER UMA VARIAVEL COM TODOS OS JOGADORES, UMA CONDIÇÃO SE A VARIAVEL FOR NULL NÃO MOSTRA SE FOR DIFERENTE DE NULL MOSTRA -->
     <div class="col-xl-12 col-md-12">
-        <div class="card social-card bg-simple-c-white">
-            <div class="card-block">
+    
+        <div class="card social-card bg-simple-c-white" >
+            <div class="card-block" >
                 <div class="row align-items-center">
                     <div class="col-auto">
                         <%= image_tag("avatar-2.jpg", alt:"User-Image") %>
@@ -35,3 +62,8 @@
             
         </div>
     </div>
+
+
+<% end %>
+
+  

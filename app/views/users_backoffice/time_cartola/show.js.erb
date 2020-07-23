@@ -1,17 +1,45 @@
 var escudo = document.getElementById("escudo");
 var time = document.getElementById("nome_time");
+var time2 = document.getElementById("nome_time2");
 var cartoleiro = document.getElementById("cartoleiro");
 var slug = document.getElementById("slug");
-
-
-escudo.value = '<%= @time_cartola.bairro %>';
-time.value = '<%= @time_cartola.uf %>';
-cartoleiro.value = '<%= @time_cartola.logradouro %>';
-slug.value = '<%= @time_cartola.localidade %>';
-
+var escudo2 = document.getElementById("escudo2");
+var time_encontrado = document.getElementById("time_encontrado");
+var titulo_time = document.getElementById("titulo_time");
+var titulo_cartoleiro = document.getElementById("titulo_cartoleiro");
 
 
 
+<%if @time_encontrado == 1 %>   
+
+time_encontrado.innerHTML = 'Time Não Encontrado';
+titulo_time.innerHTML = '';
+titulo_cartoleiro.innerHTML = '';
+time_encontrado.style.color = 'red'
+time2.innerHTML = '';
+cartoleiro2.innerHTML = '';
+escudo2.src = '/assets/fundo_time.png';
+escudo.value = '';
+time.value = '';
+cartoleiro.value = '';
+slug.value = '';
+<% else%>
+
+time_encontrado.innerHTML = 'Time Encontrado';
+titulo_time.innerHTML = 'TIME:';
+titulo_cartoleiro.innerHTML = 'CARTOLEIRO:';
+time_encontrado.style.color = 'green'
+time2.innerHTML = '<%= @nome_time %>';
+cartoleiro2.innerHTML = '<%= @cartoleiro %>';
+escudo.value = '<%= @escudo %>';
+time.value = '<%= @nome_time %>';
+cartoleiro.value = '<%= @cartoleiro %>';
+slug.value = '<%= @slug %>';
+escudo2.src = '<%= @escudo %>';
+
+<% end %>  
 
 
-          
+
+
+ 

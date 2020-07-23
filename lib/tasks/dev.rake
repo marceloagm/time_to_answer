@@ -11,7 +11,7 @@ namespace :dev do
       show_spinner("Migrando BD...") { %x(rails db:migrate) }
       show_spinner("Criando o Administrador padrão...") { %x(rails dev:add_default_admin) }
       show_spinner("Criando o Usuário padrão...") { %x(rails dev:add_default_user) }
-      show_spinner("Criando o Equipe padrão...") { %x(rails dev:add_default_equipe) }
+     # show_spinner("Criando o Equipe padrão...") { %x(rails dev:add_default_equipe) }
       
       show_spinner("Adiciona o valor total das rodadas...") { %x(rails dev:add_default_value_aposta) }
       #show_spinner("Criando o Equipe Aposta Teste...") { %x(rails dev:add_default_equipe_aposta) }

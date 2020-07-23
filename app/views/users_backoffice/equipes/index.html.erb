@@ -1,11 +1,11 @@
 <h1 class="text-center">MEUS TIMES</h1>
-
 <!-- Button trigger modal -->
 <div style="text-align: center;">
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#timeModal">
   Adicionar Time
 </button>
 </div>
+
 
 <h1></h1>
 <% if @equipes == [] %>
@@ -18,8 +18,10 @@
     <div class="card social-card bg-simple-c-blue">
         <div class="card-block">
             <div class="row align-items-center">
-                <div class="col-auto">
-                    <%= image_tag "avatar-2.jpg" ,  alt:"User-Image" %>
+                <div class="col" >
+                  <div>
+                  <%= image_tag "#{equipe.escudo}" , style: "width:90%;", alt:"User-Image" %>
+                  </div>                     
                 </div>
                 <div class="col">
                     <h6 class="m-b-0">Time</h6>
@@ -55,7 +57,7 @@
 
         <%= form_with(local: true, html: {id: :pesquisar_time}) do |form| %>
         
-                  
+        <p style="color:red;" > Obs: Digitar o nome do time igual está no cartola, porém sem os acentos. </p>           
         <div class="row">
               <div class="col-sm-12">
                   <div class="input-group input-group-button">
@@ -96,29 +98,52 @@
 
         <!-- REVER QUESTÃO DO TAMANHO DA DIV QUE BUSCAR O TIME (ESCUDO)-->
        
-       <label id="time_encontrado" for="exemplo">  </label>
+       <h5 id="time_encontrado" for="exemplo" style="text-align: center; font-weight: bold;"></h5>
        
-        
         <%= form_with(url: users_backoffice_equipes_path, scope: :equipe, model: @equipe , local: true) do |f| %>
         
         <div class="card mb-3", style="background: white" >
         <div class="row no-gutters">
             <div class="col-md-4">
             <div style="margin: 10%">
-             <h5 class="card-title"><b>ESCUDO: </b><%= f.text_field :escudo, class:"form-control bg-info",readonly: true, style:"background: white;
-                  border: transparent;", id:"escudo" %></h5>                     
+
+             
+
+             <%= f.hidden_field :escudo, class:"form-control bg-info",readonly: true, style:"background: white;
+                  border: transparent;", id:"escudo" %>       
+            
+            <%= image_tag "/assets/fundo_time.png" , style: "width:80%;", alt:"User-Image", id:"escudo2"%>
+            
             <!--
             <%= image_tag 'logo.png', alt:'', style:"width: 95px; height: 95px;" %>
             <h1> TIME</h1> -->
             </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
             <div class="card-body">                
-                <h5 class="card-title"><b>TIME: </b><%= f.text_field :nome_time, class:"form-control", readonly: true, style:"background: white;
-                  border: transparent; outline: none;", id:"nome_time" %></h5>
+                <h6 class="card-title" id="titulo_time" style="font-weight: bold;"><b></b></h6>
+                
+                <%= f.hidden_field :nome_time, class:"form-control", readonly: true, style:"background: white;
+                  border: transparent; outline: none;", id:"nome_time" %>
+
                   
-                <h5 class="card-title"><b>CARTOLEIRO: </b><%= f.text_field :cartoleiro, class:"form-control ",readonly: true,  style:"background: white;
-                  border: transparent;", id:"cartoleiro" %>  </h5>
+
+                  <h6 class="card-title"  id="nome_time2"> </h6>
+
+                  <h6 style="color:white;">.</h5>
+
+
+                <h6 class="card-title" id="titulo_cartoleiro" style="font-weight: bold;"><b></b></h6>
+                
+                <%= f.hidden_field :cartoleiro, class:"form-control ",readonly: true,  style:"background: white;
+                  border: transparent; width:100%;", id:"cartoleiro" %>  
+
+  
+
+                  <h6 class="card-title"  id="cartoleiro2"> </h6>
+
+                  <h6 style="color:white;">.</h6>
+
 
                   <%= f.hidden_field :user_id, :value => current_user.id %>
 
@@ -133,6 +158,7 @@
         
       
       </div>
+      
       <div class="modal-footer">
          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="fechar-modal">Fechar</button>
          <button type="submit" class="btn btn-primary">Adicionar</button>
@@ -146,8 +172,11 @@
       var botao = document.getElementById('fechar-modal');
       botao.addEventListener("click", function(){
         document.getElementById('escudo').value='';
+        document.getElementById('escudo2').src='/assets/fundo_time.png';
         document.getElementById('nome_time').value='';
+        document.getElementById('nome_time2').innerHTML='';
         document.getElementById('cartoleiro').value='';
+        document.getElementById('cartoleiro2').innerHTML='';
         document.getElementById('time_cartola').value='';
         document.getElementById('time_encontrado').innerHTML='';
         });  

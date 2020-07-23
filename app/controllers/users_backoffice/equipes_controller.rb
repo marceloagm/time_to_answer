@@ -1,4 +1,10 @@
 class UsersBackoffice::EquipesController < UsersBackofficeController
+    require 'rest-client'
+    require 'json'
+
+
+
+
     before_action :set_user
     before_action :set_equipe, only: [:destroy]
         
@@ -8,7 +14,9 @@ class UsersBackoffice::EquipesController < UsersBackofficeController
    
     def index
         @equipes = Equipe.all.where(user_id: @user).page(params[:page]).per(6)
+              
         
+
     end
 
     def create

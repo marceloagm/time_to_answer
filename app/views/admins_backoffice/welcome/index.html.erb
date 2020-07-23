@@ -40,6 +40,7 @@
     <thead>
         <tr>
             <th style="text-align: center;">Rodada</th>
+            <th style="text-align: center;">Participantes</th>
             <th style="text-align: center;">Lucro</th>
            
         </tr>
@@ -48,6 +49,7 @@
        <% @total_aposta.each do |aposta| %>
         <tr>
             <th scope="row" style="text-align: center;"><%= aposta.rodada %></th>
+            <td style="text-align: center;"> <%= @total_aposta[@contador]["total"] %></td>
             <td style="text-align: center;"> <%= @total_valores[@contador]  %></td>
             
                 </td>    

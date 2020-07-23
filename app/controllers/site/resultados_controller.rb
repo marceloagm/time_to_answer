@@ -1,13 +1,19 @@
 class Site::ResultadosController < SiteController
     include ActionView::Helpers::NumberHelper
+    require 'rest-client'
+    require 'json'
+    before_action :set_api
     before_action :set_rodada
+    before_action :set_mercado
+
     def index 
             
     end
     def visualizar_resultados
         
-        rodada = params[:rodada].to_i
-        @apostas = Apostum.includes(:equipe).all.where(rodada: rodada).page(params[:page]).per(20)
+        @rodada = params[:rodada].to_i
+
+       # @apostas = Apostum.includes(:equipe).all.where(rodada: rodada).page(params[:page]).per(20)
 
         @ppp = params["page"].to_i 
         if @ppp == 0
@@ -22,12 +28,8 @@ class Site::ResultadosController < SiteController
             @contador2 = (params["page"].to_i * 20) - 19
         end
 
-        
-        if rodada > @rodada_atual ||  rodada < 1
-            redirect_to users_backoffice_resultados_index_path
-        end
-
-        @total_aposta0 = ApostaStatistic.all.where(rodada: rodada).first.attributes["total"]
+       
+        @total_aposta0 = ApostaStatistic.all.where(rodada: @rodada).first.attributes["total"]
         @valor_total01 = (@total_aposta0*10).to_f
         @valor_total02 = ((@valor_total01*15)/100).to_f
         @valor_total_aposta0 = @valor_total01 - @valor_total02
@@ -39,6 +41,50 @@ class Site::ResultadosController < SiteController
             @valor_aposta[x] = number_to_currency(@valor_total_aposta0)
         end
         
+
+         #time
+         if @rodada > @rodada_atual ||  @rodada < 1
+            redirect_to site_resultados_index_path
+         else
+
+            if @mercado == 1 && @rodada == @rodada_atual
+                @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
+
+            else
+
+                @contador3 = 0
+                @contador4 = 0
+        
+                @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
+        
+                a = 0  
+                @equipe_cartola = Array.new
+                while a < @apostas.length 
+                    @equipe_cartola[a] = @apostas[a]["slug"]
+                    a = a + 1
+                end
+                    
+                
+                b = 0
+            
+                @time_final = Array.new
+        
+                while b < @apostas.length 
+
+                    url2 = 'https://api.cartolafc.globo.com/time/id/'
+                    @times_slug = RestClient.get ("#{url2}#{@equipe_cartola[b]}/#{@rodada}")
+                    @nome_time_slug = JSON.parse(@times_slug.body)["time"]["nome"]
+                    @pontos_time_slug = JSON.parse(@times_slug.body)["time"]["tipo_estampa_camisa"] # aqui será pontuação, só mudar para pontos
+                    @time_final[b] = [@nome_time_slug, @pontos_time_slug, @equipe_cartola[b]]
+                    
+                    b = b + 1
+                end
+                
+                @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[1]}).page(params[:page]).per(20)
+                                
+            end
+        end
+
 
         if @total_aposta0 >= 11 && @total_aposta0 <= 50
                 x = 1
@@ -165,8 +211,25 @@ class Site::ResultadosController < SiteController
 
         
     end
+
     private
+
+    def set_api
+
+        url = 'https://api.cartolafc.globo.com/mercado/status'
+        @resp = RestClient.get "#{url}"   
+
+    end
+
+
+    def set_mercado
+        @mercado = JSON.parse(@resp.body)["status_mercado"]
+
+    end
+
     def set_rodada
-        @rodada_atual = 38
+           
+    @rodada_atual = JSON.parse(@resp.body)["rodada_atual"]
+
     end
 end

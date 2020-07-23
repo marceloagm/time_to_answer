@@ -3,7 +3,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     require 'net/http'
     require 'uri'
     require 'json'
-    
+    before_action :set_api
     before_action :rodadas  
     before_action :set_user
     before_action :set_equipe 
@@ -18,6 +18,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     end
 
     def rodada_atual
+
 
         uri = URI.parse("https://appws.picpay.com/ecommerce/public/payments")
         request = Net::HTTP::Post.new(uri)
@@ -48,6 +49,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
          # Configura credenciais
          $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
 
+
+
         unless @mercado == 1
             redirect_to users_backoffice_welcome_index_path #redirect para tela de resultados dessa aposta
         end  
@@ -62,8 +65,9 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 if status_pagamento == "approved"
                     equipe_verificar_salvar = Equipe.all.where(id: params["external_reference"])
                     equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
-                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar]
-                        unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
+                    equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
+                    unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
                             @aposta = Apostum.new(equipe_salvar)
                                 if @aposta.save
                                     equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
@@ -99,17 +103,19 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             end
         end
         
-
-        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
-
         #define a numeração das posições        
         @ppp = params["page"].to_i 
         if @ppp == 0
             @contador = 1
+           
         else
-            @contador = (params["page"].to_i * 20) - 19
+            @contador = (params["page"].to_i * 2) - 1
+           
         end
         
+       
+        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
+
         # descobre quais equipes do usuario já está na aposta
         @equipes_total = Equipe.all.where(user_id: @user)
 
@@ -138,11 +144,11 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @equipe_verificar = params[:equipe_id]
 
         #verifica na api o fechamento do mercado para poder bloquear pagamento após esse horário
-        dia = 29
-        mes = 12
-        ano = 2020
-        hora = 14
-        minuto = 5
+        dia = JSON.parse(@resp.body)["fechamento"]["dia"]
+        mes = JSON.parse(@resp.body)["fechamento"]["mes"]
+        ano = JSON.parse(@resp.body)["fechamento"]["ano"]
+        hora = JSON.parse(@resp.body)["fechamento"]["hora"]
+        minuto = JSON.parse(@resp.body)["fechamento"]["minuto"]
 
         if minuto >= 0 && minuto <= 9
             minuto_final = "0#{minuto}"
@@ -235,7 +241,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 if status_pagamento == "approved"
                     equipe_verificar_salvar = Equipe.all.where(id: params["external_reference"])
                     equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
-                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar]
+                    equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
                         unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
                             @aposta = Apostum.new(equipe_salvar)
                                 if @aposta.save
@@ -368,7 +375,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 if status_pagamento == "approved"
                     equipe_verificar_salvar = Equipe.all.where(id: params["external_reference"])
                     equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
-                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar]
+                    equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
                         unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
                             @aposta = Apostum.new(equipe_salvar)
                                 if @aposta.save
@@ -503,7 +511,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 if status_pagamento == "approved"
                     equipe_verificar_salvar = Equipe.all.where(id: params["external_reference"])
                     equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
-                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar]
+                    equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
                         unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
                             @aposta = Apostum.new(equipe_salvar)
                                  if @aposta.save
@@ -621,8 +630,18 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
 
     private
+
+    def set_api
+
+        url = 'https://api.cartolafc.globo.com/mercado/status'
+        @resp = RestClient.get "#{url}"   
+
+    end
+
+
     def set_mercado
-        @mercado = 1
+        @mercado = JSON.parse(@resp.body)["status_mercado"]
+
     end
    
     def set_equipe
@@ -640,7 +659,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
       ]
     end
     def rodadas
-        @rodada_atual = 1  #será uma consulta a API em qual rodada está
+        @rodada_atual = JSON.parse(@resp.body)["rodada_atual"]
     
         @rodada_prox0 = @rodada_atual 
         @rodada_prox1 = @rodada_atual + 1

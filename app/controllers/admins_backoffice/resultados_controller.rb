@@ -26,9 +26,42 @@ class AdminsBackoffice::ResultadosController < AdminsBackofficeController
 
     def visualizar_resultados
         
-        rodada = params[:rodada].to_i
-        @apostas = Apostum.includes(:equipe).all.where(rodada: rodada).page(params[:page]).per(20)
-                
+        @contador = 0
+        @rodada = params[:rodada].to_i
+
+        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
+        
+        a = 0  
+        @equipe_cartola = Array.new
+        @equipe_salvar_cartola = Array.new
+        @equipe_criado_cartola = Array.new
+        while a < @apostas.length 
+            @equipe_cartola[a] = @apostas[a]["slug"]
+            @equipe_salvar_cartola[a] = @apostas[a]["equipe_id"]
+            @equipe_criado_cartola[a] = @apostas[a]["created_at"]
+            a = a + 1
+        end
+            
+        
+        b = 0
+    
+        @time_final = Array.new
+
+        while b < @apostas.length 
+
+            url2 = 'https://api.cartolafc.globo.com/time/id/'
+            @times_slug = RestClient.get ("#{url2}#{@equipe_cartola[b]}/#{@rodada}")
+            @nome_time_slug = JSON.parse(@times_slug.body)["time"]["nome"]
+            @pontos_time_slug = JSON.parse(@times_slug.body)["time"]["tipo_estampa_camisa"] # aqui será pontuação, só mudar para pontos
+            @time_final[b] = [@equipe_salvar_cartola[b], @nome_time_slug, @equipe_criado_cartola[b] , @pontos_time_slug]
+            
+            b = b + 1
+        end
+        
+        @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[3]}).page(params[:page]).per(20)
+           
+                        
+
          
     end
 

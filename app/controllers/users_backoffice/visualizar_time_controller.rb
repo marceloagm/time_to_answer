@@ -1,8 +1,63 @@
 class UsersBackoffice::VisualizarTimeController < UsersBackofficeController
-    def time 
-        @time = params["time"]
+    require 'rest-client'
+    require 'json'
+    before_action :set_api
+    before_action :set_rodada
+    before_action :set_mercado
 
-        @times = Equipe.all.where(id: @time)
+
+    def time 
+
+        @rodada = params["rodada"].to_i
+        
+
+        if @rodada > @rodada_atual ||  @rodada < 1
+            redirect_to users_backoffice_resultados_index_path
+        else 
+
+
+            if @mercado == 1 && @rodada == @rodada_atual
+                #busca time no banco de dados
+                time = params["time"]
+                @times = Equipe.all.where(id: time)   
+                    if @time.blank?
+                        redirect_to users_backoffice_resultados_index_path
+                    end
+
+            else 
+                #busca time no cartola
+                slug = params["slug"]
+                url2 = 'https://api.cartolafc.globo.com/time/id/'
+                @resp = RestClient.get ("#{url2}#{slug}/#{@rodada}")
+                @nome_time_slug = JSON.parse(@resp.body)["time"]["nome"]
+                @nome_cartoleiro_slug = JSON.parse(@resp.body)["time"]["nome_cartola"]
+
+                encontrar_slug = Equipe.all.where(slug: slug)  
+                @nome_escudo_slug = encontrar_slug[0]["escudo"]
+
+            end
+        end
+
     end
 
+    private
+
+    def set_api
+
+        url = 'https://api.cartolafc.globo.com/mercado/status'
+        @resp = RestClient.get "#{url}"   
+
+    end
+
+
+    def set_mercado
+        @mercado = JSON.parse(@resp.body)["status_mercado"]
+
+    end
+
+    def set_rodada
+           
+        @rodada_atual = JSON.parse(@resp.body)["rodada_atual"]
+
+    end
 end
