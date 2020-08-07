@@ -342,7 +342,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             @contador = 1
            
         else
-            @contador = (params["page"].to_i * 2) - 1
+            @contador = (params["page"].to_i * 20) - 19
            
         end
         

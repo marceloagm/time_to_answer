@@ -14,7 +14,7 @@
           <div class="card-block text-center">
               <p class="m-b-0">Rodada</p>
               <span class="d-block text-c f-36"><%= pagamento.rodada%></span>
-                           
+        <%= link_to "Visualizar Resultados", users_backoffice_resultados_visualizar_resultados_path(:rodada => pagamento.rodada), class:"btn btn-primary btn-sm btn-round f-12" %>
           </div>
           <% if pagamento.status == "Aprovado"%>
           <div class="card-footer bg-c-green">
@@ -25,6 +25,7 @@
               <h6 class="text-white m-b-0" style="text-align:center;">Pagamento <%= pagamento.status%></h6>
           </div>
           <% end %>
+      
       </div>
   </div>
   <% end %>
