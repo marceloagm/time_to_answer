@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_23_105723) do
+ActiveRecord::Schema.define(version: 2020_08_04_190603) do
 
   create_table "admin_statistics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "event"
@@ -81,6 +81,24 @@ ActiveRecord::Schema.define(version: 2020_07_23_105723) do
     t.string "rg"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "verificar_pagamento_mps", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "reference_mp"
+    t.string "equipe_mp"
+    t.string "user_mp"
+    t.string "rodada"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "verificar_pagamentos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "reference_picpay"
+    t.string "equipe_picpay"
+    t.string "user_picpay"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "rodada"
   end
 
   add_foreign_key "aposta", "equipes"

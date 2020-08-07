@@ -79,16 +79,13 @@
   <div class="modal-dialog " role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Participar da Aposta</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+        <h5 class="modal-title" id="exampleModalLabel">Participar da Liga</h5>
+       </div>
       <div class="modal-body">
       <% if  @equipes_final == [] %>
               <h4 class="modal-title" id="exampleModalLabel" style="color: red; text-align: center;"> <b>Atenção</b></h4>
-              <h5 class="modal-title" id="exampleModalLabel"><b> Você não consegue participar dessa aposta por um dos motivos a seguir:</b></h5>
-              <h5 class="modal-title" id="exampleModalLabel"> 1º Seu(s) Time(s) já está(ão) participando dessa aposta;</h5>
+              <h5 class="modal-title" id="exampleModalLabel"><b> Você não consegue participar dessa liga por um dos motivos a seguir:</b></h5>
+              <h5 class="modal-title" id="exampleModalLabel"> 1º Seu(s) Time(s) já está(ão) participando dessa liga;</h5>
               <h5 class="modal-title" id="exampleModalLabel"> 2º Você não tem time(s) adicionado(s) a sua conta, para adicionar vá até o menu lateral "Meus Times" ou senão clique no botão a seguir: </h5>
               <%= link_to "Adicionar TIme", users_backoffice_equipes_path, class:"btn btn-primary", type:"submit" %>
 
@@ -106,7 +103,7 @@
       <div class="row">
 
           <div class="col-6">
-            <%= link_to  "#", class:"btn btn-primary btn-round btn-outline-primary btn-block", id:"pagar", style:"width: 100%; " do %>
+            <%= link_to  "#", class:"btn btn-primary btn-round btn-outline-primary btn-block", id:"mercado-pago",  style:"width: 100%; " do %>
 
             <%= image_tag("mercado-pago-logo.png", alt:"Ligas do CFC", class:"img-fluid", style:"width: 50%;") %> 
 
@@ -114,20 +111,70 @@
           </div>
           <h1></h1>
           <div class="col-6">
-            <%= link_to  "#", class:"btn btn-success btn-round btn-outline-success btn-block", id:"pagar-pay", style:"width: 100%; " do %>
+            <%= link_to  "#", class:"btn btn-success btn-round btn-outline-success btn-block", id:"picpay", style:"width: 100%; " do %>
 
             <%= image_tag("picpay-logo.png", alt:"Ligas do CFC", class:"img-fluid", style:"width: 50%;") %> 
 
             <% end %>
+
+
+
+            
           </div>
+
+          
+
           <h1></h1>
+
+
           <div>
           <h1></h1>
-          <p class="" style="text-align: justify;"> OBS: Após realizar o pagamento via <b>Mercado Pago</b>, caso o pagamento for:</p>
-          <p class="" style="text-align: justify;"> <b style="color: green;">Aprovado: </b> Clique em <b> Voltar para o site </b> ou espere 5 segundos ser redirecionado para o site.<br>
-          <b style="color: #FF8000;">Pendente: </b> Clique em <b> Ok, Entendi </b> para que suas informações sejam salvas no nosso sistema.<br>
-          <b style="color: red;">Recusado:  </b>Revise seus dados de pagamento e tente pagar novamente ou Clique em <b> Voltar para o site </b> para que suas informações sejam salvas no nosso sistema. </p>
+          
+          <script>
+
+         var botao_mp = document.getElementById('mercado-pago');
+          botao_mp.addEventListener("click", function(){       
+          document.getElementById("pagar").style.display = "";
+          document.getElementById("pagar-pay").style.display = "none";
+          document.getElementById('text1').innerHTML='OBS: Após realizar o pagamento via <b>Mercado Pago</b>, caso o pagamento for:';
+          document.getElementById('text2').innerHTML='<b style="color: green;">Aprovado: </b> Clique em <b> Voltar para o site </b> ou espere 5 segundos ser redirecionado para o site.<br> <b style="color: #FF8000;">Pendente: </b> Clique em <b> Ok, Entendi </b> para que suas informações sejam salvas no nosso sistema.<br> <b style="color: red;">Recusado:  </b>Revise seus dados de pagamento e tente pagar novamente ou Clique em <b> Voltar para o site </b> para que suas informações sejam salvas no nosso sistema.';
+         
+        
+        });  
+            
+        
+        </script>
+
+         <script>
+
+      var botao_pp = document.getElementById('picpay');
+      botao_pp.addEventListener("click", function(){       
+       document.getElementById("pagar-pay").style.display = "";
+       document.getElementById("pagar").style.display = "none";
+        document.getElementById('text1').innerHTML='OBS: Caso esteja acessando o site pelo celular e fez o pagamento pelo APP do <b>PicPay</b>, após realizar o pagamento, volte até essa pagina e atualize ela para salvar suas informações. ';
+        document.getElementById('text2').innerHTML='';
+        
+        });  
+            
+        
+        </script>
+
+         
+         
+          <p id=text1 class="" style="text-align: justify;"> </p>
+          <p id=text2 class="" style="text-align: justify;"> </p>
            
+            <div style="text-align: center;" >
+              <%= link_to  "#", class:"btn btn-primary ", id:"pagar", style:"width: 100%; display:none; " do %>
+                Realizar Pagamento
+              <% end %>
+          </div>
+
+          <div style="text-align: center;" >
+              <%= link_to  "#", class:"btn btn-success ", id:"pagar-pay", style:"width: 100%; display:none; " do %>
+                Realizar Pagamento
+              <% end %>
+          </div>
           </div>
       </div>
       <%= javascript_include_tag 'application' %>
@@ -155,8 +202,25 @@
        <% end %>
        
        <div class="modal-footer">      
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        <button id="fechar-liga" type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
       </div>      
+
+      <script>
+
+      var botao_pp = document.getElementById('fechar-liga');
+      botao_pp.addEventListener("click", function(){       
+       document.getElementById("pagar-pay").style.display = "none";
+       document.getElementById("pagar").style.display = "none";
+        document.getElementById('text1').innerHTML='';
+        document.getElementById('text2').innerHTML='';
+        document.getElementById("time").value = '';
+        document.getElementById("pagar").href = "#";
+        document.getElementById("pagar-pay").href = "#";
+        
+        });  
+            
+        
+        </script> 
     </div> 
     </div>
 </div>

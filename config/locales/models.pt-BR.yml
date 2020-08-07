@@ -20,7 +20,7 @@
         id: Código
         nome: Nome
         sobrenome: Sobrenome
-        rg: RG
+        rg: CPF
         email: Email
         password: Senha
         password_confirmation: Confirmação da Senha

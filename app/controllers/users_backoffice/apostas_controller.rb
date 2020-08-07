@@ -1,5 +1,5 @@
 class UsersBackoffice::ApostasController < UsersBackofficeController
-    
+
     require 'net/http'
     require 'uri'
     require 'json'
@@ -18,130 +18,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     end
 
     def rodada_atual
-
-
-        uri = URI.parse("https://appws.picpay.com/ecommerce/public/payments")
-        request = Net::HTTP::Post.new(uri)
-        request.content_type = "application/json"
-        request["X-Picpay-Token"] = "5b008cef7f321d00ef2367b2"
-        request.body = JSON.dump({
-          "referenceId" => "102030",
-          "callbackUrl" => "http://localhost:3000/users_backoffice/rodada_atual",
-          "returnUrl" => "http://localhost:3000/users_backoffice/rodada_atual",
-          "value" => 20.51,
-          "expiresAt" => "2022-05-01T16:00:00-03:00"
-        })
-        
-        req_options = {
-          use_ssl: uri.scheme == "https",
-        }
-        
-        @response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
-          http.request(request)
-        end
-
-
-
-
-         # SDK de Mercado Pago
-         require 'mercadopago.rb'
-
-         # Configura credenciais
-         $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
-
-
-
-        unless @mercado == 1
-            redirect_to users_backoffice_welcome_index_path #redirect para tela de resultados dessa aposta
-        end  
-                
-
-        @rodada = @rodada_prox0 
-        status_pagamento = params["collection_status"]
-        id_pagamento = params["collection_id"] 
-
-        unless status_pagamento.blank?
-            unless status_pagamento == "null"
-                if status_pagamento == "approved"
-                    equipe_verificar_salvar = Equipe.all.where(id: params["external_reference"])
-                    equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
-                    equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
-                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
-                    unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
-                            @aposta = Apostum.new(equipe_salvar)
-                                if @aposta.save
-                                    equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
-                                    pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
-                                    pagamento_aprovado.save
-                                    set_total_rodada(@rodada)
-                                    flash[:success] = "Parabéns! Você está participando dessa aposta."
-                                    redirect_to "/users_backoffice/rodada_atual"
-                                else
-                                    redirect_to "/users_backoffice/rodada_atual"
-                                end 
-                        else
-                            flash[:success] = "Parabéns! Você já está participando dessa aposta."
-                            redirect_to "/users_backoffice/rodada_atual"
-                        end
-                end
-
-
-                if status_pagamento == "pending" || status_pagamento == "in_process"
-                    preapproval = $mp.cancel_payment(id_pagamento)                    
-                    flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
-                    redirect_to "/users_backoffice/rodada_atual"
-                end
-
-                if status_pagamento == "rejected"
-                    equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
-                    pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
-                    
-                    pagamento_recusado.save
-                    flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
-                    redirect_to "/users_backoffice/rodada_atual"
-                end
-            end
-        end
-        
-        #define a numeração das posições        
-        @ppp = params["page"].to_i 
-        if @ppp == 0
-            @contador = 1
-           
-        else
-            @contador = (params["page"].to_i * 2) - 1
-           
-        end
-        
        
-        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
-
-        # descobre quais equipes do usuario já está na aposta
-        @equipes_total = Equipe.all.where(user_id: @user)
-
-        y = 0  
-        @equipes_nome = Array.new
-        while y < @equipes_total.length 
-            @equipes_nome[y] = @equipes_total[y]["nome_time"]
-            y = y + 1
-        end
-                        
-        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_nome: @equipes_nome)
-      
-        x = 0  
-        @equipes_aposta = Array.new
-        while x < @apostador.length 
-            @equipes_aposta[x] = @apostador[x]["equipe_nome"]
-            x = x + 1
-        end
-
-        @equipe_resultado = Equipe.all.where(nome_time: @equipes_aposta)
-
-        @equipes_final = @equipes_total - @equipe_resultado
-
-        
-        #verificação para a tela JS
-        @equipe_verificar = params[:equipe_id]
 
         #verifica na api o fechamento do mercado para poder bloquear pagamento após esse horário
         dia = JSON.parse(@resp.body)["fechamento"]["dia"]
@@ -170,125 +47,306 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
        if dia>=1 && dia <= 9
             @hora = "#{ano}-#{mes}-0#{dia}T#{hora_final}:#{minuto_final}:00.000-03:00"
+            @hora_picpay = "#{ano}-#{mes}-0#{dia}T#{hora_final}:#{minuto_final}:00-03:00"
+            
         else
             @hora = "#{ano}-#{mes}-#{dia}T#{hora_final}:#{minuto_final}:00.000-03:00"   
+            @hora_picpay = "#{ano}-#{mes}-#{dia}T#{hora_final}:#{minuto_final}:00-03:00"  
         end
 
-        #criar a preferencia, que gera o pagamento do mercadopago
+
+        rodada_verificar = @rodada_prox0 
+
+        
+        @equipe_verificar_picpay  =  params[:equipe_id]
+
+
+        #PAGAMENTO PICPAY
+        unless @equipe_verificar_picpay.blank?
+            
+            @teste_equipe = rand(10 .. 99)
        
-        preference_data = {
-            "items": [
-                {   
-                    "id": "1",
-                    "title": "Pagamento de Aposta",
-                    "description": "TESTE",
-                    "quantity": 1,
-                    "unit_price": 10.5,
-                    "currency_id": "BRL"
-                }
-            ],
-            "back_urls": {
-                "success": "http://localhost:3000/users_backoffice/rodada_atual",
-                "failure": "http://localhost:3000/users_backoffice/rodada_atual",
-                "pending": "http://localhost:3000/users_backoffice/rodada_atual"
-            },
-            "auto_return": "all",
-            "payment_methods": {
-                "excluded_payment_methods": [
-                    {
-                        "id": "bolbradesco"
-                    }
-                ],
+            @teste_verificando = "#{@teste_equipe}ep#{params[:equipe_id]}rda#{rodada_verificar}"
+
+            uri = URI.parse("https://appws.picpay.com/ecommerce/public/payments")
+            request = Net::HTTP::Post.new(uri)
+            request.content_type = "application/json"
+            request["X-Picpay-Token"] = "98de93cc-33f8-4ef3-9b81-36c5b6b78dec"
+            request.body = JSON.dump({
+            "referenceId" => "#{@teste_verificando}",
+            "callbackUrl" => "http://localhost:3000/users_backoffice/rodada_atual",
+            "returnUrl" => "http://localhost:3000/users_backoffice/rodada_atual",
+            "value" => 1.0,
+            "expiresAt" => "#{@hora_picpay}",
+            "buyer" => {
+                "firstName" => "#{@user.nome}",
+                "lastName" => "#{@user.sobrenome}",
+                "document" => "123.456.789-10",
+                "email" => "#{@user.email}",
+                "phone" => "+55 71 988888888"
+            }
+            })
+            
+            req_options = {
+            use_ssl: uri.scheme == "https",
+            }
+            
+            @response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+            http.request(request)
+            end
+
+            @link_pagamento = JSON.parse(@response.body)["paymentUrl"]
+
+            reference_salvar = Hash["reference_picpay"=> @teste_verificando, "equipe_picpay"=> params[:equipe_id], "user_picpay"=> @user.id, "rodada"=> rodada_verificar]
+            salvando_reference = VerificarPagamento.new(reference_salvar)
+            salvando_reference.save
+            
+        end
+        
+        
+
+        @verificar_pagamento_banco = VerificarPagamento.all.where(user_picpay: @user.id, rodada: rodada_verificar)
+        
+        if @verificar_pagamento_banco != [] && @equipe_verificar_picpay.blank?
+            
+            id_picpay = @verificar_pagamento_banco[0]["id"] 
+            @reference_picpay = @verificar_pagamento_banco[0]["reference_picpay"]  
+            equipe_picpay = @verificar_pagamento_banco[0]["equipe_picpay"] 
+            user_picpay = @verificar_pagamento_banco[0]["user_picpay"]
+            
+            uri = URI.parse("https://appws.picpay.com/ecommerce/public/payments/#{@reference_picpay}/status")
+            request = Net::HTTP::Get.new(uri)
+            request.content_type = "application/json"
+            request["X-Picpay-Token"] = "98de93cc-33f8-4ef3-9b81-36c5b6b78dec"
+
+            req_options = {
+            use_ssl: uri.scheme == "https",
+            }
+
+            @response2 = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+            http.request(request)
+            end
+
+            @status = JSON.parse(@response2.body)["status"]
                 
-               "excluded_payment_types": [
-                    {
-                        "id": "ticket"
+                if @status == "completed" || @status == "paid" || @status == "analysis" || @status == "chargeback"
+                        equipe_verificar_salvar = Equipe.all.where(id: equipe_picpay)
+                        equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
+                        equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+                        equipe_salvar = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
+                        unless Apostum.exists?(equipe_id: equipe_picpay, rodada: rodada_verificar)
+                                @aposta = Apostum.new(equipe_salvar)
+                                    if @aposta.save
+                                        equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "status"=> "Aprovado"]
+                                        pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                        pagamento_aprovado.save
+                                        set_total_rodada(rodada_verificar)
+                                        flash[:success] = "Parabéns! Você está participando dessa aposta."
+                                        redirect_to "/users_backoffice/rodada_atual"
+                                    else
+                                        redirect_to "/users_backoffice/rodada_atual"
+                                    end 
+                        else
+                                flash[:success] = "Parabéns! Você já está participando dessa aposta."
+                                redirect_to "/users_backoffice/rodada_atual"
+                        end
+                        
+                        excluir_reference = VerificarPagamento.find(id_picpay)
+                        excluir_reference.destroy
+                end        
+                
+                if  @status == "expired" || @status == "refunded"
+                        equipe_pagamento_recusado = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "status"=> "Recusado"]
+                        pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                        
+                        pagamento_recusado.save
+                        flash[:danger] = "Seu pagamento foi recusado ou cancelado, favor tentar novamente."
+                        redirect_to "/users_backoffice/rodada_atual"
+
+                        excluir_reference = VerificarPagamento.find(id_picpay)
+                        excluir_reference.destroy
+                end
+                if  @status == "created"
+                        excluir_reference = VerificarPagamento.find(id_picpay)
+                        excluir_reference.destroy
+                end
+                if @response2.code == "422"
+                     excluir_reference = VerificarPagamento.find(id_picpay)
+                     excluir_reference.destroy
+                end
+               
+        end
+
+
+
+         # SDK de Mercado Pago
+         require 'mercadopago.rb'
+
+         # Configura credenciais
+         $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
+
+        #PAGAMENTO MERCADO PAGO
+         @equipe_verificar_mp  =  params[:equipe_id]
+
+
+         unless @equipe_verificar_mp.blank?
+            @teste_equipe_mp = rand(10 .. 99)
+       
+            @teste_verificando_mp = "#{@teste_equipe}ep#{params[:equipe_id]}rda#{rodada_verificar}"
+
+            preference_data = {
+                "items": [
+                    {   
+                        "id": "1",
+                        "title": "Pagamento da Liga Rodada #{rodada_verificar}",
+                        "description": "TESTE",
+                        "quantity": 1,
+                        "unit_price": 10.5,
+                        "currency_id": "BRL"
                     }
                 ],
-                "installments": 1
-            },
-            
-            "external_reference": "#{params[:equipe_id]}",
-            "expires": true,
-            "expiration_date_from": "2020-05-20T12:00:00.000-03:00",
-            "expiration_date_to": "#{@hora}"  # Após descobrir o horario que o mercado vai fechar
+                "back_urls": {
+                    "success": "http://localhost:3000/users_backoffice/rodada_atual",
+                    "failure": "http://localhost:3000/users_backoffice/rodada_atual",
+                    "pending": "http://localhost:3000/users_backoffice/rodada_atual"
+                },
+                "auto_return": "all",
+                "payment_methods": {
+                    "excluded_payment_methods": [
+                        {
+                            "id": "bolbradesco"
+                        }
+                    ],
+                    
+                    "excluded_payment_types": [
+                        {
+                            "id": "ticket"
+                        }
+                    ],
+                    "installments": 1
+                },
+                
+                "external_reference": "#{@teste_verificando_mp}",
+                "expires": true,
+                "expiration_date_from": "2020-05-20T12:00:00.000-03:00",
+                "expiration_date_to": "#{@hora}"  # Após descobrir o horario que o mercado vai fechar
+    
+                
+                
+            }
+         
+          @preference = $mp.create_preference(preference_data)
+          #link para poder passar para o botão após escolher o time
+          @preference_link = @preference["response"]["sandbox_init_point"] 
 
-            
-            
-        }
-       
-        @preference = $mp.create_preference(preference_data)
-        #link para poder passar para o botão após escolher o time
-        @preference_link = @preference["response"]["sandbox_init_point"] 
-
-       
-    end
+          reference_salvar_mp = Hash["reference_mp"=> @teste_verificando_mp, "equipe_mp"=> params[:equipe_id], "user_mp"=> @user.id, "rodada"=> rodada_verificar]
+          salvando_reference_mp = VerificarPagamentoMp.new(reference_salvar_mp)
+          salvando_reference_mp.save
+  
+        end
 
 
-    def rodada_prox
-        # SDK de Mercado Pago
-        require 'mercadopago.rb'
+        unless @mercado == 1
+            redirect_to users_backoffice_welcome_index_path #redirect para tela de resultados dessa aposta
+        end  
+                
 
-        # Configura credenciais
-        $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
 
-        @rodada = @rodada_prox1
+        @rodada = @rodada_prox0 
         status_pagamento = params["collection_status"]
         id_pagamento = params["collection_id"] 
 
-        unless status_pagamento.blank?
-            unless status_pagamento == "null"
-                if status_pagamento == "approved"
-                    equipe_verificar_salvar = Equipe.all.where(id: params["external_reference"])
-                    equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
-                    equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
-                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
-                        unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
-                            @aposta = Apostum.new(equipe_salvar)
-                                if @aposta.save
-                                    equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
-                                    pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
-                                    pagamento_aprovado.save
-                                    set_total_rodada(@rodada)
-                                    flash[:success] = "Parabéns! Você está participando dessa aposta."
-                                    redirect_to "/users_backoffice/rodada_prox"
-                                else
-                                    redirect_to "/users_backoffice/rodada_prox"
-                                end 
-                        else
-                            flash[:success] = "Parabéns! Você já está participando dessa aposta."
-                            redirect_to "/users_backoffice/rodada_prox"
+        @verificar_pagamento_mp = VerificarPagamentoMp.all.where(user_mp: @user.id, rodada: rodada_verificar)
+
+
+        if @verificar_pagamento_mp != [] && @equipe_verificar_mp.blank?
+
+            id_mp = @verificar_pagamento_mp[0]["id"] 
+            reference_mp = @verificar_pagamento_mp[0]["reference_mp"]  
+            equipe_mp = @verificar_pagamento_mp[0]["equipe_mp"] 
+            user_mp = @verificar_pagamento_mp[0]["user_mp"]
+
+            if reference_mp == params["external_reference"]
+                unless status_pagamento.blank?
+                    unless status_pagamento == "null"
+                        paymentInfo = $mp.get_payment(id_pagamento) 
+                        status_pagamento_mp = paymentInfo["response"]["status"] 
+
+                        if status_pagamento_mp == "approved"
+                            equipe_verificar_salvar = Equipe.all.where(id: equipe_mp)
+                            equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
+                            equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+                            equipe_salvar = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
+                            unless Apostum.exists?(equipe_id: equipe_mp, rodada: @rodada)
+                                    @aposta = Apostum.new(equipe_salvar)
+                                        if @aposta.save
+                                            equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "status"=> "Aprovado"]
+                                            pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                            pagamento_aprovado.save
+                                            set_total_rodada(@rodada)
+                                            flash[:success] = "Parabéns! Você está participando dessa aposta."
+                                            redirect_to "/users_backoffice/rodada_atual"
+                                            
+                                        else
+                                            redirect_to "/users_backoffice/rodada_atual"
+                                        end 
+                            else
+                                    flash[:success] = "Parabéns! Você já está participando dessa aposta."
+                                    redirect_to "/users_backoffice/rodada_atual"
+                            end
+
+                            excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                            excluir_reference_mp.destroy
                         end
+
+
+                        if status_pagamento_mp == "pending" || status_pagamento == "in_process"
+                            preapproval = $mp.cancel_payment(id_pagamento)                    
+                            flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
+                            redirect_to "/users_backoffice/rodada_atual"
+                            excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                            excluir_reference_mp.destroy
+                        end
+
+                        if status_pagamento_mp == "rejected"
+                            equipe_pagamento_recusado = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "status"=> "Recusado"]
+                            pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                            
+                            pagamento_recusado.save
+                            flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
+                            redirect_to "/users_backoffice/rodada_atual"
+                            excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                            excluir_reference_mp.destroy
+                        end
+                    else
+                        excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                        excluir_reference_mp.destroy
+                        redirect_to "/users_backoffice/rodada_atual"
+                    end
                 end
 
-                if status_pagamento == "pending" || status_pagamento == "in_process"
-                    preapproval = $mp.cancel_payment(id_pagamento)                    
-                    flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
-                    redirect_to "/users_backoffice/rodada_prox"
-                end
-
-                if status_pagamento == "rejected"
-                    equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
-                    pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
-                    
-                    pagamento_recusado.save
-                    flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
-                    redirect_to "/users_backoffice/rodada_prox"
-                end
+            else
+                excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                excluir_reference_mp.destroy
+                redirect_to "/users_backoffice/rodada_atual"
             end
+            
         end
-                
-        
+
+       
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
 
         #define a numeração das posições        
         @ppp = params["page"].to_i 
         if @ppp == 0
             @contador = 1
+           
         else
-            @contador = (params["page"].to_i * 20) - 19
+            @contador = (params["page"].to_i * 2) - 1
+           
         end
         
+
         # descobre quais equipes do usuario já está na aposta
         @equipes_total = Equipe.all.where(user_id: @user)
 
@@ -315,12 +373,159 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         
         #verificação para a tela JS
         @equipe_verificar = params[:equipe_id]
+        if @equipe_verificar.blank?
+            @equipe_verificar_js = 1
+        else
+            @equipe_verificar_js = 2
+        end
+       
+    end
+
+
+    def rodada_prox
+
+        rodada_verificar = @rodada_prox1 
+
+        @equipe_verificar_picpay  =  params[:equipe_id]
+
+        #PAGAMENTO PICPAY
+        unless @equipe_verificar_picpay.blank?
+            
+            @teste_equipe = rand(1 .. 99)
+       
+            @teste_verificando = "#{@teste_equipe}ep#{params[:equipe_id]}rda#{rodada_verificar}"
+
+            uri = URI.parse("https://appws.picpay.com/ecommerce/public/payments")
+            request = Net::HTTP::Post.new(uri)
+            request.content_type = "application/json"
+            request["X-Picpay-Token"] = "98de93cc-33f8-4ef3-9b81-36c5b6b78dec"
+            request.body = JSON.dump({
+            "referenceId" => "#{@teste_verificando}",
+            "callbackUrl" => "http://localhost:3000/users_backoffice/rodada_prox",
+            "returnUrl" => "http://localhost:3000/users_backoffice/rodada_prox",
+            "value" => 1.0,
+            "expiresAt" => "2021-12-31T16:00:00-03:00",
+            "buyer" => {
+                "firstName" => "#{@user.nome}",
+                "lastName" => "#{@user.sobrenome}",
+                "document" => "123.456.789-10",
+                "email" => "#{@user.email}",
+                "phone" => "+55 71 988888888"
+            }
+            })
+            
+            req_options = {
+            use_ssl: uri.scheme == "https",
+            }
+            
+            @response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+            http.request(request)
+            end
+
+            @link_pagamento = JSON.parse(@response.body)["paymentUrl"]
+
+            reference_salvar = Hash["reference_picpay"=> @teste_verificando, "equipe_picpay"=> params[:equipe_id], "user_picpay"=> @user.id, "rodada"=> rodada_verificar]
+            salvando_reference = VerificarPagamento.new(reference_salvar)
+            salvando_reference.save
+            
+        end
+        
+    
+        @verificar_pagamento_banco = VerificarPagamento.all.where(user_picpay: @user.id, rodada: rodada_verificar)
+        
+        if @verificar_pagamento_banco != [] && @equipe_verificar_picpay.blank?
+            
+            id_picpay = @verificar_pagamento_banco[0]["id"] 
+            @reference_picpay = @verificar_pagamento_banco[0]["reference_picpay"]  
+            equipe_picpay = @verificar_pagamento_banco[0]["equipe_picpay"] 
+            user_picpay = @verificar_pagamento_banco[0]["user_picpay"]
+            
+            uri = URI.parse("https://appws.picpay.com/ecommerce/public/payments/#{@reference_picpay}/status")
+            request = Net::HTTP::Get.new(uri)
+            request.content_type = "application/json"
+            request["X-Picpay-Token"] = "98de93cc-33f8-4ef3-9b81-36c5b6b78dec"
+
+            req_options = {
+            use_ssl: uri.scheme == "https",
+            }
+
+            @response2 = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+            http.request(request)
+            end
+
+            @status = JSON.parse(@response2.body)["status"]
+                
+                if @status == "completed" || @status == "paid" || @status == "analysis" || @status == "chargeback"
+                        equipe_verificar_salvar = Equipe.all.where(id: equipe_picpay)
+                        equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
+                        equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+                        equipe_salvar = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
+                        unless Apostum.exists?(equipe_id: equipe_picpay, rodada: rodada_verificar)
+                                @aposta = Apostum.new(equipe_salvar)
+                                    if @aposta.save
+                                        equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "status"=> "Aprovado"]
+                                        pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                        pagamento_aprovado.save
+                                        set_total_rodada(rodada_verificar)
+                                        flash[:success] = "Parabéns! Você está participando dessa aposta."
+                                        redirect_to "/users_backoffice/rodada_prox"
+                                    else
+                                        redirect_to "/users_backoffice/rodada_prox"
+                                    end 
+                        else
+                                flash[:success] = "Parabéns! Você já está participando dessa aposta."
+                                redirect_to "/users_backoffice/rodada_prox"
+                        end
+                        
+                        excluir_reference = VerificarPagamento.find(id_picpay)
+                        excluir_reference.destroy
+                end        
+                
+                if  @status == "expired" || @status == "refunded"
+                        equipe_pagamento_recusado = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "status"=> "Recusado"]
+                        pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                        
+                        pagamento_recusado.save
+                        flash[:danger] = "Seu pagamento foi recusado ou cancelado, favor tentar novamente."
+                        redirect_to "/users_backoffice/rodada_prox"
+
+                        excluir_reference = VerificarPagamento.find(id_picpay)
+                        excluir_reference.destroy
+                end
+
+                if  @status == "created"
+                        excluir_reference = VerificarPagamento.find(id_picpay)
+                        excluir_reference.destroy
+                end
+                if @response2.code == "422"
+                    excluir_reference = VerificarPagamento.find(id_picpay)
+                    excluir_reference.destroy
+               end
+               
+        end
+               
+        
+
+        # SDK de Mercado Pago
+        require 'mercadopago.rb'
+
+        # Configura credenciais
+        $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
+
+        #PAGAMENTO MERCADO PAGO
+        @equipe_verificar_mp  =  params[:equipe_id]
+
+        unless @equipe_verificar_mp.blank?
+            @teste_equipe_mp = rand(10 .. 99)
+       
+            @teste_verificando_mp = "#{@teste_equipe}ep#{params[:equipe_id]}rda#{rodada_verificar}"
+       
 
         preference_data = {
             "items": [
                 {   
                     "id": "1",
-                    "title": "Pagamento de Aposta",
+                    "title": "Pagamento da Liga Rodada #{rodada_verificar}",
                     "description": "TESTE",
                     "quantity": 1,
                     "unit_price": 10.5,
@@ -340,7 +545,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                     }
                 ],
                 
-               "excluded_payment_types": [
+            "excluded_payment_types": [
                     {
                         "id": "ticket"
                     }
@@ -348,69 +553,411 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 "installments": 1
             },
             
-            "external_reference": "#{params[:equipe_id]}",
+            "external_reference": "#{@teste_verificando_mp}",
             
             
         }
         @preference = $mp.create_preference(preference_data)
-        
+        #link para poder passar para o botão após escolher o time
         @preference_link = @preference["response"]["sandbox_init_point"] 
+
+        reference_salvar_mp = Hash["reference_mp"=> @teste_verificando_mp, "equipe_mp"=> params[:equipe_id], "user_mp"=> @user.id, "rodada"=> rodada_verificar]
+        salvando_reference_mp = VerificarPagamentoMp.new(reference_salvar_mp)
+        salvando_reference_mp.save
+
+      end
+
+
+
+        @rodada = @rodada_prox1
+        status_pagamento = params["collection_status"]
+        id_pagamento = params["collection_id"] 
+
+        @verificar_pagamento_mp = VerificarPagamentoMp.all.where(user_mp: @user.id, rodada: rodada_verificar)
+
+        if @verificar_pagamento_mp != [] && @equipe_verificar_mp.blank?
+
+            id_mp = @verificar_pagamento_mp[0]["id"] 
+            reference_mp = @verificar_pagamento_mp[0]["reference_mp"]  
+            equipe_mp = @verificar_pagamento_mp[0]["equipe_mp"] 
+            user_mp = @verificar_pagamento_mp[0]["user_mp"]
+
+            if reference_mp == params["external_reference"]
+                unless status_pagamento.blank?
+                    unless status_pagamento == "null"
+                    paymentInfo = $mp.get_payment(id_pagamento) 
+                    status_pagamento_mp = paymentInfo["response"]["status"] 
+
+                        if status_pagamento_mp == "approved"
+                            equipe_verificar_salvar = Equipe.all.where(id: equipe_mp)
+                            equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
+                            equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+                            equipe_salvar = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
+                                unless Apostum.exists?(equipe_id: equipe_mp, rodada: @rodada)
+                                    @aposta = Apostum.new(equipe_salvar)
+                                        if @aposta.save
+                                            equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "status"=> "Aprovado"]
+                                            pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                            pagamento_aprovado.save
+                                            set_total_rodada(@rodada)
+                                            flash[:success] = "Parabéns! Você está participando dessa aposta."
+                                            redirect_to "/users_backoffice/rodada_prox"
+                                        else
+                                            redirect_to "/users_backoffice/rodada_prox"
+                                        end 
+                                else
+                                    flash[:success] = "Parabéns! Você já está participando dessa aposta."
+                                    redirect_to "/users_backoffice/rodada_prox"
+                                end
+                            excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                            excluir_reference_mp.destroy
+                        end
+
+                        if status_pagamento_mp == "pending" || status_pagamento == "in_process"
+                            preapproval = $mp.cancel_payment(id_pagamento)                    
+                            flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
+                            redirect_to "/users_backoffice/rodada_prox"
+                            excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                            excluir_reference_mp.destroy
+                        end
+
+                        if status_pagamento_mp == "rejected"
+                            equipe_pagamento_recusado = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "status"=> "Recusado"]
+                            pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                            
+                            pagamento_recusado.save
+                            flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
+                            redirect_to "/users_backoffice/rodada_prox"
+                            excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                            excluir_reference_mp.destroy
+                        end
+                    else
+                        excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                        excluir_reference_mp.destroy
+                        redirect_to "/users_backoffice/rodada_prox"
+                    end
+                end
+            else
+                excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                excluir_reference_mp.destroy
+                redirect_to "/users_backoffice/rodada_prox"
+            end
+        end
+        
+        
+        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
+
+        #define a numeração das posições        
+        @ppp = params["page"].to_i 
+        if @ppp == 0
+            @contador = 1
+        else
+            @contador = (params["page"].to_i * 20) - 19
+        end
+        
+        # descobre quais equipes do usuario já está na aposta
+        @equipes_total = Equipe.all.where(user_id: @user)
+
+        y = 0  
+        @equipes_nome = Array.new
+        while y < @equipes_total.length 
+            @equipes_nome[y] = @equipes_total[y]["nome_time"]
+            y = y + 1
+        end
+                        
+        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_nome: @equipes_nome)
+      
+        x = 0  
+        @equipes_aposta = Array.new
+        while x < @apostador.length 
+            @equipes_aposta[x] = @apostador[x]["equipe_nome"]
+            x = x + 1
+        end
+
+        @equipe_resultado = Equipe.all.where(nome_time: @equipes_aposta)
+
+        @equipes_final = @equipes_total - @equipe_resultado
+        
+          #verificação para a tela JS
+        @equipe_verificar = params[:equipe_id]
+        if @equipe_verificar.blank?
+            @equipe_verificar_js = 1
+        else
+            @equipe_verificar_js = 2
+        end
+        
+        
         
     end
 
 
     def rodada_dprox
+
+        rodada_verificar = @rodada_prox2 
+
+        @equipe_verificar_picpay  =  params[:equipe_id]
+
+        #PAGAMENTO PICPAY
+        unless @equipe_verificar_picpay.blank?
+            
+            @teste_equipe = rand(10 .. 99)
+       
+            @teste_verificando = "#{@teste_equipe}ep#{params[:equipe_id]}rda#{rodada_verificar}"
+
+            uri = URI.parse("https://appws.picpay.com/ecommerce/public/payments")
+            request = Net::HTTP::Post.new(uri)
+            request.content_type = "application/json"
+            request["X-Picpay-Token"] = "98de93cc-33f8-4ef3-9b81-36c5b6b78dec"
+            request.body = JSON.dump({
+            "referenceId" => "#{@teste_verificando}",
+            "callbackUrl" => "http://localhost:3000/users_backoffice/rodada_dprox",
+            "returnUrl" => "http://localhost:3000/users_backoffice/rodada_dprox",
+            "value" => 1.0,
+            "expiresAt" => "2021-12-31T16:00:00-03:00",
+            "buyer" => {
+                "firstName" => "#{@user.nome}",
+                "lastName" => "#{@user.sobrenome}",
+                "document" => "123.456.789-10",
+                "email" => "#{@user.email}",
+                "phone" => "+55 71 988888888"
+            }
+            })
+            
+            req_options = {
+            use_ssl: uri.scheme == "https",
+            }
+            
+            @response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+            http.request(request)
+            end
+
+            @link_pagamento = JSON.parse(@response.body)["paymentUrl"]
+
+            reference_salvar = Hash["reference_picpay"=> @teste_verificando, "equipe_picpay"=> params[:equipe_id], "user_picpay"=> @user.id, "rodada"=> rodada_verificar]
+            salvando_reference = VerificarPagamento.new(reference_salvar)
+            salvando_reference.save
+            
+        end
+        
+        
+
+        @verificar_pagamento_banco = VerificarPagamento.all.where(user_picpay: @user.id, rodada: rodada_verificar)
+        
+        if @verificar_pagamento_banco != [] && @equipe_verificar_picpay.blank?
+            
+            id_picpay = @verificar_pagamento_banco[0]["id"] 
+            @reference_picpay = @verificar_pagamento_banco[0]["reference_picpay"]  
+            equipe_picpay = @verificar_pagamento_banco[0]["equipe_picpay"] 
+            user_picpay = @verificar_pagamento_banco[0]["user_picpay"]
+            
+            uri = URI.parse("https://appws.picpay.com/ecommerce/public/payments/#{@reference_picpay}/status")
+            request = Net::HTTP::Get.new(uri)
+            request.content_type = "application/json"
+            request["X-Picpay-Token"] = "98de93cc-33f8-4ef3-9b81-36c5b6b78dec"
+
+            req_options = {
+            use_ssl: uri.scheme == "https",
+            }
+
+            @response2 = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+            http.request(request)
+            end
+
+            @status = JSON.parse(@response2.body)["status"]
+                
+                if @status == "completed" || @status == "paid" || @status == "analysis" || @status == "chargeback"
+                        equipe_verificar_salvar = Equipe.all.where(id: equipe_picpay)
+                        equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
+                        equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+                        equipe_salvar = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
+                        unless Apostum.exists?(equipe_id: equipe_picpay, rodada: rodada_verificar)
+                                @aposta = Apostum.new(equipe_salvar)
+                                    if @aposta.save
+                                        equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "status"=> "Aprovado"]
+                                        pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                        pagamento_aprovado.save
+                                        set_total_rodada(rodada_verificar)
+                                        flash[:success] = "Parabéns! Você está participando dessa aposta."
+                                        redirect_to "/users_backoffice/rodada_dprox"
+                                    else
+                                        redirect_to "/users_backoffice/rodada_dprox"
+                                    end 
+                        else
+                                flash[:success] = "Parabéns! Você já está participando dessa aposta."
+                                redirect_to "/users_backoffice/rodada_dprox"
+                        end
+                        
+                        excluir_reference = VerificarPagamento.find(id_picpay)
+                        excluir_reference.destroy
+                end        
+                
+                if  @status == "expired" || @status == "refunded"
+                        equipe_pagamento_recusado = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "status"=> "Recusado"]
+                        pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                        
+                        pagamento_recusado.save
+                        flash[:danger] = "Seu pagamento foi recusado ou cancelado, favor tentar novamente."
+                        redirect_to "/users_backoffice/rodada_dprox"
+
+                        excluir_reference = VerificarPagamento.find(id_picpay)
+                        excluir_reference.destroy
+                end
+                if  @status == "created"
+                        excluir_reference = VerificarPagamento.find(id_picpay)
+                        excluir_reference.destroy
+                end
+                if @response2.code == "422"
+                    excluir_reference = VerificarPagamento.find(id_picpay)
+                    excluir_reference.destroy
+               end
+               
+        end
+               
+        
+
+
+
+
         # SDK de Mercado Pago
         require 'mercadopago.rb'
 
         # Configura credenciais
         $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
 
+       
+        
+        #PAGAMENTO MERCADO PAGO
+        @equipe_verificar_mp  =  params[:equipe_id]
+
+        unless @equipe_verificar_mp.blank?
+            @teste_equipe_mp = rand(10 .. 99)
+       
+            @teste_verificando_mp = "#{@teste_equipe}ep#{params[:equipe_id]}rda#{rodada_verificar}"
+       
+
+        preference_data = {
+            "items": [
+                {   
+                    "id": "1",
+                    "title": "Pagamento da Liga Rodada #{rodada_verificar}",
+                    "description": "TESTE",
+                    "quantity": 1,
+                    "unit_price": 10.5,
+                    "currency_id": "BRL"
+                }
+            ],
+            "back_urls": {
+                "success": "http://localhost:3000/users_backoffice/rodada_dprox",
+                "failure": "http://localhost:3000/users_backoffice/rodada_dprox",
+                "pending": "http://localhost:3000/users_backoffice/rodada_dprox"
+            },
+            "auto_return": "all",
+            "payment_methods": {
+                "excluded_payment_methods": [
+                    {
+                        "id": "bolbradesco"
+                    }
+                ],
+                
+            "excluded_payment_types": [
+                    {
+                        "id": "ticket"
+                    }
+                ],
+                "installments": 1
+            },
+            
+            "external_reference": "#{@teste_verificando_mp}",
+            
+            
+        }
+        @preference = $mp.create_preference(preference_data)
+        #link para poder passar para o botão após escolher o time
+        @preference_link = @preference["response"]["sandbox_init_point"] 
+
+        reference_salvar_mp = Hash["reference_mp"=> @teste_verificando_mp, "equipe_mp"=> params[:equipe_id], "user_mp"=> @user.id, "rodada"=> rodada_verificar]
+        salvando_reference_mp = VerificarPagamentoMp.new(reference_salvar_mp)
+        salvando_reference_mp.save
+
+      end
+
+
+
         @rodada = @rodada_prox2
         status_pagamento = params["collection_status"]
         id_pagamento = params["collection_id"] 
 
-        unless status_pagamento.blank?
-            unless status_pagamento == "null"
-                if status_pagamento == "approved"
-                    equipe_verificar_salvar = Equipe.all.where(id: params["external_reference"])
-                    equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
-                    equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
-                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
-                        unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
-                            @aposta = Apostum.new(equipe_salvar)
-                                if @aposta.save
-                                    equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
-                                    pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
-                                    pagamento_aprovado.save
-                                    set_total_rodada(@rodada)
-                                    flash[:success] = "Parabéns! Você está participando dessa aposta."
-                                    redirect_to "/users_backoffice/rodada_dprox"
+        @verificar_pagamento_mp = VerificarPagamentoMp.all.where(user_mp: @user.id, rodada: rodada_verificar)
+
+        if @verificar_pagamento_mp != [] && @equipe_verificar_mp.blank?
+
+            id_mp = @verificar_pagamento_mp[0]["id"] 
+            reference_mp = @verificar_pagamento_mp[0]["reference_mp"]  
+            equipe_mp = @verificar_pagamento_mp[0]["equipe_mp"] 
+            user_mp = @verificar_pagamento_mp[0]["user_mp"]
+
+            if reference_mp == params["external_reference"]
+                unless status_pagamento.blank?
+                    unless status_pagamento == "null"
+                    paymentInfo = $mp.get_payment(id_pagamento) 
+                    status_pagamento_mp = paymentInfo["response"]["status"] 
+
+                        if status_pagamento_mp == "approved"
+                            equipe_verificar_salvar = Equipe.all.where(id: equipe_mp)
+                            equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
+                            equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+                            equipe_salvar = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
+                                unless Apostum.exists?(equipe_id: equipe_mp, rodada: @rodada)
+                                    @aposta = Apostum.new(equipe_salvar)
+                                        if @aposta.save
+                                            equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "status"=> "Aprovado"]
+                                            pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                            pagamento_aprovado.save
+                                            set_total_rodada(@rodada)
+                                            flash[:success] = "Parabéns! Você está participando dessa aposta."
+                                            redirect_to "/users_backoffice/rodada_dprox"
+                                        else
+                                            redirect_to "/users_backoffice/rodada_dprox"
+                                        end 
                                 else
+                                    flash[:success] = "Parabéns! Você já está participando dessa aposta."
                                     redirect_to "/users_backoffice/rodada_dprox"
-                                end 
-                        else
-                            flash[:success] = "Parabéns! Você já está participando dessa aposta."
-                            redirect_to "/users_backoffice/rodada_dprox"
+                                end
+                            excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                            excluir_reference_mp.destroy
                         end
-                end
 
-                if status_pagamento == "pending" || status_pagamento == "in_process"
-                    preapproval = $mp.cancel_payment(id_pagamento)
-                    flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
-                    redirect_to "/users_backoffice/rodada_dprox"
-                end
+                        if status_pagamento_mp == "pending" || status_pagamento == "in_process"
+                            preapproval = $mp.cancel_payment(id_pagamento)                    
+                            flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
+                            redirect_to "/users_backoffice/rodada_dprox"
+                            excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                            excluir_reference_mp.destroy
+                        end
 
-                if status_pagamento == "rejected"
-                    equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
-                    pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
-                    
-                    pagamento_recusado.save
-                    flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
-                    redirect_to "/users_backoffice/rodada_dprox"
+                        if status_pagamento_mp == "rejected"
+                            equipe_pagamento_recusado = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "status"=> "Recusado"]
+                            pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                            
+                            pagamento_recusado.save
+                            flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
+                            redirect_to "/users_backoffice/rodada_dprox"
+                            excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                            excluir_reference_mp.destroy
+                        end
+                    else
+                        excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                        excluir_reference_mp.destroy
+                        redirect_to "/users_backoffice/rodada_dprox"
+                    end
                 end
+            else
+                excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                excluir_reference_mp.destroy
+                redirect_to "/users_backoffice/rodada_dprox"
             end
         end
+        
         
         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
 
@@ -448,12 +995,163 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         
         #verificação para a tela JS
         @equipe_verificar = params[:equipe_id]
+        if @equipe_verificar.blank?
+            @equipe_verificar_js = 1
+        else
+            @equipe_verificar_js = 2
+        end
+
+        
+    end
+    
+
+
+
+    def rodada_ddprox
+
+        rodada_verificar = @rodada_prox3 
+
+        @equipe_verificar_picpay  =  params[:equipe_id]
+
+        #PAGAMENTO PICPAY
+        unless @equipe_verificar_picpay.blank?
+            
+            @teste_equipe = rand(10 .. 99)
+       
+            @teste_verificando = "#{@teste_equipe}ep#{params[:equipe_id]}rda#{rodada_verificar}"
+
+            uri = URI.parse("https://appws.picpay.com/ecommerce/public/payments")
+            request = Net::HTTP::Post.new(uri)
+            request.content_type = "application/json"
+            request["X-Picpay-Token"] = "98de93cc-33f8-4ef3-9b81-36c5b6b78dec"
+            request.body = JSON.dump({
+            "referenceId" => "#{@teste_verificando}",
+            "callbackUrl" => "http://localhost:3000/users_backoffice/rodada_ddprox",
+            "returnUrl" => "http://localhost:3000/users_backoffice/rodada_ddprox",
+            "value" => 1.0,
+            "expiresAt" => "2021-12-31T16:00:00-03:00",
+            "buyer" => {
+                "firstName" => "#{@user.nome}",
+                "lastName" => "#{@user.sobrenome}",
+                "document" => "123.456.789-10",
+                "email" => "#{@user.email}",
+                "phone" => "+55 71 988888888"
+            }
+            })
+            
+            req_options = {
+            use_ssl: uri.scheme == "https",
+            }
+            
+            @response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+            http.request(request)
+            end
+
+            @link_pagamento = JSON.parse(@response.body)["paymentUrl"]
+
+            reference_salvar = Hash["reference_picpay"=> @teste_verificando, "equipe_picpay"=> params[:equipe_id], "user_picpay"=> @user.id, "rodada"=> rodada_verificar]
+            salvando_reference = VerificarPagamento.new(reference_salvar)
+            salvando_reference.save
+            
+        end
+        
+        
+
+        @verificar_pagamento_banco = VerificarPagamento.all.where(user_picpay: @user.id, rodada: rodada_verificar)
+        
+        if @verificar_pagamento_banco != [] && @equipe_verificar_picpay.blank?
+            
+            id_picpay = @verificar_pagamento_banco[0]["id"] 
+            @reference_picpay = @verificar_pagamento_banco[0]["reference_picpay"]  
+            equipe_picpay = @verificar_pagamento_banco[0]["equipe_picpay"] 
+            user_picpay = @verificar_pagamento_banco[0]["user_picpay"]
+            
+            uri = URI.parse("https://appws.picpay.com/ecommerce/public/payments/#{@reference_picpay}/status")
+            request = Net::HTTP::Get.new(uri)
+            request.content_type = "application/json"
+            request["X-Picpay-Token"] = "98de93cc-33f8-4ef3-9b81-36c5b6b78dec"
+
+            req_options = {
+            use_ssl: uri.scheme == "https",
+            }
+
+            @response2 = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+            http.request(request)
+            end
+
+            @status = JSON.parse(@response2.body)["status"]
+                
+                if @status == "completed" || @status == "paid" || @status == "analysis" || @status == "chargeback"
+                        equipe_verificar_salvar = Equipe.all.where(id: equipe_picpay)
+                        equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
+                        equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+                        equipe_salvar = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
+                        unless Apostum.exists?(equipe_id: equipe_picpay, rodada: rodada_verificar)
+                                @aposta = Apostum.new(equipe_salvar)
+                                    if @aposta.save
+                                        equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "status"=> "Aprovado"]
+                                        pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                        pagamento_aprovado.save
+                                        set_total_rodada(rodada_verificar)
+                                        flash[:success] = "Parabéns! Você está participando dessa aposta."
+                                        redirect_to "/users_backoffice/rodada_ddprox"
+                                    else
+                                        redirect_to "/users_backoffice/rodada_ddprox"
+                                    end 
+                        else
+                                flash[:success] = "Parabéns! Você já está participando dessa aposta."
+                                redirect_to "/users_backoffice/rodada_ddprox"
+                        end
+                        
+                        excluir_reference = VerificarPagamento.find(id_picpay)
+                        excluir_reference.destroy
+                end        
+                
+                if  @status == "expired" || @status == "refunded"
+                        equipe_pagamento_recusado = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "status"=> "Recusado"]
+                        pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                        
+                        pagamento_recusado.save
+                        flash[:danger] = "Seu pagamento foi recusado ou cancelado, favor tentar novamente."
+                        redirect_to "/users_backoffice/rodada_ddprox"
+
+                        excluir_reference = VerificarPagamento.find(id_picpay)
+                        excluir_reference.destroy
+                end
+                if  @status == "created"
+                        excluir_reference = VerificarPagamento.find(id_picpay)
+                        excluir_reference.destroy
+                end
+                if @response2.code == "422"
+                    excluir_reference = VerificarPagamento.find(id_picpay)
+                    excluir_reference.destroy
+               end
+               
+        end
+               
+
+
+        # SDK de Mercado Pago
+        require 'mercadopago.rb'
+
+        # Configura credenciais
+        $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
+
+        
+        #PAGAMENTO MERCADO PAGO
+        @equipe_verificar_mp  =  params[:equipe_id]
+
+        unless @equipe_verificar_mp.blank?
+            @teste_equipe_mp = rand(10 .. 99)
+       
+            @teste_verificando_mp = "#{@teste_equipe}ep#{params[:equipe_id]}rda#{rodada_verificar}"
+       
 
         preference_data = {
             "items": [
                 {   
                     "id": "1",
-                    "title": "Pagamento de Aposta",
+                    "title": "Pagamento da Liga Rodada #{rodada_verificar}",
                     "description": "TESTE",
                     "quantity": 1,
                     "unit_price": 10.5,
@@ -461,9 +1159,9 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 }
             ],
             "back_urls": {
-                "success": "http://localhost:3000/users_backoffice/rodada_dprox",
-                "failure": "http://localhost:3000/users_backoffice/rodada_dprox",
-                "pending": "http://localhost:3000/users_backoffice/rodada_dprox"
+                "success": "http://localhost:3000/users_backoffice/rodada_ddprox",
+                "failure": "http://localhost:3000/users_backoffice/rodada_ddprox",
+                "pending": "http://localhost:3000/users_backoffice/rodada_ddprox"
             },
             "auto_return": "all",
             "payment_methods": {
@@ -473,7 +1171,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                     }
                 ],
                 
-               "excluded_payment_types": [
+            "excluded_payment_types": [
                     {
                         "id": "ticket"
                     }
@@ -481,72 +1179,98 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                 "installments": 1
             },
             
-            "external_reference": "#{params[:equipe_id]}",
+            "external_reference": "#{@teste_verificando_mp}",
             
             
         }
         @preference = $mp.create_preference(preference_data)
-        
+        #link para poder passar para o botão após escolher o time
         @preference_link = @preference["response"]["sandbox_init_point"] 
-    end
-    
+
+        reference_salvar_mp = Hash["reference_mp"=> @teste_verificando_mp, "equipe_mp"=> params[:equipe_id], "user_mp"=> @user.id, "rodada"=> rodada_verificar]
+        salvando_reference_mp = VerificarPagamentoMp.new(reference_salvar_mp)
+        salvando_reference_mp.save
+
+      end
 
 
 
-    def rodada_ddprox
-        # SDK de Mercado Pago
-        require 'mercadopago.rb'
-
-        # Configura credenciais
-        $mp = MercadoPago.new('TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614')
-
-         @rodada = @rodada_prox3 
-         
-         status_pagamento = params["collection_status"]
-         status_pagamento = params["collection_status"]
+        @rodada = @rodada_prox3
+        status_pagamento = params["collection_status"]
         id_pagamento = params["collection_id"] 
 
-        unless status_pagamento.blank?
-            unless status_pagamento == "null"
-                if status_pagamento == "approved"
-                    equipe_verificar_salvar = Equipe.all.where(id: params["external_reference"])
-                    equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
-                    equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
-                    equipe_salvar = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
-                        unless Apostum.exists?(equipe_id: params["external_reference"], rodada: @rodada)
-                            @aposta = Apostum.new(equipe_salvar)
-                                 if @aposta.save
-                                     equipe_pagamento_aprovado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Aprovado"]
-                                     pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
-                                     pagamento_aprovado.save
-                                     set_total_rodada(@rodada)
-                                     flash[:success] = "Parabéns! Você está participando dessa aposta."
-                                     redirect_to "/users_backoffice/rodada_ddprox"
-                                 else
-                                     redirect_to "/users_backoffice/rodada_ddprox"
-                                 end 
-                         else
-                             flash[:success] = "Parabéns! Você já está participando dessa aposta."
-                             redirect_to "/users_backoffice/rodada_ddprox"
-                         end
-                 end
- 
-                 if status_pagamento == "pending" || status_pagamento == "in_process"
-                     preapproval = $mp.cancel_payment(id_pagamento)
-                     flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
-                     redirect_to "/users_backoffice/rodada_ddprox"
-                 end
- 
-                 if status_pagamento == "rejected"
-                     equipe_pagamento_recusado = Hash["equipe_id"=> params["external_reference"], "rodada"=> @rodada, "status"=> "Recusado"]
-                     pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
-                     
-                     pagamento_recusado.save
-                     flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
-                     redirect_to "/users_backoffice/rodada_ddprox"
-                 end
-             end
-         end
+        @verificar_pagamento_mp = VerificarPagamentoMp.all.where(user_mp: @user.id, rodada: rodada_verificar)
+
+        if @verificar_pagamento_mp != [] && @equipe_verificar_mp.blank?
+
+            id_mp = @verificar_pagamento_mp[0]["id"] 
+            reference_mp = @verificar_pagamento_mp[0]["reference_mp"]  
+            equipe_mp = @verificar_pagamento_mp[0]["equipe_mp"] 
+            user_mp = @verificar_pagamento_mp[0]["user_mp"]
+
+            if reference_mp == params["external_reference"]
+                unless status_pagamento.blank?
+                    unless status_pagamento == "null"
+                    paymentInfo = $mp.get_payment(id_pagamento) 
+                    status_pagamento_mp = paymentInfo["response"]["status"] 
+
+                        if status_pagamento_mp == "approved"
+                            equipe_verificar_salvar = Equipe.all.where(id: equipe_mp)
+                            equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
+                            equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+                            equipe_salvar = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]
+                                unless Apostum.exists?(equipe_id: equipe_mp, rodada: @rodada)
+                                    @aposta = Apostum.new(equipe_salvar)
+                                        if @aposta.save
+                                            equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "status"=> "Aprovado"]
+                                            pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
+                                            pagamento_aprovado.save
+                                            set_total_rodada(@rodada)
+                                            flash[:success] = "Parabéns! Você está participando dessa aposta."
+                                            redirect_to "/users_backoffice/rodada_ddprox"
+                                        else
+                                            redirect_to "/users_backoffice/rodada_ddprox"
+                                        end 
+                                else
+                                    flash[:success] = "Parabéns! Você já está participando dessa aposta."
+                                    redirect_to "/users_backoffice/rodada_ddprox"
+                                end
+                            excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                            excluir_reference_mp.destroy
+                        end
+
+                        if status_pagamento_mp == "pending" || status_pagamento == "in_process"
+                            preapproval = $mp.cancel_payment(id_pagamento)                    
+                            flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
+                            redirect_to "/users_backoffice/rodada_ddprox"
+                            excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                            excluir_reference_mp.destroy
+                        end
+
+                        if status_pagamento_mp == "rejected"
+                            equipe_pagamento_recusado = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "status"=> "Recusado"]
+                            pagamento_recusado = StatusPagamento.new(equipe_pagamento_recusado)
+                            
+                            pagamento_recusado.save
+                            flash[:danger] = "Seu pagamento foi recusado, favor tentar novamente."
+                            redirect_to "/users_backoffice/rodada_ddprox"
+                            excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                            excluir_reference_mp.destroy
+                        end
+                    else
+                        excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                        excluir_reference_mp.destroy
+                        redirect_to "/users_backoffice/rodada_ddprox"
+                        
+                    end
+                end
+            else
+                excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
+                excluir_reference_mp.destroy
+                redirect_to "/users_backoffice/rodada_ddprox"
+            end
+        end
+        
         
        
          @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
@@ -583,48 +1307,14 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @equipes_final = @equipes_total - @equipe_resultado
 
         
-        #verificação para a tela JS
-        @equipe_verificar = params[:equipe_id]
-        
-        preference_data = {
-            "items": [
-                {   
-                    "id": "1",
-                    "title": "Pagamento de Aposta",
-                    "description": "TESTE",
-                    "quantity": 1,
-                    "unit_price": 10.5,
-                    "currency_id": "BRL"
-                }
-            ],
-            "back_urls": {
-                "success": "http://localhost:3000/users_backoffice/rodada_ddprox",
-                "failure": "http://localhost:3000/users_backoffice/rodada_ddprox",
-                "pending": "http://localhost:3000/users_backoffice/rodada_ddprox"
-            },
-            "auto_return": "all",
-            "payment_methods": {
-                "excluded_payment_methods": [
-                    {
-                        "id": "bolbradesco"
-                    }
-                ],
-                
-               "excluded_payment_types": [
-                    {
-                        "id": "ticket"
-                    }
-                ],
-                "installments": 1
-            },
-            
-            "external_reference": "#{params[:equipe_id]}",
-            
-            
-        }
-        @preference = $mp.create_preference(preference_data)
-        
-        @preference_link = @preference["response"]["sandbox_init_point"] 
+         #verificação para a tela JS
+         @equipe_verificar = params[:equipe_id]
+         if @equipe_verificar.blank?
+             @equipe_verificar_js = 1
+         else
+             @equipe_verificar_js = 2
+         end
+       
     end
     
 
@@ -652,12 +1342,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @user = User.find(current_user.id)
         
     end
-     def headers
-      header = [
-          'Content-Type': 'application/json',
-          'x-picpay-token': '5b008cef7f321d00ef2367b2',
-      ]
-    end
+    
     def rodadas
         @rodada_atual = JSON.parse(@resp.body)["rodada_atual"]
     

@@ -24,10 +24,10 @@
                   </div>                     
                 </div>
                 <div class="col">
-                    <h6 class="m-b-0">Time</h6>
+                    <h6 class="m-b-0"><b>Time</b></h6>
                     <p><%= equipe.nome_time%></p>
 
-                    <h6 class="m-b-0">Cartoleiro</h6>
+                    <h6 class="m-b-0"><b>Cartoleiro</b></h6>
                     <p><%= equipe.cartoleiro%></p>
                 </div>
             </div>
@@ -57,7 +57,7 @@
 
         <%= form_with(local: true, html: {id: :pesquisar_time}) do |form| %>
         
-        <p style="color:red;" > Obs: Digitar o nome do time igual está no cartola, porém sem os acentos. </p>           
+        <p style="color:red;" > Obs: Digitar o nome do time igual está no cartola, porém sem os acentos (caso tenha). </p>           
         <div class="row">
               <div class="col-sm-12">
                   <div class="input-group input-group-button">

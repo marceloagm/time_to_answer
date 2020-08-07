@@ -1,8 +1,13 @@
-
 var botao_pagar = document.getElementById("pagar");
+var botao_pagar_pay = document.getElementById("pagar-pay");
 
-if(<%= @equipe_verificar.length %> > 0){
+
+if(<%= @equipe_verificar_js %> == 2){
     botao_pagar.href = "<%= @preference_link %>";
+    botao_pagar_pay.href = "<%= @link_pagamento %>";
+
 }else{
     botao_pagar.href = "#";
+    botao_pagar_pay.href = "#";
 }
+

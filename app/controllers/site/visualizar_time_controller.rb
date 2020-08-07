@@ -31,6 +31,7 @@ class Site::VisualizarTimeController < SiteController
                 @resp = RestClient.get ("#{url2}#{slug}/#{@rodada}")
                 @nome_time_slug = JSON.parse(@resp.body)["time"]["nome"]
                 @nome_cartoleiro_slug = JSON.parse(@resp.body)["time"]["nome_cartola"]
+                @pontos_time_slug = JSON.parse(@resp.body)["time"]["tipo_estampa_camisa"] # aqui será pontuação, só mudar para pontos
 
                 encontrar_slug = Equipe.all.where(slug: slug)  
                 @nome_escudo_slug = encontrar_slug[0]["escudo"]

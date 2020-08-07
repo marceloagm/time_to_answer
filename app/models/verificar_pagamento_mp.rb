@@ -1,0 +1,2 @@
+class VerificarPagamentoMp < ApplicationRecord
+end
