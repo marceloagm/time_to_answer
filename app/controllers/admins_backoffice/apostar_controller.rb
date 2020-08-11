@@ -3,9 +3,9 @@ class AdminsBackoffice::ApostarController < AdminsBackofficeController
     def apostar_manual
         unless params["equipe_id"].blank?
             equipe_verificar_salvar = Equipe.all.where(id: params["equipe_id"])
-                equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
-                equipe_salvar = Hash["equipe_id"=> params["equipe_id"], "rodada"=> params["rodada"], "equipe_nome"=> equipe_nome_salvar]
-                    unless Apostum.exists?(equipe_id: params["equipe_id"], rodada: params["rodada"])
+            equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
+            equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
+            equipe_salvar = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar]    unless Apostum.exists?(equipe_id: params["equipe_id"], rodada: params["rodada"])
                         @aposta = Apostum.new(equipe_salvar)
                             if @aposta.save
                                 equipe_pagamento_aprovado = Hash["equipe_id"=> params["equipe_id"], "rodada"=> params["rodada"], "status"=> "Aprovado"]

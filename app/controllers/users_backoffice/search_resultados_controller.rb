@@ -1,4 +1,5 @@
 class UsersBackoffice::SearchResultadosController < UsersBackofficeController
+    include ActionView::Helpers::NumberHelper
     require 'rest-client'
     require 'json'
     before_action :set_api
@@ -31,7 +32,8 @@ class UsersBackoffice::SearchResultadosController < UsersBackofficeController
                         @times_slug = RestClient.get ("#{url2}#{@equipe_slug}/#{@rodada}")
 
                         @nome_time_slug = JSON.parse(@times_slug.body)["time"]["nome"]
-                        @pontos_time_slug = JSON.parse(@times_slug.body)["time"]["tipo_estampa_camisa"]
+                        pontos_time_slug_verificar = JSON.parse(@times_slug.body)["pontos"]
+                        @pontos_time_slug = number_with_precision(pontos_time_slug_verificar, precision: 2, separator: '.')
                     end
             end
 

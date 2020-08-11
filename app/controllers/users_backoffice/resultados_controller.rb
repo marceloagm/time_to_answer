@@ -59,14 +59,7 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
         
                 @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
         
-                a = 0  
-                @equipe_cartola = Array.new
-                while a < @apostas.length 
-                    @equipe_cartola[a] = @apostas[a]["slug"]
-                    a = a + 1
-                end
-                    
-                
+                              
                 b = 0
             
                 @time_final = Array.new
@@ -74,16 +67,23 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
                 while b < @apostas.length 
 
                     url2 = 'https://api.cartolafc.globo.com/time/id/'
-                    @times_slug = RestClient.get ("#{url2}#{@equipe_cartola[b]}/#{@rodada}")
-                    @nome_time_slug = JSON.parse(@times_slug.body)["time"]["nome"]
-                    @pontos_time_slug = JSON.parse(@times_slug.body)["time"]["tipo_estampa_camisa"] # aqui será pontuação, só mudar para pontos
-                    @time_final[b] = [@nome_time_slug, @pontos_time_slug, @equipe_cartola[b]]
+                    @times_slug = RestClient.get ("#{url2}#{@apostas[b]["slug"]}/#{@rodada}")
+                    @nome_time_slug = @apostas[b]["equipe_nome"]
+                    pontos_time_slug_verificar = JSON.parse(@times_slug.body)["pontos"]
+                    if pontos_time_slug_verificar == nil
+                        @pontos_time_slug = 0
+                    else
+                        @pontos_time_slug = number_with_precision(pontos_time_slug_verificar, precision: 2, separator: '.')
+                    end
+                     # aqui será pontuação, só mudar para pontos
+                    @time_final[b] = [@nome_time_slug, @pontos_time_slug.to_f, @apostas[b]["slug"]]
                     
                     b = b + 1
                 end
                 
                 @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[1]}).page(params[:page]).per(20)
-                                
+
+               
             end
         end
 

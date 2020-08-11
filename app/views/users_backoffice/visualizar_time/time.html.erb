@@ -1,4 +1,5 @@
 
+<%=  @codigo2%>
 
 <% if @mercado == 1 && @rodada == @rodada_atual %>
 <% @times.each do |time| %>
@@ -50,15 +51,14 @@
             <div class="card-block" >
                 <div class="row align-items-center">
                     <div class="col-auto">
-                        <%= image_tag("avatar-2.jpg", alt:"User-Image") %>
+                <%= image_tag "#{@atletas[@contador][5]}" , style: "width:100%;", alt:"User-Image" %>
                     </div>
                     <div class="col">
-                        <h6 class="m-b-0" style="color: black;"><b><%= @atletas[@contador][2] %></b></h6>
-                        <p class="m-b-0" style="color: black;"><%= @atletas[@contador][0] %></p>
-                        <h6 class="m-b-0" style="color: black;"><b>Pontuação <%= @atletas[@contador][4] %>:</b></h6>
-                        <p class="m-b-0" style="color: black;"><%= @atletas[@contador][3] %></p>
-                        <h6 class="m-b-0" style="color: black;"><b>Estatistica:</b></h6>
-                        <p class="m-b-0" style="color: black;">rb,2gols,3pe</p>
+                        <h6 class="m-b-0 f-17" style="color: black;"><b><%= @atletas[@contador][2] %></b></h6>
+                        <p class="m-b-0 f-17" style="color: black;"><%= @atletas[@contador][0] %></p>
+                        <h6 class="m-b-0 f-17" style="color: black;"><b>Pontuação <%= @atletas[@contador][4] %>:</b></h6>
+                        <p class="m-b-0 f-17" style="color: black;"><%= @atletas[@contador][3] %></p>
+                        
                     </div>
                 </div>
             </div>

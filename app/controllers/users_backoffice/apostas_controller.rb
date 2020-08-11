@@ -17,6 +17,9 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
          
     end
 
+    def teste
+        @teste = "OI"
+    end
     def rodada_atual
        
 

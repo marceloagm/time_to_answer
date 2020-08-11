@@ -1,4 +1,5 @@
 class Site::SearchResultadosController < SiteController
+    include ActionView::Helpers::NumberHelper
     require 'rest-client'
     require 'json'
     before_action :set_api
@@ -15,7 +16,7 @@ class Site::SearchResultadosController < SiteController
         unless @equipes_total.blank?
 
             if @rodada > @rodada_atual ||  @rodada < 1
-                    redirect_to site_resultados_index_path
+                    redirect_to users_backoffice_resultados_index_path
 
             else      
 
@@ -31,7 +32,8 @@ class Site::SearchResultadosController < SiteController
                         @times_slug = RestClient.get ("#{url2}#{@equipe_slug}/#{@rodada}")
 
                         @nome_time_slug = JSON.parse(@times_slug.body)["time"]["nome"]
-                        @pontos_time_slug = JSON.parse(@times_slug.body)["time"]["tipo_estampa_camisa"]
+                        pontos_time_slug_verificar = JSON.parse(@times_slug.body)["pontos"]
+                        @pontos_time_slug = number_with_precision(pontos_time_slug_verificar, precision: 2, separator: '.')
                     end
             end
 
@@ -58,8 +60,6 @@ class Site::SearchResultadosController < SiteController
     @rodada_atual = JSON.parse(@resp.body)["rodada_atual"]
 
     end
-
-
 
 
 end
