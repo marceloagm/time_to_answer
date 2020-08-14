@@ -69,5 +69,10 @@ Rails.application.routes.draw do
   get 'inicio', to: 'site/welcome#index'
 
   root to: 'site/welcome#index'
+  get 'index', to: 'parciais#index'
+  get 'parciais', to: 'parciais#parciais'
+  get 'salvar_equipe', to: 'parciais#salvar_equipe'
+  get 'rodada_atual', to: 'parciais#rodada_atual'
+  get 'salvar_atletas_pontuados', to: 'parciais#salvar_atletas_pontuados'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

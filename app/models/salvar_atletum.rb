@@ -1,0 +1,2 @@
+class SalvarAtletum < ApplicationRecord
+end

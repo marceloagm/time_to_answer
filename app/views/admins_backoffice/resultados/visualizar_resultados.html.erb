@@ -1,5 +1,4 @@
 <h1 class="text-center"> LIGA RODADA <%= params["rodada"] %> </h1>
-<%= @time_final.inspect%>
 
 <div class="d-flex flex-row-reverse bd-highlight">
   <%= form_with(url: admins_backoffice_search_resultados_path, local: true, method: :get) do |time| %>
@@ -29,6 +28,33 @@
         </tr>
     </thead>
     <tbody>
+        <% if @mercado == "1" && @rodada == @rodada_atual %>
+
+    <% @apostas.each do |aposta| %>
+        <tr>
+            <th scope="row" style="text-align: center;"><%= @apostas[@contador1]["equipe_id"] %></th>
+            <th scope="row" style="text-align: center;"><%= @apostas[@contador1]["equipe_nome"] %></th>
+            
+            <td style="text-align: center;"><%= @apostas[@contador1]["created_at"] %>  </td>
+              <td style="text-align: center;">0 </td>      
+              <td style="text-align: center;"> 
+              <%= link_to admins_backoffice_resultados_path(:id => @apostas[@contador1]["equipe_id"], :rodada => params["rodada"]), class:"btn btn-danger btn-icon", style:""  do %>
+                        
+                        <i class="icofont icofont-ui-remove justify-content-center"></i>
+        <% end %>          
+              
+               </td> 
+              
+                   
+        </tr>
+        <% @contador1 = @contador1 + 1%>
+     <% end %>
+
+        <% else %>
+        
+
+
+
        <% @time_teste.each do |aposta| %>
         <tr>
             <th scope="row" style="text-align: center;"><%= @time_teste[@contador][0] %></th>
@@ -48,11 +74,20 @@
         </tr>
         <% @contador = @contador + 1%>
      <% end %>
+     <% end %>
     </tbody>
 </table>
 <h1></h1>
-<div class="pagination justify-content-center">
+
+    <% if @mercado == "1" && @rodada == @rodada_atual %>
+    <div class="pagination justify-content-center">
+    <%= paginate @apostas %>
+    </div>
+    <% else %>
+    <div class="pagination justify-content-center">
     <%= paginate @time_teste %>
+    </div>
+    <% end %>
  </div>
 </div>
 </div>

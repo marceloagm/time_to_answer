@@ -1,0 +1,2 @@
+class AtletaPontuado < ApplicationRecord
+end

@@ -1,7 +1,6 @@
 
-<%=  @codigo2%>
 
-<% if @mercado == 1 && @rodada == @rodada_atual %>
+<% if @mercado == "1" && @rodada == @rodada_atual %>
 <% @times.each do |time| %>
 <div class="justify-content-center">
  <div class="row h-100 justify-content-center align-items-center">
@@ -35,29 +34,29 @@
                   </div>                     
                 </div>
                 <h6 style="color: white;">.</h6>
-                 <span class="f-20 text-c-black"><%= @nome_time_slug %></span>
+                 <span class="f-20 text-c-black"><%= @equipe %></span>
                 <p><%= @nome_cartoleiro_slug %></p>
-                <span class="f-20 text-c-black"><b><%= @pontos_time_slug %></b></span>
+                <span class="f-20 text-c-black"><b><%= @pontos %></b></span>
             </div>
         </div>
     </div>
 <!-- AQUI IRAR RECEBER UMA VARIAVEL COM TODOS OS JOGADORES, UMA CONDIÇÃO SE A VARIAVEL FOR NULL NÃO MOSTRA SE FOR DIFERENTE DE NULL MOSTRA -->
  
 
-    <% @atletas.each do |time| %>
+    <% @atleta_final.each do |time| %>
     <div class="col-xl-12 col-md-12">
     
         <div class="card social-card bg-simple-c-white" >
             <div class="card-block" >
                 <div class="row align-items-center">
                     <div class="col-auto">
-                <%= image_tag "#{@atletas[@contador][5]}" , style: "width:100%;", alt:"User-Image" %>
+                <%= image_tag "#{@atleta_final[@contador][5]}" , style: "width:100%;", alt:"User-Image" %>
                     </div>
                     <div class="col">
-                        <h6 class="m-b-0 f-17" style="color: black;"><b><%= @atletas[@contador][2] %></b></h6>
-                        <p class="m-b-0 f-17" style="color: black;"><%= @atletas[@contador][0] %></p>
-                        <h6 class="m-b-0 f-17" style="color: black;"><b>Pontuação <%= @atletas[@contador][4] %>:</b></h6>
-                        <p class="m-b-0 f-17" style="color: black;"><%= @atletas[@contador][3] %></p>
+                        <h6 class="m-b-0 f-17" style="color: black;"><b><%= @atleta_final[@contador][2] %></b></h6>
+                        <p class="m-b-0 f-17" style="color: black;"><%= @atleta_final[@contador][0] %></p>
+                        <h6 class="m-b-0 f-17" style="color: black;"><b>Pontuação <%= @atleta_final[@contador][4] %>:</b></h6>
+                        <p class="m-b-0 f-17" style="color: black;"><%= @atleta_final[@contador][3] %></p>
                         
                     </div>
                 </div>

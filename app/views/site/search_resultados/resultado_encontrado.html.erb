@@ -4,7 +4,7 @@
 
 <% unless @equipes_total.blank? %>
   <h1 class="text-center"> EQUIPE ENCONTRADA RODADA <%= params["rodada"] %></h1>
-    <% if @mercado == 1 && @rodada == @rodada_atual %>
+    <% if @mercado == "1" && @rodada == @rodada_atual %>
   
         <% @apostas.each do |aposta| %>
             <%= link_to  site_visualizar_time_time_path(:time => "#{aposta.equipe.id}", :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
@@ -30,7 +30,7 @@
         <% end %>
     <% end %>
 
-    <% if @mercado != 1 %>
+    <% if @mercado != "1" %>
         <%= link_to  site_visualizar_time_time_path(:slug => @equipe_slug, :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
                 <div class="col-md-12 col-xl-12" style="height:80%;">
                     <div class="card widget-card-1">
@@ -53,7 +53,7 @@
                     </div>
         <% end %>
     <% end %>
-    <% if @mercado == 1 && @rodada_atual != @rodada %>
+    <% if @mercado == "1" && @rodada_atual != @rodada %>
         <%= link_to  site_visualizar_time_time_path(:slug => @equipe_slug, :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
                 <div class="col-md-12 col-xl-12" style="height:80%;">
                     <div class="card widget-card-1">

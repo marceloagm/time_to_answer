@@ -1,5 +1,5 @@
 class AdminsBackoffice::ResultadosController < AdminsBackofficeController
-    before_action :set_rodada
+    before_action :set_mercado_rodada
     before_action :set_aposta, only: [:edit]
     def edit
        
@@ -25,40 +25,111 @@ class AdminsBackoffice::ResultadosController < AdminsBackofficeController
     end
 
     def visualizar_resultados
-        
-        @contador = 0
         @rodada = params[:rodada].to_i
 
-        @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
+       # @apostas = Apostum.includes(:equipe).all.where(rodada: rodada).page(params[:page]).per(20)
+        @contador = 0
         
-        a = 0  
-        @equipe_cartola = Array.new
-        @equipe_salvar_cartola = Array.new
-        @equipe_criado_cartola = Array.new
-        while a < @apostas.length 
-            @equipe_cartola[a] = @apostas[a]["slug"]
-            @equipe_salvar_cartola[a] = @apostas[a]["equipe_id"]
-            @equipe_criado_cartola[a] = @apostas[a]["created_at"]
-            a = a + 1
+        if @mercado == "1" && @rodada == @rodada_atual
+            @contador1 = 0
+            @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
         end
+
+
+        if @mercado == "1" && @rodada != @rodada_atual
+            @contador3 = 0
+            @contador4 = 0
+            @apostas = Apostum.all.where(rodada: @rodada)
+            @equipes_encontrar = SalvarAtletumAnterior.all.where(rodada: @rodada)
+            b = 0
+
+            @nome_time_slug = Array.new
+            @pontos_time_slug = Array.new
+            @time_slug = Array.new
+            @time_final = Array.new
+            @equipe_id = Array.new
+            @aposta_participar = Array.new
             
+            
+            while b < @apostas.length 
+
+                
+                @aposta_participar[b] = @apostas[b]["created_at"]
+                @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
+                @pontos_time_slug[b] = @equipes_encontrar[b]["pontos"]
+                @time_slug[b] = @equipes_encontrar[b]["slug"]
+                @equipe_id[b] = @apostas[b]["equipe_id"]
+
+                @time_final[b] = [@equipe_id[b], @nome_time_slug[b], @aposta_participar[b], @pontos_time_slug[b].to_f ]
+                
+                b = b + 1
+            end
+            
+            @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[3]}).page(params[:page]).per(20)
+        end
+
+
+        if @mercado == "2" && @rodada != @rodada_atual
+            @contador3 = 0
+            @contador4 = 0
+            @apostas = Apostum.all.where(rodada: @rodada)
+            @equipes_encontrar = SalvarAtletumAnterior.all.where(rodada: @rodada)
+            b = 0
+            @nome_time_slug = Array.new
+            @pontos_time_slug = Array.new
+            @time_slug = Array.new
+            @time_final = Array.new
+            while b < @apostas.length 
+
+                
+                @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
+                @pontos_time_slug[b] = @equipes_encontrar[b]["pontos"]
+                @time_slug[b] = @equipes_encontrar[b]["slug"]
+
+                @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b]]
+                
+                b = b + 1
+            end
+            
+            @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[1]}).page(params[:page]).per(20)
         
-        b = 0
+        end
+
+
+        if @mercado == "2" && @rodada == @rodada_atual
+
+            @contador3 = 0
+            @contador4 = 0
     
-        @time_final = Array.new
-
-        while b < @apostas.length 
-
-            url2 = 'https://api.cartolafc.globo.com/time/id/'
-            @times_slug = RestClient.get ("#{url2}#{@equipe_cartola[b]}/#{@rodada}")
-            @nome_time_slug = JSON.parse(@times_slug.body)["time"]["nome"]
-            @pontos_time_slug = JSON.parse(@times_slug.body)["time"]["tipo_estampa_camisa"] # aqui será pontuação, só mudar para pontos
-            @time_final[b] = [@equipe_salvar_cartola[b], @nome_time_slug, @equipe_criado_cartola[b] , @pontos_time_slug]
-            
-            b = b + 1
-        end
+            @apostas = Apostum.all.where(rodada: @rodada)
+    
+                          
+            b = 0
         
-        @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[3]}).page(params[:page]).per(20)
+            @time_final = Array.new
+            @nome_time_slug = Array.new
+            @pontos_time_slug = Array.new
+            @time_slug = Array.new
+
+           
+            @equipes_encontrar = Parcial.all.where(rodada: @rodada)
+
+            while b < @apostas.length 
+
+                
+                @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
+                @pontos_time_slug[b] = @equipes_encontrar[b]["pontos"]
+                @time_slug[b] = @equipes_encontrar[b]["slug"]
+
+                @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b]]
+                
+                b = b + 1
+            end
+            
+            @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[1]}).page(params[:page]).per(20)
+
+           
+        end
            
                         
 
@@ -66,16 +137,12 @@ class AdminsBackoffice::ResultadosController < AdminsBackofficeController
     end
 
     private
-    def set_rodada
-        @rodada_atual = 38
-    end
+    def set_mercado_rodada
 
-    def set_aposta        
-        @aposta = Apostum.find(params[:id])
+        buscar_mercado_rodada = SalvarRodadaMercado.all
+        @rodada_atual = buscar_mercado_rodada[0]["rodada_atual"].to_i
+        @mercado = buscar_mercado_rodada[0]["mercado"]
+    
     end
-
-    def params_aposta
-        params.require(:apostum).permit(:id, :rodada, :nome_time)
-     end
      
 end

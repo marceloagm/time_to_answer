@@ -1,0 +1,2 @@
+class SalvarRodadaMercado < ApplicationRecord
+end

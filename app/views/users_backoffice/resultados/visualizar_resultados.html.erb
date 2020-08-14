@@ -55,7 +55,7 @@
                            </div>
 
 
-                         <% if @mercado == 1 && @rodada == @rodada_atual %>
+                         <% if @mercado == "1" && @rodada == @rodada_atual %>
                           <% @apostas.each do |aposta| %>
                         <%= link_to  users_backoffice_visualizar_time_time_path(:time => "#{aposta.equipe.id}", :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
                               <div class="card widget-card-1">
@@ -143,7 +143,7 @@
 
 
 
-                     <% if @mercado == 1 && @rodada == @rodada_atual %>
+                     <% if @mercado == "1" && @rodada == @rodada_atual %>
                         <% @apostas.each do |aposta| %>
                         <%= link_to  users_backoffice_visualizar_time_time_path(:time => "#{aposta.equipe.id}", :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
                               <div class="card widget-card-1">
@@ -217,7 +217,7 @@
          <!-- Margin card end -->
       </div>
 
-      <%if @mercado == 1 && @rodada == @rodada_atual  %>
+      <%if @mercado == "1" && @rodada == @rodada_atual  %>
           <div class="pagination justify-content-center">
                <%= paginate @apostas %>
          </div>

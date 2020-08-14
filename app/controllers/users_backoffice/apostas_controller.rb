@@ -3,11 +3,10 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     require 'net/http'
     require 'uri'
     require 'json'
-    before_action :set_api
+    before_action :set_mercado_rodada
     before_action :rodadas  
     before_action :set_user
     before_action :set_equipe 
-    before_action :set_mercado, only: [:rodada_atual]
     before_action :headers, only: [:rodada_atual]
 
         
@@ -21,14 +20,15 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @teste = "OI"
     end
     def rodada_atual
-       
+        buscar_fechamento = SalvarRodadaMercado.all
+      
 
         #verifica na api o fechamento do mercado para poder bloquear pagamento após esse horário
-        dia = JSON.parse(@resp.body)["fechamento"]["dia"]
-        mes = JSON.parse(@resp.body)["fechamento"]["mes"]
-        ano = JSON.parse(@resp.body)["fechamento"]["ano"]
-        hora = JSON.parse(@resp.body)["fechamento"]["hora"]
-        minuto = JSON.parse(@resp.body)["fechamento"]["minuto"]
+        dia = buscar_fechamento[0]["dia"].to_i
+        mes = buscar_fechamento[0]["mes"].to_i
+        ano = buscar_fechamento[0]["ano"].to_i
+        hora = buscar_fechamento[0]["hora"].to_i
+        minuto = buscar_fechamento[0]["minuto"].to_i
 
         if minuto >= 0 && minuto <= 9
             minuto_final = "0#{minuto}"
@@ -143,6 +143,11 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                                         equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "status"=> "Aprovado"]
                                         pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
                                         pagamento_aprovado.save
+
+                                        equipe_pontos = Hash["rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar, "pontos"=> "0"]
+                                        equipe_pontos_pagamento = Parcial.new(equipe_pontos)
+                                        equipe_pontos_pagamento.save
+
                                         set_total_rodada(rodada_verificar)
                                         flash[:success] = "Parabéns! Você está participando dessa aposta."
                                         redirect_to "/users_backoffice/rodada_atual"
@@ -249,7 +254,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         end
 
 
-        unless @mercado == 1
+        unless @mercado == "1"
             redirect_to users_backoffice_welcome_index_path #redirect para tela de resultados dessa aposta
         end  
                 
@@ -286,6 +291,10 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                                             equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "status"=> "Aprovado"]
                                             pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
                                             pagamento_aprovado.save
+
+                                            equipe_pontos = Hash["rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar, "pontos"=> "0"]
+                                            equipe_pontos_pagamento = Parcial.new(equipe_pontos)
+                                            equipe_pontos_pagamento.save
                                             set_total_rodada(@rodada)
                                             flash[:success] = "Parabéns! Você está participando dessa aposta."
                                             redirect_to "/users_backoffice/rodada_atual"
@@ -469,6 +478,11 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                                         equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "status"=> "Aprovado"]
                                         pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
                                         pagamento_aprovado.save
+
+                                        equipe_pontos = Hash["rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar, "pontos"=> "0"]
+                                        equipe_pontos_pagamento = Parcial.new(equipe_pontos)
+                                        equipe_pontos_pagamento.save
+
                                         set_total_rodada(rodada_verificar)
                                         flash[:success] = "Parabéns! Você está participando dessa aposta."
                                         redirect_to "/users_backoffice/rodada_prox"
@@ -602,6 +616,11 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                                             equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "status"=> "Aprovado"]
                                             pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
                                             pagamento_aprovado.save
+
+                                            equipe_pontos = Hash["rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar, "pontos"=> "0"]
+                                            equipe_pontos_pagamento = Parcial.new(equipe_pontos)
+                                            equipe_pontos_pagamento.save
+
                                             set_total_rodada(@rodada)
                                             flash[:success] = "Parabéns! Você está participando dessa aposta."
                                             redirect_to "/users_backoffice/rodada_prox"
@@ -779,6 +798,11 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                                         equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "status"=> "Aprovado"]
                                         pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
                                         pagamento_aprovado.save
+
+                                        equipe_pontos = Hash["rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar, "pontos"=> "0"]
+                                        equipe_pontos_pagamento = Parcial.new(equipe_pontos)
+                                        equipe_pontos_pagamento.save
+
                                         set_total_rodada(rodada_verificar)
                                         flash[:success] = "Parabéns! Você está participando dessa aposta."
                                         redirect_to "/users_backoffice/rodada_dprox"
@@ -916,6 +940,11 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                                             equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "status"=> "Aprovado"]
                                             pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
                                             pagamento_aprovado.save
+
+                                            equipe_pontos = Hash["rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar, "pontos"=> "0"]
+                                            equipe_pontos_pagamento = Parcial.new(equipe_pontos)
+                                            equipe_pontos_pagamento.save
+
                                             set_total_rodada(@rodada)
                                             flash[:success] = "Parabéns! Você está participando dessa aposta."
                                             redirect_to "/users_backoffice/rodada_dprox"
@@ -1095,6 +1124,11 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                                         equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_picpay, "rodada"=> rodada_verificar, "status"=> "Aprovado"]
                                         pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
                                         pagamento_aprovado.save
+
+                                        equipe_pontos = Hash["rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar, "pontos"=> "0"]
+                                        equipe_pontos_pagamento = Parcial.new(equipe_pontos)
+                                        equipe_pontos_pagamento.save
+                                            
                                         set_total_rodada(rodada_verificar)
                                         flash[:success] = "Parabéns! Você está participando dessa aposta."
                                         redirect_to "/users_backoffice/rodada_ddprox"
@@ -1228,6 +1262,11 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                                             equipe_pagamento_aprovado = Hash["equipe_id"=> equipe_mp, "rodada"=> @rodada, "status"=> "Aprovado"]
                                             pagamento_aprovado = StatusPagamento.new(equipe_pagamento_aprovado)
                                             pagamento_aprovado.save
+
+                                            equipe_pontos = Hash["rodada"=> rodada_verificar, "equipe_nome"=> equipe_nome_salvar, "slug"=> equipe_slug_salvar, "pontos"=> "0"]
+                                            equipe_pontos_pagamento = Parcial.new(equipe_pontos)
+                                            equipe_pontos_pagamento.save
+                                            
                                             set_total_rodada(@rodada)
                                             flash[:success] = "Parabéns! Você está participando dessa aposta."
                                             redirect_to "/users_backoffice/rodada_ddprox"
@@ -1324,16 +1363,10 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
     private
 
-    def set_api
+    def set_mercado_rodada
 
-        url = 'https://api.cartolafc.globo.com/mercado/status'
-        @resp = RestClient.get "#{url}"   
-
-    end
-
-
-    def set_mercado
-        @mercado = JSON.parse(@resp.body)["status_mercado"]
+        buscar_mercado_rodada = SalvarRodadaMercado.all
+        @mercado = buscar_mercado_rodada[0]["mercado"]
 
     end
    
@@ -1347,7 +1380,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     end
     
     def rodadas
-        @rodada_atual = JSON.parse(@resp.body)["rodada_atual"]
+        buscar_mercado_rodada = SalvarRodadaMercado.all
+        @rodada_atual = buscar_mercado_rodada[0]["rodada_atual"].to_i
     
         @rodada_prox0 = @rodada_atual 
         @rodada_prox1 = @rodada_atual + 1

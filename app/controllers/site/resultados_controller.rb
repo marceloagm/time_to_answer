@@ -2,9 +2,8 @@ class Site::ResultadosController < SiteController
     include ActionView::Helpers::NumberHelper
     require 'rest-client'
     require 'json'
-    before_action :set_api
-    before_action :set_rodada
-    before_action :set_mercado
+    before_action :set_mercado_rodada
+   
 
     def index 
             
@@ -49,34 +48,93 @@ class Site::ResultadosController < SiteController
         if @rodada > @rodada_atual ||  @rodada < 1
             redirect_to users_backoffice_resultados_index_path
         else
-            if @mercado == 1 && @rodada == @rodada_atual
-                @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
+            if @mercado == "1" && @rodada == @rodada_atual
 
-            else
+                @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada).page(params[:page]).per(20)
+            end
+
+
+            if @mercado == "1" && @rodada != @rodada_atual
+                @contador3 = 0
+                @contador4 = 0
+                @apostas = Apostum.all.where(rodada: @rodada)
+                @equipes_encontrar = SalvarAtletumAnterior.all.where(rodada: @rodada)
+                b = 0
+
+                @nome_time_slug = Array.new
+                @pontos_time_slug = Array.new
+                @time_slug = Array.new
+                @time_final = Array.new
+                while b < @apostas.length 
+
+
+                    
+                    @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
+                    @pontos_time_slug[b] = @equipes_encontrar[b]["pontos"]
+                    @time_slug[b] = @equipes_encontrar[b]["slug"]
+
+                    @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b]]
+                    
+                    b = b + 1
+                end
+                
+                @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[1]}).page(params[:page]).per(20)
+            end
+
+
+            if @mercado == "2" && @rodada != @rodada_atual
+                @contador3 = 0
+                @contador4 = 0
+                @apostas = Apostum.all.where(rodada: @rodada)
+                @equipes_encontrar = SalvarAtletumAnterior.all.where(rodada: @rodada)
+                b = 0
+                @nome_time_slug = Array.new
+                @pontos_time_slug = Array.new
+                @time_slug = Array.new
+                @time_final = Array.new
+                while b < @apostas.length 
+
+                    
+                    @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
+                    @pontos_time_slug[b] = @equipes_encontrar[b]["pontos"]
+                    @time_slug[b] = @equipes_encontrar[b]["slug"]
+
+                    @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b]]
+                    
+                    b = b + 1
+                end
+                
+                @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[1]}).page(params[:page]).per(20)
+            
+            end
+
+
+            if @mercado == "2" && @rodada == @rodada_atual
 
                 @contador3 = 0
                 @contador4 = 0
         
-                @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada)
+                @apostas = Apostum.all.where(rodada: @rodada)
         
                               
                 b = 0
             
                 @time_final = Array.new
-        
+                @nome_time_slug = Array.new
+                @pontos_time_slug = Array.new
+                @time_slug = Array.new
+
+               
+                @equipes_encontrar = Parcial.all.where(rodada: @rodada)
+
                 while b < @apostas.length 
 
-                    url2 = 'https://api.cartolafc.globo.com/time/id/'
-                    @times_slug = RestClient.get ("#{url2}#{@apostas[b]["slug"]}/#{@rodada}")
-                    @nome_time_slug = @apostas[b]["equipe_nome"]
-                    pontos_time_slug_verificar = JSON.parse(@times_slug.body)["pontos"]
-                    if pontos_time_slug_verificar == nil
-                        @pontos_time_slug = 0
-                    else
-                        @pontos_time_slug = number_with_precision(pontos_time_slug_verificar, precision: 2, separator: '.')
-                    end
-                     # aqui será pontuação, só mudar para pontos
-                    @time_final[b] = [@nome_time_slug, @pontos_time_slug.to_f, @apostas[b]["slug"]]
+                    
+                    @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
+                    @pontos_time_slug[b] = @equipes_encontrar[b]["pontos"]
+                    @time_slug[b] = @equipes_encontrar[b]["slug"]
+
+                    @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b]]
                     
                     b = b + 1
                 end
@@ -216,22 +274,12 @@ class Site::ResultadosController < SiteController
 
     private
 
-    def set_api
+    def set_mercado_rodada
 
-        url = 'https://api.cartolafc.globo.com/mercado/status'
-        @resp = RestClient.get "#{url}"   
-
-    end
-
-
-    def set_mercado
-        @mercado = JSON.parse(@resp.body)["status_mercado"]
+        buscar_mercado_rodada = SalvarRodadaMercado.all
+        @rodada_atual = buscar_mercado_rodada[0]["rodada_atual"].to_i
+        @mercado = buscar_mercado_rodada[0]["mercado"]
 
     end
-
-    def set_rodada
-           
-    @rodada_atual = JSON.parse(@resp.body)["rodada_atual"]
-
-    end
+    
 end

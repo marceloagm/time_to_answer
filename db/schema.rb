@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_04_190603) do
+ActiveRecord::Schema.define(version: 2020_08_14_180428) do
 
   create_table "admin_statistics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "event"
@@ -48,6 +48,13 @@ ActiveRecord::Schema.define(version: 2020_08_04_190603) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "atleta_pontuados", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "rodada"
+    t.text "atletas", limit: 4294967295
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "equipes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "nome_time", null: false
     t.string "cartoleiro", null: false
@@ -57,6 +64,61 @@ ActiveRecord::Schema.define(version: 2020_08_04_190603) do
     t.datetime "updated_at", null: false
     t.text "escudo"
     t.index ["user_id"], name: "index_equipes_on_user_id"
+  end
+
+  create_table "parcials", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "slug"
+    t.string "rodada"
+    t.string "pontos"
+    t.string "pontos_atleta"
+    t.string "atletas"
+    t.string "capitao"
+    t.string "nome_atleta"
+    t.string "posicao_atleta"
+    t.text "foto_final", limit: 4294967295
+    t.string "equipe_nome"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "salvar_atleta", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "slug"
+    t.string "rodada"
+    t.string "atletas"
+    t.string "capitao"
+    t.string "nome_atleta"
+    t.string "posicao_atleta"
+    t.text "foto_final", limit: 4294967295
+    t.string "equipe_nome"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "salvar_atletum_anteriors", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "slug"
+    t.string "rodada"
+    t.string "pontos"
+    t.string "pontos_atleta"
+    t.string "atletas"
+    t.string "capitao"
+    t.string "nome_atleta"
+    t.string "posicao_atleta"
+    t.text "foto_final", limit: 4294967295
+    t.string "equipe_nome"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "salvar_rodada_mercados", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "rodada_atual"
+    t.string "rodada_anterior"
+    t.string "mercado"
+    t.string "dia"
+    t.string "mes"
+    t.string "hora"
+    t.string "minuto"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "status_pagamentos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

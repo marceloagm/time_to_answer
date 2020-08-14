@@ -2,22 +2,12 @@ class Site::WelcomeController < SiteController
     include ActionView::Helpers::NumberHelper
     require 'rest-client'
     require 'json'
+    before_action :set_mercado_rodada
+
 
   def index
-    url = 'https://api.cartolafc.globo.com/mercado/status'
-    @resp = RestClient.get "#{url}"  
 
-
-    if user_signed_in?
-        redirect_to users_backoffice_welcome_index_path
-    end
     
-    if admin_signed_in?
-        redirect_to admins_backoffice_welcome_index_path
-    end
-    
-    @rodada_atual = JSON.parse(@resp.body)["rodada_atual"]
-
     @rodada_prox0 = @rodada_atual 
     @rodada_prox1 = @rodada_atual + 1
     @rodada_prox2 = @rodada_atual + 2
@@ -49,19 +39,29 @@ class Site::WelcomeController < SiteController
     @valor_total32 = ((@valor_total31*15)/100).to_f
     @valor_total_aposta3 = number_to_currency(@valor_total31 - @valor_total32)
     end
- 
-    @mercado = JSON.parse(@resp.body)["status_mercado"]
-    if @mercado == 1
+
+    #Mercado aberto ou fechado
+
+    if @mercado == "1"
         @mercado_path = users_backoffice_rodada_atual_path
         @botao_text = "Participar"
         @botao_cor = "primary"
         @f = "20"
     else
-        @mercado_path = @mercado_path = site_resultados_visualizar_resultados_path(:rodada => @rodada_prox0)
+        @mercado_path = users_backoffice_resultados_visualizar_resultados_path(:rodada => @rodada_prox0)
         @botao_text = "Acompanhar Resultados"
         @botao_cor = "success"
         @f = "15"
     end
+    
+end
+
+private
+def set_mercado_rodada
+
+    buscar_mercado_rodada = SalvarRodadaMercado.all
+    @rodada_atual = buscar_mercado_rodada[0]["rodada_atual"].to_i
+    @mercado = buscar_mercado_rodada[0]["mercado"]
 
 end
 
