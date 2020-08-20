@@ -6,7 +6,9 @@ class Site::WelcomeController < SiteController
 
 
   def index
-
+    if user_signed_in?
+       redirect_to users_backoffice_welcome_index_path
+    end
     
     @rodada_prox0 = @rodada_atual 
     @rodada_prox1 = @rodada_atual + 1
@@ -48,7 +50,7 @@ class Site::WelcomeController < SiteController
         @botao_cor = "primary"
         @f = "20"
     else
-        @mercado_path = users_backoffice_resultados_visualizar_resultados_path(:rodada => @rodada_prox0)
+        @mercado_path = site_resultados_visualizar_resultados_path(:rodada => @rodada_prox0)
         @botao_text = "Acompanhar Resultados"
         @botao_cor = "success"
         @f = "15"

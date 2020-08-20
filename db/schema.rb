@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_14_180428) do
+ActiveRecord::Schema.define(version: 2020_08_20_120649) do
 
   create_table "admin_statistics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "event"
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(version: 2020_08_14_180428) do
     t.string "equipe_nome"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "mensagem"
   end
 
   create_table "salvar_atleta", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -92,6 +93,7 @@ ActiveRecord::Schema.define(version: 2020_08_14_180428) do
     t.string "equipe_nome"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "mensagem"
   end
 
   create_table "salvar_atletum_anteriors", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -107,6 +109,7 @@ ActiveRecord::Schema.define(version: 2020_08_14_180428) do
     t.string "equipe_nome"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "mensagem"
   end
 
   create_table "salvar_rodada_mercados", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -119,6 +122,7 @@ ActiveRecord::Schema.define(version: 2020_08_14_180428) do
     t.string "minuto"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "ano"
   end
 
   create_table "status_pagamentos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

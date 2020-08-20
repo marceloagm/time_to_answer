@@ -1,0 +1,47 @@
+.card1-icon{
+width:40px;
+height:40px;
+position:absolute;
+top:-32px;
+font-size:11px;
+border-radius:8px;
+display:-webkit-box;
+display:-ms-flexbox;
+display:flex;
+color:#fff;
+-webkit-box-align:center;
+-ms-flex-align:center;
+align-items:center;
+-webkit-box-pack:center;
+-ms-flex-pack:center;
+justify-content:center;
+-webkit-transition:all 0.3s ease-in-out;
+transition:all 0.3s ease-in-out
+}
+
+.photo{
+    border-radius: 50%;
+    border: 5px solid white;
+   
+}
+
+.card2-icon{
+    width:30px;
+    height:30px;
+    position:absolute;
+    top:-21px;
+    font-size:9px;
+    border-radius:8px;
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display:flex;
+    color:#fff;
+    -webkit-box-align:center;
+    -ms-flex-align:center;
+    align-items:center;
+    -webkit-box-pack:center;
+    -ms-flex-pack:center;
+    justify-content:center;
+    -webkit-transition:all 0.3s ease-in-out;
+    transition:all 0.3s ease-in-out
+    }

@@ -20,15 +20,15 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         @teste = "OI"
     end
     def rodada_atual
-        buscar_fechamento = SalvarRodadaMercado.all
+        @buscar_fechamento = SalvarRodadaMercado.all
       
 
         #verifica na api o fechamento do mercado para poder bloquear pagamento após esse horário
-        dia = buscar_fechamento[0]["dia"].to_i
-        mes = buscar_fechamento[0]["mes"].to_i
-        ano = buscar_fechamento[0]["ano"].to_i
-        hora = buscar_fechamento[0]["hora"].to_i
-        minuto = buscar_fechamento[0]["minuto"].to_i
+        dia = @buscar_fechamento[0]["dia"].to_i
+        mes = @buscar_fechamento[0]["mes"].to_i
+        ano = @buscar_fechamento[0]["ano"].to_i
+        hora = @buscar_fechamento[0]["hora"].to_i
+        minuto = @buscar_fechamento[0]["minuto"].to_i
 
         if minuto >= 0 && minuto <= 9
             minuto_final = "0#{minuto}"
@@ -49,12 +49,12 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         end
 
        if dia>=1 && dia <= 9
-            @hora = "#{ano}-#{mes}-0#{dia}T#{hora_final}:#{minuto_final}:00.000-03:00"
-            @hora_picpay = "#{ano}-#{mes}-0#{dia}T#{hora_final}:#{minuto_final}:00-03:00"
+            @hora = "#{ano}-#{mes_final}-0#{dia}T#{hora_final}:#{minuto_final}:00.000-03:00"
+            @hora_picpay = "#{ano}-#{mes_final}-0#{dia}T#{hora_final}:#{minuto_final}:00-03:00"
             
         else
-            @hora = "#{ano}-#{mes}-#{dia}T#{hora_final}:#{minuto_final}:00.000-03:00"   
-            @hora_picpay = "#{ano}-#{mes}-#{dia}T#{hora_final}:#{minuto_final}:00-03:00"  
+            @hora = "#{ano}-#{mes_final}-#{dia}T#{hora_final}:#{minuto_final}:00.000-03:00"   
+            @hora_picpay = "#{ano}-#{mes_final}-#{dia}T#{hora_final}:#{minuto_final}:00-03:00"  
         end
 
 
@@ -82,8 +82,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             "value" => 1.0,
             "expiresAt" => "#{@hora_picpay}",
             "buyer" => {
-                "firstName" => "#{@user.nome}",
-                "lastName" => "#{@user.sobrenome}",
+                "firstName" => "#{@user.email}",
+                "lastName" => "#{@user.email}",
                 "document" => "123.456.789-10",
                 "email" => "#{@user.email}",
                 "phone" => "+55 71 988888888"
@@ -418,8 +418,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             "value" => 1.0,
             "expiresAt" => "2021-12-31T16:00:00-03:00",
             "buyer" => {
-                "firstName" => "#{@user.nome}",
-                "lastName" => "#{@user.sobrenome}",
+                "firstName" => "#{@user.email}",
+                "lastName" => "#{@user.email}",
                 "document" => "123.456.789-10",
                 "email" => "#{@user.email}",
                 "phone" => "+55 71 988888888"
@@ -737,8 +737,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             "value" => 1.0,
             "expiresAt" => "2021-12-31T16:00:00-03:00",
             "buyer" => {
-                "firstName" => "#{@user.nome}",
-                "lastName" => "#{@user.sobrenome}",
+                "firstName" => "#{@user.email}",
+                "lastName" => "#{@user.email}",
                 "document" => "123.456.789-10",
                 "email" => "#{@user.email}",
                 "phone" => "+55 71 988888888"
@@ -1063,8 +1063,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             "value" => 1.0,
             "expiresAt" => "2021-12-31T16:00:00-03:00",
             "buyer" => {
-                "firstName" => "#{@user.nome}",
-                "lastName" => "#{@user.sobrenome}",
+                "firstName" => "#{@user.email}",
+                "lastName" => "#{@user.email}",
                 "document" => "123.456.789-10",
                 "email" => "#{@user.email}",
                 "phone" => "+55 71 988888888"

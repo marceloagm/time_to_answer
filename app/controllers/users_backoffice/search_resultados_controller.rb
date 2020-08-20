@@ -23,6 +23,8 @@ class UsersBackoffice::SearchResultadosController < UsersBackofficeController
                     end
 
                     if @mercado == "1" && @rodada != @rodada_atual
+                        @cartoleiro = @equipes_total[0]["cartoleiro"]
+                        @escudo = @equipes_total[0]["escudo"]
                         @equipe_slug = @equipes_total[0]["slug"]
                         atletas_encontrados = SalvarAtletumAnterior.all.where(rodada: @rodada, slug: @equipe_slug)
                         pontos = atletas_encontrados[0]["pontos"]
@@ -32,6 +34,8 @@ class UsersBackoffice::SearchResultadosController < UsersBackofficeController
                     end
 
                     if @mercado == "2" && @rodada != @rodada_atual
+                        @cartoleiro = @equipes_total[0]["cartoleiro"]
+                        @escudo = @equipes_total[0]["escudo"]
                         @equipe_slug = @equipes_total[0]["slug"]
                         atletas_encontrados = SalvarAtletumAnterior.all.where(rodada: @rodada, slug: @equipe_slug)
                         pontos = atletas_encontrados[0]["pontos"]
@@ -40,6 +44,8 @@ class UsersBackoffice::SearchResultadosController < UsersBackofficeController
                     end
 
                     if @mercado == "2" && @rodada == @rodada_atual
+                        @cartoleiro = @equipes_total[0]["cartoleiro"]
+                        @escudo = @equipes_total[0]["escudo"]
                         @equipe_slug = @equipes_total[0]["slug"]
                         atletas_encontrados = Parcial.all.where(rodada: @rodada, slug: @equipe_slug)
                         pontos = atletas_encontrados[0]["pontos"]

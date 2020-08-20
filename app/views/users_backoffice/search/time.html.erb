@@ -2,26 +2,25 @@
 <h1 class="text-center"> LIGA RODADA <%= @rodada %> </h1>
 <% unless @apostador == [] %>
 <% @apostador.each do |apostador| %>
-<div class="col-md-12 col-xl-12" style="height:80%;">
-    <div class="card widget-card-1">
-        <div class="card-block-small">
-            <i class=" bg-c-blue card1-icon"></i>
-                    <div class="row">
-                    <div class="col-6">
-                    
-                    <h4 style="color: white">.</h4>
-                    <h4><%= apostador.equipe.nome_time%></h4>
-                    </div>
-                    <div class="col-6">
-                    
-                    <h4 style="color: white">.</h4>
-                    <h4>Pontos</h4>
-                    </div>
-                </div>
-            </div>
+
+<div class="card py-3 py-md-3 text-white" >
+    <div class="d-flex px-2 px-md-4" >
+    
+    <div class="align-self-baseline mr-2 mr-md-4 ">
+        <img src="<%= apostador.equipe.escudo %>" height="40px" width="40px" alt="" class=" " style="border-color: white;"> </div>
+        <div>
+        
+            <h6 clas="ml-auto"style="color:black; font-size:0.7rem"><b> <%= apostador.equipe.nome_time %></b> </h6>
+            <h6 class="ml-auto" style="color:black; font-size:0.7rem" class="light"> <%= apostador.equipe.cartoleiro %></h6>
+        </div>
+        <div class="align-self-center d-flex ml-auto">
+            <h6>.</h6>
+            <h4 style="color:black; font-size:0.7rem" >0.00</h6>
         </div>
     </div>
     
+</div>            
+
 <% end %>
 <% else %>
 <h1 class="text-center" style="color: red;"><b> ATENÇÃO </b></h1>

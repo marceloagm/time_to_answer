@@ -6,8 +6,7 @@ class UsersBackoffice::TimeCartolaController < UsersBackofficeController
     def show
 
         time_cartola = params[:time_cartola]
-        url = 'https://api.cartolafc.globo.com/times?'
-        @resp = RestClient.get "#{url}q=#{time_cartola}"    
+        @resp = RestClient::Request.execute( method: :get, url:"https://api.cartolafc.globo.com/times?q=#{time_cartola}" , verify_ssl: false)   
         @resp_verificar = JSON.parse(@resp.body)[0]
 
         if @resp_verificar == nil

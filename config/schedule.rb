@@ -22,27 +22,27 @@
 set :output, 'log/whenever.log'
  #whenever --update-crontab --set environment=development - codigo para arivar alterações na schedule
 # Chamando de 7 em 7 minuto
-every 5.minute do
+every 1.minute do
 
- #runner "Parcial.rodada_atual"
+    runner "Parcial.rodada_atual"
  
 end
 
-every 6.minute do
+every 2.minute do
 
-    #runner "Parcial.salvar_equipe"
+    runner "Parcial.salvar_equipe"
     
 end
 
-every 11.minute do
+every 3.minute do
 
-    #runner "Parcial.salvar_atletas_pontuados"
+    runner "Parcial.salvar_atletas_pontuados"
 
 end
 
-every 13.minute do
+every 5.minute do
 
-    #runner "Parcial.parciais"
+    runner "Parcial.parciais"
 
 end
  

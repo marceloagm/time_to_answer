@@ -23,51 +23,36 @@
  <% end %>
 </div>
 
-<div class="col-md-12 col-xl-12">
-    <div class="card widget-card-1">
-        <div class="card-block-small">
-            <i class="bg-c-blue card1-icon"> <h6> Posição </h6> </i>
-                    <div class="row">
-                    <div class="col-6">
-                     
-                    <h4 style="color: white">.</h4>
-                    <h4>Time</h4>
-                    </div>
-                    <div class="col-6">
+  <div class="row justify-content-center" >
+        <div class="col-12 col-md-12 col-sm-12 col-xs-12" >
+        <% @apostas.each do |aposta| %>
+        <h8 style="color:white;">.</h8> 
+                
+                    <div class="card py-3 py-md-3 text-white" >
                     
-                    <h4 style="color: white">.</h4>
-                    <h4>Pontos</h4>
+                        <div class="d-flex px-2 px-md-4" >
+                    
+                        <i class="bg-c-blue card1-icon">  <%= @contador%> </i>
+                            <div class="align-self-baseline mr-2 mr-md-4 ">
+                            <img src="<%= aposta.equipe.escudo %>" height="55px" width="55px" alt="" class="" style="border-color: black"> </div>
+                            <div>
+                               
+                                <h6 clas="ml-auto"style="color:black;"><b> <%= aposta.equipe.nome_time %></b> </h6>
+                                <h6 class="ml-auto" style="color:black;" class="light"> <%= aposta.equipe.cartoleiro %></h6>
+                            </div>
+                            <div class="align-self-center d-flex ml-auto">
+                                <h6>.</h6>
+                                <h4 style="color:black;" >0.00</h6>
+                            </div>
+                        </div>
+                        
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+          
+            <% @contador = @contador + 1 %>
+        <% end %>
+ </div>
 </div>
-
-
-
-<% @apostas.each do |aposta| %>
-
-      <div class="card widget-card-1">
-        <div class="card-block-small">
-            <i class=" bg-c-blue card1-icon"><h5><%= @contador %></h5></i>
-                    <div class="row">
-                    <div class="col-6">
-                    
-                    <h4 style="color: white">.</h4>
-                    <h4><%= aposta.equipe.nome_time %></h4>
-                    </div>
-                    <div class="col-6">
-                    
-                    <h4 style="color: white">.</h4>
-                    <h4>0</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-  
-    <% @contador = @contador + 1 %>
-<% end %>
 
 <div class="pagination justify-content-center">
     <%= paginate @apostas %>

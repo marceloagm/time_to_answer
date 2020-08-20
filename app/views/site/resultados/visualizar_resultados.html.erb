@@ -17,16 +17,16 @@
 
 <div class="col-md-12">
          <!-- Margin card start -->
-         <div class="card">
-               <div class="card-header p-b-0" >
-                  <ul class="nav nav-tabs md-tabs" role="tablist">
-                     <li class="nav-item">
-                           <a class="nav-link active"  data-toggle="tab" href="#margin" role="tab" aria-expanded="true">Pontuação</a>
-                           <div class="slide"></div>
+         <div class="card justify-content-center">
+               <div class="card-header p-b-0 justify-content-center" >
+                  <ul class="nav nav-tabs justify-content-center" role="tablist">
+                     <li class="nav-item ">
+                           <a class="btn-outline-info btn nav-link active"  data-toggle="tab" href="#margin" role="tab" aria-expanded="true">Pontuação</a>
+                           <div class=""></div>
                      </li>
                      <li class="nav-item" style="">
-                           <a class="nav-link " data-toggle="tab" href="#padding" role="tab" aria-expanded="false">Premiação</a>
-                           <div class="slide"></div>
+                           <a class="btn-outline-info btn nav-link " data-toggle="tab" href="#padding" role="tab" aria-expanded="false">Premiação</a>
+                           <div class=""></div>
                      </li>
                   </ul>
                </div>
@@ -34,47 +34,33 @@
                <div class="card-block tab-content p-t-20">
                   <div class="tab-pane fade active show" id="margin" role="tabpanel" aria-expanded="true">
                      <div class="generic-card-body">
-                           <div class="col-md-12 col-xl-12">
-                           <div class="card widget-card-1">
-                              <div class="card-block-small">
-                                    <i class="bg-c-blue card1-icon"> <h6> Posição </h6> </i>
-                                          <div class="row">
-                                          <div class="col-6">
-                                          
-                                          <h4 style="color: white">.</h4>
-                                          <h4>Time</h4>
-                                          </div>
-                                          <div class="col-6">
-                                          
-                                          <h4 style="color: white">.</h4>
-                                          <h4>Pontos</h4>
-                                          </div>
-                                       </div>
-                                    </div>
-                              </div>
-                           </div>
-
+                 
 
                          <% if @mercado == "1" && @rodada == @rodada_atual %>
                           <% @apostas.each do |aposta| %>
+                          
                         <%= link_to  site_visualizar_time_time_path(:time => "#{aposta.equipe.id}", :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
-                              <div class="card widget-card-1">
-                              <div class="card-block-small">
-                                    <i class=" bg-c-blue card1-icon"><h5><%= @contador %></h5></i>
-                                          <div class="row">
-                                          <div class="col-6">
-                                          
-                                          <h4 style="color: white">.</h4>
-                                          <h4><%= aposta.equipe.nome_time %></h4>
-                                          </div>
-                                          <div class="col-6">
-                                          
-                                          <h4 style="color: white">.</h4>
-                                          <h4>0</h4>
-                                          </div>
-                                       </div>
+                               
+                        
+                           <div class="card py-3 py-md-3 text-white" >
+                           
+                                 <div class="d-flex px-2 px-md-4" >
+                           
+                                 <i class="bg-c-blue card2-icon">  <%= @contador %> </i>
+                                    <div class="align-self-baseline mr-2 mr-md-4 ">
+                                    <img src="<%= aposta.equipe.escudo %>" height="40px" width="40px" alt="" class=" " style="border-color: white;"> </div>
+                                    <div>
+                                       
+                                       <h6 clas="ml-auto"style="color:black;font-size:0.7rem"><b> <%= aposta.equipe.nome_time %></b> </h6>
+                                       <h6 class="ml-auto" style="color:black; font-size:0.7rem" class="light"> <%= aposta.equipe.cartoleiro %></h6>
                                     </div>
-                              </div>
+                                    <div class="align-self-center d-flex ml-auto">
+                                       <h6>.</h6>
+                                       <h4 style="color:black; font-size:0.7rem" >0.00</h6>
+                                    </div>
+                                 </div>
+                                 
+                           </div>
                         <% end %>
                            <% @contador = @contador + 1 %>
                         <% end %>
@@ -84,24 +70,26 @@
 
                        
                         <% @time_teste.each do |aposta| %>
+                        
                         <%= link_to  site_visualizar_time_time_path(:slug => @time_teste[@contador3][2], :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
-                              <div class="card widget-card-1">
-                              <div class="card-block-small">
-                                    <i class=" bg-c-blue card1-icon"><h5><%= @contador %></h5></i>
-                                          <div class="row">
-                                          <div class="col-6">
-                                          
-                                          <h4 style="color: white">.</h4>
-                                          <h4><%= @time_teste[@contador3][0] %></h4>
-                                          </div>
-                                          <div class="col-6">
-                                          
-                                          <h4 style="color: white">.</h4>
-                                          <h4><%= @time_teste[@contador3][1]%></h4>
-                                          </div>
+                               <div class="card py-3 py-md-3 text-white" >
+                                   <div class="d-flex px-2 px-md-4" >
+                                    <i class="bg-c-blue card2-icon">  <%= @contador %> </i>
+                                    <div class="align-self-baseline mr-2 mr-md-4 ">
+                                       <img src="<%= @time_teste[@contador3][3] %>" height="40px" width="40px" alt="" class=" " style="border-color: white;"> </div>
+                                       <div>
+                                       
+                                          <h6 clas="ml-auto"style="color:black; font-size:0.7rem"><b> <%= @time_teste[@contador3][0] %></b> </h6>
+                                          <h6 class="ml-auto" style="color:black; font-size:0.7rem" class="light"> <%= @time_teste[@contador3][4] %></h6>
+                                       </div>
+                                       <div class="align-self-center d-flex ml-auto">
+                                          <h6>.</h6>
+                                          <h4 style="color:black; font-size:0.7rem" ><%= @time_teste[@contador3][1]%></h6>
                                        </div>
                                     </div>
-                              </div>
+                                    
+                              </div>            
+
                         <% end %>
 
                            <% @contador = @contador + 1 %>
@@ -110,100 +98,74 @@
                         
 
                         <% end %>
-                           
-
-
-
+                     
                      </div>
                   </div>
                   <div class="tab-pane fade" id="padding" role="tabpanel" aria-expanded="false">
                      <div class="generic-card-body">
-                           <div class="col-md-12 col-xl-12">
-                           <div class="card widget-card-1">
-                              <div class="card-block-small">
-                                    <i class="bg-c-blue card1-icon"> <h6> Posição </h6> </i>
-                                          <div class="row">
-                                          <div class="col-6">
-                                          
-                                          <h4 style="color: white">.</h4>
-                                          <h4>Time</h4>
-                                          </div>
-                                          <div class="col-6">
-                                          
-                                          <h4 style="color: white">.</h4>
-                                          <h4>Premiação</h4>
-                                          </div>
-                                       </div>
-                                    </div>
-                              </div>
-                           </div>
-
-
-
-
-
+                          
 
                      <% if @mercado == "1" && @rodada == @rodada_atual %>
                         <% @apostas.each do |aposta| %>
+                       
                         <%= link_to  site_visualizar_time_time_path(:time => "#{aposta.equipe.id}", :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
-                              <div class="card widget-card-1">
-                              <div class="card-block-small">
-                                    <i class=" bg-c-blue card1-icon"><h5> <%= @contador2 %></h5></i>
-                                          <div class="row">
-                                          <div class="col-6">
+                             <div class="card py-3 py-md-3 text-white" >
+                                 <div class="d-flex px-2 px-md-4" >
+                                    <i class="bg-c-blue card2-icon">  <%= @contador2 %> </i>
+                                       <div class="align-self-baseline mr-2 mr-md-4 ">
+                                       <img src="<%= aposta.equipe.escudo %>" height="40px" width="40px" alt="" class="" style="border-color: white;"> </div>
+                                       <div >
                                           
-                                          <h4 style="color: white">.</h4>
-                                          <h4><%= aposta.equipe.nome_time %></h4>
-                                          </div>
-                                          <div class="col-6">
-                                          
-                                          <h4 style="color: white">.</h4>
+                                          <h6 style="color:black; font-size:0.7rem"><b> <%= aposta.equipe.nome_time %></b> </h6>
+                                          <h6  style="color:black; font-size:0.7rem" > <%= aposta.equipe.cartoleiro %></h6>
+                                       </div>
+                                       <div class="align-self-center d-flex ml-auto">
+                                         
                                           <% if params["page"].blank? %>
                                              <% if @valor_aposta == nil %>
                                                 <h4></h4>
                                              <% else %>
-                                                <h4><%= @valor_aposta[@contador2] %></h4>
+                                                <h6 style="color:black; font-size:0.7rem""><%= @valor_aposta[@contador2] %></h6>
                                              <% end %>
                                           <% else %>
                                            <h4> </h4>
                                           <% end %>
-                                          </div>
                                        </div>
-                                    </div>
+                                    </div>                                    
                               </div>
-                        <% end %>
+                       <% end %>
                            <% @contador2 = @contador2 + 1 %>
                         <% end %>
 
                 <% else %> 
 
-
+               
                <% @time_teste.each do |aposta| %>
+                     
                         <%= link_to  site_visualizar_time_time_path(:slug => @time_teste[@contador4][2], :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
-                              <div class="card widget-card-1">
-                              <div class="card-block-small">
-                                    <i class=" bg-c-blue card1-icon"><h5> <%= @contador2 %></h5></i>
-                                          <div class="row">
-                                          <div class="col-6">
+                             <div class="card py-3 py-md-3 text-white" >
+                                 <div class="d-flex px-2 px-md-4" >
+                                    <i class="bg-c-blue card2-icon">  <%= @contador2 %> </i>
+                                    <div class="align-self-baseline mr-2 mr-md-4 "> 
+                                       <img src="<%= @time_teste[@contador4][3] %>" height="40px" width="40px" alt="" class=" " style="border-color: "> </div>
+                                       <div>
                                           
-                                          <h4 style="color: white">.</h4>
-                                          <h4> <%= @time_teste[@contador4][0] %> </h4>
-                                          </div>
-                                          <div class="col-6">
-                                          
-                                          <h4 style="color: white">.</h4>
-                                          <% if params["page"].blank? %>
+                                          <h6 class="ml-auto"style="color:black;font-size:0.7rem;"><b> <%= @time_teste[@contador4][0] %> </b></h6>
+                                          <h6 class="ml-auto" style="color:black;font-size:0.7rem" class="light"> <%= @time_teste[@contador4][4] %></h6>
+                                       </div>
+                                       <div class="align-self-center d-flex ml-auto">
+                                          <h6>.</h6>
+                                           <% if params["page"].blank? %>
                                              <% if @valor_aposta == nil %>
                                                 <h4></h4>
                                              <% else %>
-                                                <h4><%= @valor_aposta[@contador2] %></h4>
+                                                <h5 class="ml-auto" style="color:black;font-size:0.7rem"><%= @valor_aposta[@contador2] %></h5>
                                              <% end %>
                                           <% else %>
                                            <h4> </h4>
                                           <% end %>
-                                          </div>
                                        </div>
-                                    </div>
+                                    </div>                                    
                               </div>
                         <% end %>
                            <% @contador2 = @contador2 + 1 %>
@@ -227,5 +189,4 @@
                         </div>
 
        <%end%>
- 
  

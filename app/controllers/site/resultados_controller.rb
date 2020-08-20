@@ -11,6 +11,7 @@ class Site::ResultadosController < SiteController
     def visualizar_resultados
         
         @rodada = params[:rodada].to_i
+        
 
        # @apostas = Apostum.includes(:equipe).all.where(rodada: rodada).page(params[:page]).per(20)
 
@@ -45,8 +46,8 @@ class Site::ResultadosController < SiteController
 
          #time
           
-        if @rodada > @rodada_atual ||  @rodada < 1
-            redirect_to users_backoffice_resultados_index_path
+        if @rodada > @rodada_atual ||  @rodada < 4
+            redirect_to site_resultados_index_path
         else
             if @mercado == "1" && @rodada == @rodada_atual
 
@@ -65,15 +66,26 @@ class Site::ResultadosController < SiteController
                 @pontos_time_slug = Array.new
                 @time_slug = Array.new
                 @time_final = Array.new
+                pontos_time_slug_inter = Array.new
+                @foto_final = Array.new
+                @cartoleiro = Array.new
+
                 while b < @apostas.length 
 
 
                     
                     @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
-                    @pontos_time_slug[b] = @equipes_encontrar[b]["pontos"]
+                    pontos_time_slug_inter[b] = @equipes_encontrar[b]["pontos"]
+                    @pontos_time_slug[b] = number_with_precision(pontos_time_slug_inter[b], precision: 2, separator: '.')
+
                     @time_slug[b] = @equipes_encontrar[b]["slug"]
 
-                    @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b]]
+
+                    encontrar_cartoleiro = Equipe.all.where(nome_time: @nome_time_slug[b])
+                    @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
+                    @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
+
+                    @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
                     
                     b = b + 1
                 end
@@ -92,14 +104,25 @@ class Site::ResultadosController < SiteController
                 @pontos_time_slug = Array.new
                 @time_slug = Array.new
                 @time_final = Array.new
+                @cartoleiro = Array.new
+                pontos_time_slug_inter = Array.new
+                @foto_final = Array.new
+
                 while b < @apostas.length 
+
 
                     
                     @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
-                    @pontos_time_slug[b] = @equipes_encontrar[b]["pontos"]
+                    pontos_time_slug_inter[b] = @equipes_encontrar[b]["pontos"]
+                    @pontos_time_slug[b] = number_with_precision(pontos_time_slug_inter[b], precision: 2, separator: '.')
+
                     @time_slug[b] = @equipes_encontrar[b]["slug"]
 
-                    @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b]]
+                   
+                    encontrar_cartoleiro = Equipe.all.where(nome_time: @nome_time_slug[b])
+                    @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
+                    @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
+                    @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
                     
                     b = b + 1
                 end
@@ -123,7 +146,9 @@ class Site::ResultadosController < SiteController
                 @nome_time_slug = Array.new
                 @pontos_time_slug = Array.new
                 @time_slug = Array.new
-
+                pontos_time_slug_inter = Array.new
+                @foto_final = Array.new
+                @cartoleiro = Array.new
                
                 @equipes_encontrar = Parcial.all.where(rodada: @rodada)
 
@@ -131,10 +156,15 @@ class Site::ResultadosController < SiteController
 
                     
                     @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
-                    @pontos_time_slug[b] = @equipes_encontrar[b]["pontos"]
+                    pontos_time_slug_inter[b] = @equipes_encontrar[b]["pontos"]
+                    @pontos_time_slug[b] = number_with_precision(pontos_time_slug_inter[b], precision: 2, separator: '.')
+                    
                     @time_slug[b] = @equipes_encontrar[b]["slug"]
-
-                    @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b]]
+                    
+                    encontrar_cartoleiro = Equipe.all.where(nome_time: @nome_time_slug[b])
+                    @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
+                    @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
+                    @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
                     
                     b = b + 1
                 end

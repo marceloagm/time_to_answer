@@ -8,23 +8,24 @@
   
         <% @apostas.each do |aposta| %>
             <%= link_to  site_visualizar_time_time_path(:time => "#{aposta.equipe.id}", :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
-                    <div class="card widget-card-1">
-                    <div class="card-block-small">
-                        <i class=" bg-c-blue card1-icon"><h5></h5></i>
-                                <div class="row">
-                                <div class="col-6">
-                                
-                                <h4 style="color: white">.</h4>
-                                <h4><%= aposta.equipe.nome_time %></h4>
-                                </div>
-                                <div class="col-6">
-                                
-                                <h4 style="color: white">.</h4>
-                                <h4>0</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="card py-3 py-md-3 text-white" >
+                                   <div class="d-flex px-2 px-md-4" >
+                                   
+                                    <div class="align-self-baseline mr-2 mr-md-4 ">
+                                       <img src="<%= @aposta.equipe.escudo %>" height="40px" width="40px" alt="" class=" " style="border-color: white;"> </div>
+                                       <div>
+                                       
+                                          <h6 clas="ml-auto"style="color:black; font-size:0.7rem"><b> <%= aposta.equipe.nome_time %></b> </h6>
+                                          <h6 class="ml-auto" style="color:black; font-size:0.7rem" class="light"> <%= aposta.equipe.cartoleiro %></h6>
+                                       </div>
+                                       <div class="align-self-center d-flex ml-auto">
+                                          <h6>.</h6>
+                                          <h4 style="color:black; font-size:0.7rem" >0.00</h6>
+                                       </div>
+                                    </div>
+                                    
+                              </div>            
+              
             <% end %>
           
         <% end %>
@@ -32,48 +33,46 @@
 
     <% if @mercado != "1" %>
         <%= link_to  site_visualizar_time_time_path(:slug => @equipe_slug, :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
-                <div class="col-md-12 col-xl-12" style="height:80%;">
-                    <div class="card widget-card-1">
-                        <div class="card-block-small">
-                            <i class=" bg-c-blue card1-icon"></i>
-                                    <div class="row">
-                                    <div class="col-6">
+                <div class="card py-3 py-md-3 text-white" >
+                                   <div class="d-flex px-2 px-md-4" >
                                     
-                                    <h4 style="color: white">.</h4>
-                                    <h4><%= @nome_time_slug %></h4>
+                                    <div class="align-self-baseline mr-2 mr-md-4 ">
+                                       <img src="<%= @escudo %>" height="40px" width="40px" alt="" class=" " style="border-color: white;"> </div>
+                                       <div>
+                                       
+                                          <h6 clas="ml-auto"style="color:black; font-size:0.7rem"><b> <%= @nome_time_slug %></b> </h6>
+                                          <h6 class="ml-auto" style="color:black; font-size:0.7rem" class="light"> <%= @cartoleiro %></h6>
+                                       </div>
+                                       <div class="align-self-center d-flex ml-auto">
+                                          <h6>.</h6>
+                                          <h4 style="color:black; font-size:0.7rem" ><%= @pontos_time_slug %></h6>
+                                       </div>
                                     </div>
-                                    <div class="col-6">
                                     
-                                    <h4 style="color: white">.</h4>
-                                    <h4><%= @pontos_time_slug %></h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                             </div>           
+
         <% end %>
     <% end %>
     <% if @mercado == "1" && @rodada_atual != @rodada %>
         <%= link_to  site_visualizar_time_time_path(:slug => @equipe_slug, :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
-                <div class="col-md-12 col-xl-12" style="height:80%;">
-                    <div class="card widget-card-1">
-                        <div class="card-block-small">
-                            <i class=" bg-c-blue card1-icon"></i>
-                                    <div class="row">
-                                    <div class="col-6">
+                    <div class="card py-3 py-md-3 text-white" >
+                                   <div class="d-flex px-2 px-md-4" >
                                     
-                                    <h4 style="color: white">.</h4>
-                                    <h4><%= @nome_time_slug %></h4>
+                                    <div class="align-self-baseline mr-2 mr-md-4 ">
+                                       <img src="<%= @escudo %>" height="40px" width="40px" alt="" class=" " style="border-color: white;"> </div>
+                                       <div>
+                                       
+                                          <h6 clas="ml-auto"style="color:black; font-size:0.7rem"><b> <%= @nome_time_slug %></b> </h6>
+                                          <h6 class="ml-auto" style="color:black; font-size:0.7rem" class="light"> <%= @cartoleiro %></h6>
+                                       </div>
+                                       <div class="align-self-center d-flex ml-auto">
+                                          <h6>.</h6>
+                                          <h4 style="color:black; font-size:0.7rem" ><%= @pontos_time_slug %></h6>
+                                       </div>
                                     </div>
-                                    <div class="col-6">
                                     
-                                    <h4 style="color: white">.</h4>
-                                    <h4><%= @pontos_time_slug %></h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                             </div>   
+
         <% end %>
     <% end %>
 
@@ -85,4 +84,3 @@
                 <h3 class="text-center"> 2º Você digitou o nome do time errado. </h3>
 
 <% end %>
-

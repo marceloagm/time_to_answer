@@ -3,43 +3,7 @@
 <div class="row">
 
 
-<% if @rodada_atual.to_i >= 1 %>
-<div class="col-md-6 col-xl-3">
-    <div class="card user-widget-card bg-c-blue">
-        <div class="card-block">
-            <i class="icofont icofont-result bg-simple-c-blue card1-icon"></i>
-            <h4>Rodada 1</h4>
-            <p></p>
-            <%= link_to "Visualizar", site_resultados_visualizar_resultados_path(:rodada => "1"), class:"more-info" %>
-        </div>
-    </div>
-</div>
-<% end %>
 
-<% if @rodada_atual.to_i >= 2 %>
-<div class="col-md-6 col-xl-3">
-    <div class="card user-widget-card bg-c-blue">
-        <div class="card-block">
-            <i class="icofont icofont-result bg-simple-c-blue card1-icon"></i>
-            <h4>Rodada 2</h4>
-            <p></p>
-            <%= link_to "Visualizar", site_resultados_visualizar_resultados_path(:rodada => "2"), class:"more-info" %>
-        </div>
-    </div>
-</div>
-<% end %>
-<% if @rodada_atual.to_i >= 3 %>
-<div class="col-md-6 col-xl-3">
-    <div class="card user-widget-card bg-c-blue">
-        <div class="card-block">
-            <i class="icofont icofont-result bg-simple-c-blue card1-icon"></i>
-            <h4>Rodada 3</h4>
-            <p></p>
-            <%= link_to "Visualizar", site_resultados_visualizar_resultados_path(:rodada => "3"), class:"more-info" %>
-        </div>
-    </div>
-</div>
-<% end %>
 <% if @rodada_atual.to_i >= 4 %>
 <div class="col-md-6 col-xl-3">
     <div class="card user-widget-card bg-c-blue">

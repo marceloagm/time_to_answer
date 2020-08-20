@@ -3,7 +3,6 @@ class Site::SearchResultadosController < SiteController
     require 'rest-client'
     require 'json'
     before_action :set_mercado_rodada
-   
 
     def resultado_encontrado
         @equipe = params[:term]
@@ -15,16 +14,17 @@ class Site::SearchResultadosController < SiteController
         unless @equipes_total.blank?
 
             if @rodada > @rodada_atual ||  @rodada < 1
-                    redirect_to site_resultados_index_path
+                    redirect_to users_backoffice_resultados_index_path
 
             else      
 
                     if @mercado == "1" && @rodada == @rodada_atual
                         @apostas = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_id: @equipes_total)
-
                     end
 
                     if @mercado == "1" && @rodada != @rodada_atual
+                        @cartoleiro = @equipes_total[0]["cartoleiro"]
+                        @escudo = @equipes_total[0]["escudo"]
                         @equipe_slug = @equipes_total[0]["slug"]
                         atletas_encontrados = SalvarAtletumAnterior.all.where(rodada: @rodada, slug: @equipe_slug)
                         pontos = atletas_encontrados[0]["pontos"]
@@ -34,6 +34,8 @@ class Site::SearchResultadosController < SiteController
                     end
 
                     if @mercado == "2" && @rodada != @rodada_atual
+                        @cartoleiro = @equipes_total[0]["cartoleiro"]
+                        @escudo = @equipes_total[0]["escudo"]
                         @equipe_slug = @equipes_total[0]["slug"]
                         atletas_encontrados = SalvarAtletumAnterior.all.where(rodada: @rodada, slug: @equipe_slug)
                         pontos = atletas_encontrados[0]["pontos"]
@@ -42,6 +44,8 @@ class Site::SearchResultadosController < SiteController
                     end
 
                     if @mercado == "2" && @rodada == @rodada_atual
+                        @cartoleiro = @equipes_total[0]["cartoleiro"]
+                        @escudo = @equipes_total[0]["escudo"]
                         @equipe_slug = @equipes_total[0]["slug"]
                         atletas_encontrados = Parcial.all.where(rodada: @rodada, slug: @equipe_slug)
                         pontos = atletas_encontrados[0]["pontos"]
@@ -64,6 +68,7 @@ class Site::SearchResultadosController < SiteController
         @mercado = buscar_mercado_rodada[0]["mercado"]
 
     end
+
 
 
 end

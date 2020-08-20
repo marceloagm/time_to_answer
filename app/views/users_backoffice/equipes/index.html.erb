@@ -1,4 +1,12 @@
 <h1 class="text-center">MEUS TIMES</h1>
+
+
+
+    
+
+
+
+
 <!-- Button trigger modal -->
 <div style="text-align: center;">
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#timeModal">
@@ -11,33 +19,23 @@
 <% if @equipes == [] %>
     <h5 class="text-center" style="color: red;"> Ops! Você ainda não tem equipe adicionada a sua conta. </h5>
 <% else %>
-<div class="row">
+<div class="row justify-content-center">
 
 <% @equipes.each do |equipe| %>
-<div class="col-xl-4 col-md-6">
-    <div class="card social-card bg-simple-c-blue">
-        <div class="card-block">
-            <div class="row align-items-center">
-                <div class="col" >
-                  <div>
-                  <%= image_tag "#{equipe.escudo}" , style: "width:90%;", alt:"User-Image" %>
-                  </div>                     
-                </div>
-                <div class="col">
-                    <h6 class="m-b-0"><b>Time</b></h6>
-                    <p><%= equipe.nome_time%></p>
 
-                    <h6 class="m-b-0"><b>Cartoleiro</b></h6>
-                    <p><%= equipe.cartoleiro%></p>
-                </div>
+        <div class="col-12 col-md-3 col-sm-12 col-xs-12 ml-3">
+            <div class="card py-4 px-0 p-md-4 mt-4 mt-md-5 ">
+                <h5 class="d-flex mr-4 mr-md-0 angle"> <i class="fa fa-angle-double-right font-weight-bold ml-auto" aria-hidden="true"></i> </h5>
+                <div class="col-12 d-flex justify-content-center my-2"> <img src="<%= equipe.escudo %>" height="140px" width="140px" class=" " alt=""> </div>
+                <h6 class="text-center heading font-weight-bold"><%= equipe.nome_time%> </h6>
+                <p class="text-center px-4 "> <%= equipe.cartoleiro%> </p>
+                <div style="text-align: center;">
+                <%= link_to "Excluir Time", users_backoffice_equipe_path(equipe), method: :delete, class:"btn btn-danger btn-sm btn-round f-12 text-center", style:"width: 50%;",  data: {commit: 'Sim', cancel: 'Cancelar', title: 'Você tem certeza?', confirm: "Deseja realmente excluir o time: <b> #{equipe.nome_time} </b>" } %>
+              </div>
             </div>
         </div>
-         <%= link_to users_backoffice_equipe_path(equipe), method: :delete, class:"download-icon red", style:"color:red;", data: {commit: 'Sim', cancel: 'Cancelar', title: 'Você tem certeza?', confirm: "Deseja realmente excluir o time: <b> #{equipe.nome_time} </b>" }  do %>
-      <i class="icofont icofont-error"></i>
-    <% end %>
-    </div>
-    
-</div>
+
+
 <% end %>
 <% end %>
 </div>

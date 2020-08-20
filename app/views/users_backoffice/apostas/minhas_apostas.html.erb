@@ -14,7 +14,9 @@
           <div class="card-block text-center">
               <p class="m-b-0">Rodada</p>
               <span class="d-block text-c f-36"><%= pagamento.rodada%></span>
+              <% if  pagamento.status == "Aprovado" %>
         <%= link_to "Visualizar Resultados", users_backoffice_resultados_visualizar_resultados_path(:rodada => pagamento.rodada), class:"btn btn-primary btn-sm btn-round f-12" %>
+        <% end %>
           </div>
           <% if pagamento.status == "Aprovado"%>
           <div class="card-footer bg-c-green">
@@ -34,3 +36,4 @@
 <div class="pagination justify-content-center">
     <%= paginate @pagamento %>
  </div>
+

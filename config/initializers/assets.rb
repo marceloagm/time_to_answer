@@ -31,7 +31,7 @@ Rails.application.config.assets.precompile += %w( sb-admin-2.js sb-admin-2.css
                                                     modernizr.js pcoded.min.js popper.min.js script.js
                                                     jquery-site.js bootstrap-site.js bootstrap-site.css
                                                     font-site.css excanvas.js vartical-layout.min.js google-2.css
-                                                    common-pages.js)
+                                                    common-pages.js cardtime.css)
 
 Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
 # /vendor/assets

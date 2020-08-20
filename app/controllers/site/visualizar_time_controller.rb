@@ -38,6 +38,9 @@ class Site::VisualizarTimeController < SiteController
                 @atleta = Array.new
                 
                     atletas_encontrados = SalvarAtletumAnterior.all.where(rodada: @rodada, slug: params["slug"])
+                    @atletas_verificar = atletas_encontrados[0]["mensagem"]
+
+                    if @atletas_verificar == "1"
                     
                         
                     
@@ -59,7 +62,10 @@ class Site::VisualizarTimeController < SiteController
                         capitao = atletas_encontrados[0]["capitao"]
                         encontrar_escudo = Equipe.all.where(slug: params["slug"])
                         @nome_escudo_slug = encontrar_escudo[0]["escudo"]
-                        @pontos = atletas_encontrados[0]["pontos"]
+                        @nome_cartoleiro_slug = encontrar_escudo[0]["cartoleiro"]
+                        pontos_inter = atletas_encontrados[0]["pontos"]
+                        @pontos = number_with_precision(pontos_inter, precision: 2, separator: '.')
+
                         @equipe = atletas_encontrados[0]["equipe_nome"]
 
                     
@@ -90,7 +96,7 @@ class Site::VisualizarTimeController < SiteController
 
 
                                 if atletas_id_final[a].to_i == capitao.to_i
-                                    textCapitaoAtleta[a] = "(Capitão)"
+                                    textCapitaoAtleta[a] = "orangered"
                                     pontuacaoAtletaFinal[a] = atletas_pontos_final[a]
                                 else
                                     pontuacaoAtletaFinal[a] = atletas_pontos_final[a]
@@ -101,7 +107,13 @@ class Site::VisualizarTimeController < SiteController
                         @atleta_final = Kaminari.paginate_array(@atleta.sort_by {|h| h[1]})
                         a = a + 1
                         end
-
+                    else
+                        @mensagem = atletas_encontrados[0]["mensagem"]
+                        encontrar_escudo = Equipe.all.where(slug: params["slug"])
+                        @nome_escudo_slug = encontrar_escudo[0]["escudo"]
+                        @nome_cartoleiro_slug = encontrar_escudo[0]["cartoleiro"]
+                        @pontos = "0.00"
+                    end
                         
                   
 
@@ -119,7 +131,9 @@ class Site::VisualizarTimeController < SiteController
                 @atleta = Array.new
                 
                     atletas_encontrados = SalvarAtletumAnterior.all.where(rodada: @rodada, slug: params["slug"])
-                    
+                    @atletas_verificar = atletas_encontrados[0]["mensagem"]
+
+                    if @atletas_verificar == "1"
                         
                     
                         result_atleta_nome = atletas_encontrados[0]["nome_atleta"].gsub('\"', '"')         
@@ -140,7 +154,10 @@ class Site::VisualizarTimeController < SiteController
                         capitao = atletas_encontrados[0]["capitao"]
                         encontrar_escudo = Equipe.all.where(slug: params["slug"])
                         @nome_escudo_slug = encontrar_escudo[0]["escudo"]
-                        @pontos = atletas_encontrados[0]["pontos"]
+                        @nome_cartoleiro_slug = encontrar_escudo[0]["cartoleiro"]
+                        pontos_inter = atletas_encontrados[0]["pontos"]
+                        @pontos = number_with_precision(pontos_inter, precision: 2, separator: '.')
+
                         @equipe = atletas_encontrados[0]["equipe_nome"]
 
                     
@@ -171,7 +188,7 @@ class Site::VisualizarTimeController < SiteController
 
 
                                 if atletas_id_final[a].to_i == capitao.to_i
-                                    textCapitaoAtleta[a] = "(Capitão)"
+                                    textCapitaoAtleta[a] = "orangered"
                                     pontuacaoAtletaFinal[a] = atletas_pontos_final[a]
                                 else
                                     pontuacaoAtletaFinal[a] = atletas_pontos_final[a]
@@ -182,6 +199,13 @@ class Site::VisualizarTimeController < SiteController
                         @atleta_final = Kaminari.paginate_array(@atleta.sort_by {|h| h[1]})
                         a = a + 1
                         end
+                    else
+                        @mensagem = atletas_encontrados[0]["mensagem"]
+                        encontrar_escudo = Equipe.all.where(slug: params["slug"])
+                        @nome_escudo_slug = encontrar_escudo[0]["escudo"]
+                        @nome_cartoleiro_slug = encontrar_escudo[0]["cartoleiro"]
+                        @pontos = "0.00"
+                    end
                
                end
 
@@ -197,7 +221,9 @@ class Site::VisualizarTimeController < SiteController
                 @atleta = Array.new
                 
                     atletas_encontrados = Parcial.all.where(rodada: @rodada, slug: params["slug"])
-                    
+                    @atletas_verificar = atletas_encontrados[0]["mensagem"]
+
+                    if @atletas_verificar == "1"
                         
                     
                         result_atleta_nome = atletas_encontrados[0]["nome_atleta"].gsub('\"', '"')         
@@ -218,7 +244,10 @@ class Site::VisualizarTimeController < SiteController
                         capitao = atletas_encontrados[0]["capitao"]
                         encontrar_escudo = Equipe.all.where(slug: params["slug"])
                         @nome_escudo_slug = encontrar_escudo[0]["escudo"]
-                        @pontos = atletas_encontrados[0]["pontos"]
+                        @nome_cartoleiro_slug = encontrar_escudo[0]["cartoleiro"]
+                        pontos_inter = atletas_encontrados[0]["pontos"]
+                        @pontos = number_with_precision(pontos_inter, precision: 2, separator: '.')
+
                         @equipe = atletas_encontrados[0]["equipe_nome"]
 
                     
@@ -249,7 +278,7 @@ class Site::VisualizarTimeController < SiteController
 
 
                                 if atletas_id_final[a].to_i == capitao.to_i
-                                    textCapitaoAtleta[a] = "(Capitão)"
+                                    textCapitaoAtleta[a] = "orangered"
                                     pontuacaoAtletaFinal[a] = atletas_pontos_final[a]
                                 else
                                     pontuacaoAtletaFinal[a] = atletas_pontos_final[a]
@@ -260,7 +289,14 @@ class Site::VisualizarTimeController < SiteController
                         @atleta_final = Kaminari.paginate_array(@atleta.sort_by {|h| h[1]})
                         a = a + 1
 
-                end
+                        end
+                    else
+                        @mensagem = atletas_encontrados[0]["mensagem"]
+                        encontrar_escudo = Equipe.all.where(slug: params["slug"])
+                        @nome_escudo_slug = encontrar_escudo[0]["escudo"]
+                        @nome_cartoleiro_slug = encontrar_escudo[0]["cartoleiro"]
+                        @pontos = "0.00"
+                    end
             
             
             
