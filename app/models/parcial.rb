@@ -75,8 +75,9 @@
                     unless atleta_verificar.blank?
                         mensagem = "1"
                         capitao = JSON.parse(times_slug.body)["capitao_id"]            
-                    
-                            
+                        escudo = JSON.parse(times_slug.body)["time"]["url_escudo_png"]
+                        cartoleiro = JSON.parse(times_slug.body)["time"]["nome_cartola"]
+                        
                             while a < 12
                             atletas[a] = JSON.parse(times_slug.body)["atletas"][a]["atleta_id"]
                             nome_atleta[a] = JSON.parse(times_slug.body)["atletas"][a]["apelido"]
@@ -94,7 +95,9 @@
                             nome_atleta = []
                             posicao_atleta = []
                             foto_final = []
-                            capitao = ""
+                            capitao = []
+                            cartoleiro = []
+                            escudo = []
                            
                     end
         
@@ -107,7 +110,9 @@
                         atletas_salvar.posicao_atleta = posicao_atleta
                         atletas_salvar.foto_final = foto_final
                         atletas_salvar.equipe_nome = equipe_nome
-                        atletas_salvar.mensagem = mensagem   
+                        atletas_salvar.mensagem = mensagem  
+                        atletas_salvar.escudo = escudo 
+                        atletas_salvar.cartoleiro = cartoleiro  
                         atletas_salvar.save
         
                         atletas.clear
@@ -153,6 +158,8 @@
                     unless atleta_verificar.blank?         
                         mensagem = "1"
                         capitao = JSON.parse(times_slug.body)["capitao_id"]
+                        escudo = JSON.parse(times_slug.body)["time"]["url_escudo_png"]
+                        cartoleiro = JSON.parse(times_slug.body)["time"]["nome_cartola"]
                    
                         while a < 12
                         atletas[a] = JSON.parse(times_slug.body)["atletas"][a]["atleta_id"]
@@ -182,6 +189,8 @@
                         posicao_atleta = []
                         foto_final = []
                         capitao = []
+                        cartoleiro = []
+                        escudo = []
                         pontos_final = 0
                         pontos_inter = []
                     end
@@ -198,6 +207,8 @@
                         atletas_salvar.foto_final = foto_final
                         atletas_salvar.equipe_nome = equipe_nome
                         atletas_salvar.mensagem = mensagem
+                        atletas_salvar.escudo = escudo
+                        atletas_salvar.cartoleiro = cartoleiro
                         atletas_salvar.save
         
                         atletas.clear
@@ -292,6 +303,8 @@
                     atletas_encontrados[b] = SalvarAtletum.all.where(rodada: rodada_atual, slug: apostas[b]["slug"])
                     atleta_verificar[b] = atletas_encontrados[b][0]["mensagem"]
                     equipe_nome = atletas_encontrados[b][0]["equipe_nome"]
+                    escudo = atletas_encontrados[b][0]["escudo"]
+                    cartoleiro = atletas_encontrados[b][0]["cartoleiro"]
         
                     if atleta_verificar[b] == "1"
                         mensagem = "1"
@@ -345,6 +358,8 @@
                             pontos_inter = []
                             atletas = []
                             capitao = []
+                            escudo = []
+                            cartoleiro = []
                             nome_atleta = []
                             posicao_atleta = []
                             posicao_atleta = []
@@ -365,6 +380,8 @@
                         parcial_pontos.foto_final = foto_final
                         parcial_pontos.equipe_nome = equipe_nome
                         parcial_pontos.mensagem = mensagem
+                        parcial_pontos.escudo = escudo
+                        parcial_pontos.cartoleiro = cartoleiro
                         parcial_pontos.save
         
         

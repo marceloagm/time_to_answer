@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_20_120649) do
+ActiveRecord::Schema.define(version: 2020_08_20_192119) do
 
   create_table "admin_statistics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "event"
@@ -80,6 +80,8 @@ ActiveRecord::Schema.define(version: 2020_08_20_120649) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "mensagem"
+    t.string "cartoleiro"
+    t.text "escudo"
   end
 
   create_table "salvar_atleta", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -94,6 +96,8 @@ ActiveRecord::Schema.define(version: 2020_08_20_120649) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "mensagem"
+    t.string "cartoleiro"
+    t.text "escudo"
   end
 
   create_table "salvar_atletum_anteriors", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -110,6 +114,8 @@ ActiveRecord::Schema.define(version: 2020_08_20_120649) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "mensagem"
+    t.string "cartoleiro"
+    t.text "escudo"
   end
 
   create_table "salvar_rodada_mercados", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

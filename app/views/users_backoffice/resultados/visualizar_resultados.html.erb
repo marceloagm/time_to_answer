@@ -68,7 +68,7 @@
 
                         <% else %>
 
-                       
+                       <% if @equipes_encontrar != [] %>
                         <% @time_teste.each do |aposta| %>
                         
                         <%= link_to  users_backoffice_visualizar_time_time_path(:slug => @time_teste[@contador3][2], :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
@@ -91,12 +91,12 @@
                               </div>            
 
                         <% end %>
-
+                     
                            <% @contador = @contador + 1 %>
                            <% @contador3 = @contador3 + 1 %>
                         <% end %>
                         
-
+                        <% end %>
                         <% end %>
                      
                      </div>
@@ -139,7 +139,7 @@
 
                 <% else %> 
 
-               
+               <% if @equipes_encontrar != [] %>
                <% @time_teste.each do |aposta| %>
                      
                         <%= link_to  users_backoffice_visualizar_time_time_path(:slug => @time_teste[@contador4][2], :rodada => params["rodada"]), class:"col-md-12 col-xl-12", style:"height:80%;" do %>
@@ -171,6 +171,7 @@
                            <% @contador2 = @contador2 + 1 %>
                            <% @contador4 = @contador4 + 1 %>
                         <% end %>
+                        <% end %>
                 <% end %>     
                      </div>
                   </div>
@@ -185,8 +186,10 @@
          </div>
        <% else %>  
          <div class="pagination justify-content-center">
+            <% if @equipes_encontrar != [] %>   
                            <%= paginate @time_teste %>
-                        </div>
 
+                        </div>
+            <% end %>
        <%end%>
  

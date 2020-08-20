@@ -70,27 +70,34 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
                 @foto_final = Array.new
                 @cartoleiro = Array.new
 
-                while b < @apostas.length 
+                if @equipes_encontrar != []
+                    while b < @apostas.length 
 
 
+                        
+                        @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
+                        pontos_time_slug_inter[b] = @equipes_encontrar[b]["pontos"]
+                        @pontos_time_slug[b] = number_with_precision(pontos_time_slug_inter[b], precision: 2, separator: '.')
+
+                        @time_slug[b] = @equipes_encontrar[b]["slug"]
+
+                        if @equipes_encontrar[b]["mensagem"] == "1"
+                            @cartoleiro[b] = @equipes_encontrar[b]["cartoleiro"]
+                            @foto_final[b] = @equipes_encontrar[b]["escudo"]
+                        else
+                            encontrar_cartoleiro = Equipe.all.where(nome_time: @nome_time_slug[b])
+                            @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
+                            @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
+                        end
+                        
+
+                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
+                        
+                        b = b + 1
+                    end
                     
-                    @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
-                    pontos_time_slug_inter[b] = @equipes_encontrar[b]["pontos"]
-                    @pontos_time_slug[b] = number_with_precision(pontos_time_slug_inter[b], precision: 2, separator: '.')
-
-                    @time_slug[b] = @equipes_encontrar[b]["slug"]
-
-
-                    encontrar_cartoleiro = Equipe.all.where(nome_time: @nome_time_slug[b])
-                    @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
-                    @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
-
-                    @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
-                    
-                    b = b + 1
+                    @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[1]}).page(params[:page]).per(20)
                 end
-                
-                @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[1]}).page(params[:page]).per(20)
             end
 
 
@@ -108,27 +115,32 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
                 pontos_time_slug_inter = Array.new
                 @foto_final = Array.new
 
-                while b < @apostas.length 
+                if @equipes_encontrar != []
 
+                    while b < @apostas.length 
+                        
+                        @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
+                        pontos_time_slug_inter[b] = @equipes_encontrar[b]["pontos"]
+                        @pontos_time_slug[b] = number_with_precision(pontos_time_slug_inter[b], precision: 2, separator: '.')
+
+                        @time_slug[b] = @equipes_encontrar[b]["slug"]
 
                     
-                    @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
-                    pontos_time_slug_inter[b] = @equipes_encontrar[b]["pontos"]
-                    @pontos_time_slug[b] = number_with_precision(pontos_time_slug_inter[b], precision: 2, separator: '.')
-
-                    @time_slug[b] = @equipes_encontrar[b]["slug"]
-
-                   
-                    encontrar_cartoleiro = Equipe.all.where(nome_time: @nome_time_slug[b])
-                    @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
-                    @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
-                    @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
+                        if @equipes_encontrar[b]["mensagem"] == "1"
+                            @cartoleiro[b] = @equipes_encontrar[b]["cartoleiro"]
+                            @foto_final[b] = @equipes_encontrar[b]["escudo"]
+                        else
+                            encontrar_cartoleiro = Equipe.all.where(nome_time: @nome_time_slug[b])
+                            @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
+                            @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
+                        end
+                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
+                        
+                        b = b + 1
+                    end
                     
-                    b = b + 1
+                    @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[1]}).page(params[:page]).per(20)
                 end
-                
-                @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[1]}).page(params[:page]).per(20)
-            
             end
 
 
@@ -152,25 +164,32 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
                
                 @equipes_encontrar = Parcial.all.where(rodada: @rodada)
 
-                while b < @apostas.length 
+                if @equipes_encontrar != []
+                    while b < @apostas.length 
 
+                        
+                        @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
+                        pontos_time_slug_inter[b] = @equipes_encontrar[b]["pontos"]
+                        @pontos_time_slug[b] = number_with_precision(pontos_time_slug_inter[b], precision: 2, separator: '.')
+                        
+                        @time_slug[b] = @equipes_encontrar[b]["slug"]
+                        
                     
-                    @nome_time_slug[b] = @equipes_encontrar[b]["equipe_nome"]
-                    pontos_time_slug_inter[b] = @equipes_encontrar[b]["pontos"]
-                    @pontos_time_slug[b] = number_with_precision(pontos_time_slug_inter[b], precision: 2, separator: '.')
+                        if @equipes_encontrar[b]["mensagem"] == "1"
+                            @cartoleiro[b] = @equipes_encontrar[b]["cartoleiro"]
+                            @foto_final[b] = @equipes_encontrar[b]["escudo"]
+                        else
+                            encontrar_cartoleiro = Equipe.all.where(nome_time: @nome_time_slug[b])
+                            @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
+                            @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
+                        end
+                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
+                        
+                        b = b + 1
+                    end
                     
-                    @time_slug[b] = @equipes_encontrar[b]["slug"]
-                    
-                    encontrar_cartoleiro = Equipe.all.where(nome_time: @nome_time_slug[b])
-                    @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
-                    @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
-                    @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
-                    
-                    b = b + 1
+                    @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[1]}).page(params[:page]).per(20)
                 end
-                
-                @time_teste = Kaminari.paginate_array(@time_final.sort_by {|h| -h[1]}).page(params[:page]).per(20)
-
                
             end
         end
