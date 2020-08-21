@@ -18,7 +18,7 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-
+set :bundle_command, "/vagrant/time_to_answer/bin/bundle exec"
 set :output, 'log/whenever.log'
  #whenever --update-crontab --set environment=development - codigo para arivar alterações na schedule
 # Chamando de 7 em 7 minuto

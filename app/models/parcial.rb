@@ -90,7 +90,7 @@
                             a = a + 1
                             end
                     else
-                            mensagem = JSON.parse(times_slug.body)["mensagem"]
+                            mensagem = "Ops! Esse time não foi escalado para essa rodada."
                             atletas = []
                             nome_atleta = []
                             posicao_atleta = []
@@ -183,7 +183,7 @@
                         pontos_final =  pontos_inter.inject(:+)
                        # pontos_time_slug = number_with_precision(pontos_final, precision: 2, separator: '.')
                     else
-                        mensagem = JSON.parse(times_slug.body)["mensagem"]
+                        mensagem = "Ops! Esse time não foi escalado para essa rodada."
                         atletas = []
                         nome_atleta = []
                         posicao_atleta = []
@@ -219,7 +219,7 @@
                         foto_atleta.clear
                         foto_format.clear
                         foto_final.clear
-                        mensagem.nill
+                        
                     
                     b = b + 1
                     end
@@ -353,7 +353,7 @@
                             pontos_final =  pontos_inter.inject(:+)
         
                         else
-                            mensagem = atletas_encontrados[b][0]["mensagem"]
+                            mensagem = "Ops! Esse time não foi escalado para essa rodada."
                             pontos_final = 0
                             pontos_inter = []
                             atletas = []

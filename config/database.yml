@@ -5,6 +5,7 @@ development:
   pool: 5
   username: root
   password: malisca1
+  reaping_frequency: 0
 test:
   adapter: mysql2
   encoding: utf8
@@ -12,6 +13,7 @@ test:
   pool: 5
   username: root
   password: malisca1
+  reaping_frequency: 0
 production:
   adapter: mysql2
   encoding: utf8
@@ -19,3 +21,4 @@ production:
   pool: 5
   username: root
   password: malisca1
+  reaping_frequency: 0

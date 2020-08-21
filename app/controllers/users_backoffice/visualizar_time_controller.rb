@@ -13,7 +13,7 @@ class UsersBackoffice::VisualizarTimeController < UsersBackofficeController
         @rodada = params["rodada"].to_i
         
 
-        if @rodada > @rodada_atual ||  @rodada < 1
+        if @rodada > @rodada_atual ||  @rodada < 4
             redirect_to users_backoffice_resultados_index_path
         else 
 
@@ -60,9 +60,8 @@ class UsersBackoffice::VisualizarTimeController < UsersBackofficeController
                         atletas_foto_final =  eval(result_foto_pontos)
 
                         capitao = atletas_encontrados[0]["capitao"]
-                        encontrar_escudo = Equipe.all.where(slug: params["slug"])
-                        @nome_escudo_slug = encontrar_escudo[0]["escudo"]
-                        @nome_cartoleiro_slug = encontrar_escudo[0]["cartoleiro"]
+                        @nome_escudo_slug = atletas_encontrados[0]["escudo"]
+                        @nome_cartoleiro_slug = atletas_encontrados[0]["cartoleiro"]
                         pontos_inter = atletas_encontrados[0]["pontos"]
                         @pontos = number_with_precision(pontos_inter, precision: 2, separator: '.')
 
@@ -152,9 +151,8 @@ class UsersBackoffice::VisualizarTimeController < UsersBackofficeController
                         atletas_foto_final =  eval(result_foto_pontos)
 
                         capitao = atletas_encontrados[0]["capitao"]
-                        encontrar_escudo = Equipe.all.where(slug: params["slug"])
-                        @nome_escudo_slug = encontrar_escudo[0]["escudo"]
-                        @nome_cartoleiro_slug = encontrar_escudo[0]["cartoleiro"]
+                        @nome_escudo_slug = atletas_encontrados[0]["escudo"]
+                        @nome_cartoleiro_slug = atletas_encontrados[0]["cartoleiro"]
                         pontos_inter = atletas_encontrados[0]["pontos"]
                         @pontos = number_with_precision(pontos_inter, precision: 2, separator: '.')
 
@@ -242,9 +240,8 @@ class UsersBackoffice::VisualizarTimeController < UsersBackofficeController
                         atletas_foto_final =  eval(result_foto_pontos)
 
                         capitao = atletas_encontrados[0]["capitao"]
-                        encontrar_escudo = Equipe.all.where(slug: params["slug"])
-                        @nome_escudo_slug = encontrar_escudo[0]["escudo"]
-                        @nome_cartoleiro_slug = encontrar_escudo[0]["cartoleiro"]
+                        @nome_escudo_slug = atletas_encontrados[0]["escudo"]
+                        @nome_cartoleiro_slug = atletas_encontrados[0]["cartoleiro"]
                         pontos_inter = atletas_encontrados[0]["pontos"]
                         @pontos = number_with_precision(pontos_inter, precision: 2, separator: '.')
 
