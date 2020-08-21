@@ -4,18 +4,16 @@ class ParciaisController < ApplicationController
     require 'uri'
     require 'json'
     require 'rest-client'
-    
-      
-      def rodada_atual
+    def rodada_atual
         
-        resp = RestClient::Request.execute( method: :get, url: 'https://api.cartolafc.globo.com/mercado/status', verify_ssl: false)   
+        resp = RestClient::Request.execute( method: :get, url: "https://api.cartolafc.globo.com/mercado/status", verify_ssl: false)   
         mercado_verificar = JSON.parse(resp.body)["status_mercado"]
         if mercado_verificar == 4
             mercado = 2
         else
-           mercado = mercado_verificar
+            mercado = mercado_verificar
         end
-        
+
         rodada_atual = JSON.parse(resp.body)["rodada_atual"]
 
         dia = JSON.parse(resp.body)["fechamento"]["dia"]
@@ -32,6 +30,7 @@ class ParciaisController < ApplicationController
         parcial_rodada.mes = mes
         parcial_rodada.hora = hora
         parcial_rodada.minuto = minuto
+        parcial_rodada.ano = ano
         parcial_rodada.save
 
 end
@@ -73,8 +72,9 @@ def salvar_equipe
             unless atleta_verificar.blank?
                 mensagem = "1"
                 capitao = JSON.parse(times_slug.body)["capitao_id"]            
-            
-                    
+                escudo = JSON.parse(times_slug.body)["time"]["url_escudo_png"]
+                cartoleiro = JSON.parse(times_slug.body)["time"]["nome_cartola"]
+                
                     while a < 12
                     atletas[a] = JSON.parse(times_slug.body)["atletas"][a]["atleta_id"]
                     nome_atleta[a] = JSON.parse(times_slug.body)["atletas"][a]["apelido"]
@@ -87,12 +87,14 @@ def salvar_equipe
                     a = a + 1
                     end
             else
-                    mensagem = JSON.parse(times_slug.body)["mensagem"]
+                    mensagem = "Ops! Esse time não foi escalado para essa rodada."
                     atletas = []
                     nome_atleta = []
                     posicao_atleta = []
                     foto_final = []
-                    capitao = ""
+                    capitao = []
+                    cartoleiro = []
+                    escudo = []
                    
             end
 
@@ -105,7 +107,9 @@ def salvar_equipe
                 atletas_salvar.posicao_atleta = posicao_atleta
                 atletas_salvar.foto_final = foto_final
                 atletas_salvar.equipe_nome = equipe_nome
-                atletas_salvar.mensagem = mensagem   
+                atletas_salvar.mensagem = mensagem  
+                atletas_salvar.escudo = escudo 
+                atletas_salvar.cartoleiro = cartoleiro  
                 atletas_salvar.save
 
                 atletas.clear
@@ -151,6 +155,8 @@ def salvar_equipe
             unless atleta_verificar.blank?         
                 mensagem = "1"
                 capitao = JSON.parse(times_slug.body)["capitao_id"]
+                escudo = JSON.parse(times_slug.body)["time"]["url_escudo_png"]
+                cartoleiro = JSON.parse(times_slug.body)["time"]["nome_cartola"]
            
                 while a < 12
                 atletas[a] = JSON.parse(times_slug.body)["atletas"][a]["atleta_id"]
@@ -174,12 +180,14 @@ def salvar_equipe
                 pontos_final =  pontos_inter.inject(:+)
                # pontos_time_slug = number_with_precision(pontos_final, precision: 2, separator: '.')
             else
-                mensagem = JSON.parse(times_slug.body)["mensagem"]
+                mensagem = "Ops! Esse time não foi escalado para essa rodada."
                 atletas = []
                 nome_atleta = []
                 posicao_atleta = []
                 foto_final = []
                 capitao = []
+                cartoleiro = []
+                escudo = []
                 pontos_final = 0
                 pontos_inter = []
             end
@@ -196,6 +204,8 @@ def salvar_equipe
                 atletas_salvar.foto_final = foto_final
                 atletas_salvar.equipe_nome = equipe_nome
                 atletas_salvar.mensagem = mensagem
+                atletas_salvar.escudo = escudo
+                atletas_salvar.cartoleiro = cartoleiro
                 atletas_salvar.save
 
                 atletas.clear
@@ -206,7 +216,7 @@ def salvar_equipe
                 foto_atleta.clear
                 foto_format.clear
                 foto_final.clear
-                mensagem.nill
+                
             
             b = b + 1
             end
@@ -290,6 +300,8 @@ def parciais
             atletas_encontrados[b] = SalvarAtletum.all.where(rodada: rodada_atual, slug: apostas[b]["slug"])
             atleta_verificar[b] = atletas_encontrados[b][0]["mensagem"]
             equipe_nome = atletas_encontrados[b][0]["equipe_nome"]
+            escudo = atletas_encontrados[b][0]["escudo"]
+            cartoleiro = atletas_encontrados[b][0]["cartoleiro"]
 
             if atleta_verificar[b] == "1"
                 mensagem = "1"
@@ -338,11 +350,13 @@ def parciais
                     pontos_final =  pontos_inter.inject(:+)
 
                 else
-                    mensagem = atletas_encontrados[b][0]["mensagem"]
+                    mensagem = "Ops! Esse time não foi escalado para essa rodada."
                     pontos_final = 0
                     pontos_inter = []
                     atletas = []
                     capitao = []
+                    escudo = []
+                    cartoleiro = []
                     nome_atleta = []
                     posicao_atleta = []
                     posicao_atleta = []
@@ -363,6 +377,8 @@ def parciais
                 parcial_pontos.foto_final = foto_final
                 parcial_pontos.equipe_nome = equipe_nome
                 parcial_pontos.mensagem = mensagem
+                parcial_pontos.escudo = escudo
+                parcial_pontos.cartoleiro = cartoleiro
                 parcial_pontos.save
 
 
