@@ -91,7 +91,7 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
                         end
                         
 
-                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
+                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b], @pontos_time_slug[b]]
                         
                         b = b + 1
                     end
@@ -134,7 +134,7 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
                             @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
                             @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
                         end
-                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
+                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b], @pontos_time_slug[b]]
                         
                         b = b + 1
                     end
@@ -183,7 +183,7 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
                             @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
                             @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
                         end
-                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
+                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b], @pontos_time_slug[b]]
                         
                         b = b + 1
                     end

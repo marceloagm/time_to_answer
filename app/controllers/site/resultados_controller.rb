@@ -91,7 +91,7 @@ class Site::ResultadosController < SiteController
                         end
                         
 
-                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
+                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b], @pontos_time_slug[b]]
                         
                         b = b + 1
                     end
@@ -134,7 +134,7 @@ class Site::ResultadosController < SiteController
                             @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
                             @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
                         end
-                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
+                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b], @pontos_time_slug[b]]
                         
                         b = b + 1
                     end
@@ -183,7 +183,7 @@ class Site::ResultadosController < SiteController
                             @cartoleiro[b] = encontrar_cartoleiro[0]["cartoleiro"]
                             @foto_final[b] = encontrar_cartoleiro[0]["escudo"]
                         end
-                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b]]
+                        @time_final[b] = [@nome_time_slug[b], @pontos_time_slug[b].to_f, @time_slug[b],@foto_final[b], @cartoleiro[b], @pontos_time_slug[b]]
                         
                         b = b + 1
                     end
@@ -330,6 +330,5 @@ class Site::ResultadosController < SiteController
         @mercado = buscar_mercado_rodada[0]["mercado"]
 
     end
-    
     
 end
