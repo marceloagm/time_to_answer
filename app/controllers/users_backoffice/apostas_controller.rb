@@ -258,14 +258,10 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             redirect_to users_backoffice_welcome_index_path #redirect para tela de resultados dessa aposta
         end  
                 
-
+      
 
         @rodada = @rodada_prox0 
-        status_pagamento = params["collection_status"]
-        id_pagamento = params["collection_id"] 
-
         @verificar_pagamento_mp = VerificarPagamentoMp.all.where(user_mp: @user.id, rodada: rodada_verificar)
-
 
         if @verificar_pagamento_mp != [] && @equipe_verificar_mp.blank?
 
@@ -273,12 +269,15 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             reference_mp = @verificar_pagamento_mp[0]["reference_mp"]  
             equipe_mp = @verificar_pagamento_mp[0]["equipe_mp"] 
             user_mp = @verificar_pagamento_mp[0]["user_mp"]
+            @resp_teste = RestClient::Request.execute( method: :get, url: "https://api.mercadopago.com/v1/payments/search?access_token=TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614&external_reference=#{reference_mp}", verify_ssl: false)   
+            resp_verificar = JSON.parse(@resp_teste.body)["results"]
+            
 
-            if reference_mp == params["external_reference"]
-                unless status_pagamento.blank?
-                    unless status_pagamento == "null"
-                        paymentInfo = $mp.get_payment(id_pagamento) 
-                        status_pagamento_mp = paymentInfo["response"]["status"] 
+            unless resp_verificar.blank?
+                status_pagamento_mp = resp_verificar[0]["status"]
+                id_pagamento = resp_verificar[0]["id"]
+                unless status_pagamento_mp.blank?
+                    unless status_pagamento_mp == "null"
 
                         if status_pagamento_mp == "approved"
                             equipe_verificar_salvar = Equipe.all.where(id: equipe_mp)
@@ -312,8 +311,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                         end
 
 
-                        if status_pagamento_mp == "pending" || status_pagamento == "in_process"
-                            preapproval = $mp.cancel_payment(id_pagamento)                    
+                        if status_pagamento_mp == "pending" || status_pagamento_mp == "in_process"
+                            preapproval = $mp.cancel_payment("#{id_pagamento}")                    
                             flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
                             redirect_to "/users_backoffice/rodada_atual"
                             excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
@@ -395,6 +394,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
 
     def rodada_prox
+
+       
 
         rodada_verificar = @rodada_prox1 
 
@@ -583,13 +584,11 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         salvando_reference_mp.save
 
       end
-
-
-
+       
+       
+     
         @rodada = @rodada_prox1
-        status_pagamento = params["collection_status"]
-        id_pagamento = params["collection_id"] 
-
+       
         @verificar_pagamento_mp = VerificarPagamentoMp.all.where(user_mp: @user.id, rodada: rodada_verificar)
 
         if @verificar_pagamento_mp != [] && @equipe_verificar_mp.blank?
@@ -598,13 +597,16 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             reference_mp = @verificar_pagamento_mp[0]["reference_mp"]  
             equipe_mp = @verificar_pagamento_mp[0]["equipe_mp"] 
             user_mp = @verificar_pagamento_mp[0]["user_mp"]
+            @resp_teste = RestClient::Request.execute( method: :get, url: "https://api.mercadopago.com/v1/payments/search?access_token=TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614&external_reference=#{reference_mp}", verify_ssl: false)   
+            resp_verificar = JSON.parse(@resp_teste.body)["results"]
+            
 
-            if reference_mp == params["external_reference"]
-                unless status_pagamento.blank?
-                    unless status_pagamento == "null"
-                    paymentInfo = $mp.get_payment(id_pagamento) 
-                    status_pagamento_mp = paymentInfo["response"]["status"] 
-
+            unless resp_verificar.blank?
+                status_pagamento_mp = resp_verificar[0]["status"]
+                id_pagamento = resp_verificar[0]["id"]
+                unless status_pagamento_mp.blank?
+                    unless status_pagamento_mp == "null"
+                   
                         if status_pagamento_mp == "approved"
                             equipe_verificar_salvar = Equipe.all.where(id: equipe_mp)
                             equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
@@ -635,8 +637,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                             excluir_reference_mp.destroy
                         end
 
-                        if status_pagamento_mp == "pending" || status_pagamento == "in_process"
-                            preapproval = $mp.cancel_payment(id_pagamento)                    
+                        if status_pagamento_mp == "pending" || status_pagamento_mp == "in_process"
+                            preapproval = $mp.cancel_payment("#{id_pagamento}")                     
                             flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
                             redirect_to "/users_backoffice/rodada_prox"
                             excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
@@ -911,9 +913,6 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
 
         @rodada = @rodada_prox2
-        status_pagamento = params["collection_status"]
-        id_pagamento = params["collection_id"] 
-
         @verificar_pagamento_mp = VerificarPagamentoMp.all.where(user_mp: @user.id, rodada: rodada_verificar)
 
         if @verificar_pagamento_mp != [] && @equipe_verificar_mp.blank?
@@ -922,12 +921,15 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             reference_mp = @verificar_pagamento_mp[0]["reference_mp"]  
             equipe_mp = @verificar_pagamento_mp[0]["equipe_mp"] 
             user_mp = @verificar_pagamento_mp[0]["user_mp"]
+            @resp_teste = RestClient::Request.execute( method: :get, url: "https://api.mercadopago.com/v1/payments/search?access_token=TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614&external_reference=#{reference_mp}", verify_ssl: false)   
+            resp_verificar = JSON.parse(@resp_teste.body)["results"]
+            
 
-            if reference_mp == params["external_reference"]
-                unless status_pagamento.blank?
-                    unless status_pagamento == "null"
-                    paymentInfo = $mp.get_payment(id_pagamento) 
-                    status_pagamento_mp = paymentInfo["response"]["status"] 
+            unless resp_verificar.blank?
+                status_pagamento_mp = resp_verificar[0]["status"]
+                id_pagamento = resp_verificar[0]["id"]
+                unless status_pagamento_mp.blank?
+                    unless status_pagamento_mp == "null"
 
                         if status_pagamento_mp == "approved"
                             equipe_verificar_salvar = Equipe.all.where(id: equipe_mp)
@@ -959,8 +961,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                             excluir_reference_mp.destroy
                         end
 
-                        if status_pagamento_mp == "pending" || status_pagamento == "in_process"
-                            preapproval = $mp.cancel_payment(id_pagamento)                    
+                        if status_pagamento_mp == "pending" || status_pagamento_mp == "in_process"
+                            preapproval = $mp.cancel_payment("#{id_pagamento}")                     
                             flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
                             redirect_to "/users_backoffice/rodada_dprox"
                             excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
@@ -1233,9 +1235,6 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
 
         @rodada = @rodada_prox3
-        status_pagamento = params["collection_status"]
-        id_pagamento = params["collection_id"] 
-
         @verificar_pagamento_mp = VerificarPagamentoMp.all.where(user_mp: @user.id, rodada: rodada_verificar)
 
         if @verificar_pagamento_mp != [] && @equipe_verificar_mp.blank?
@@ -1244,12 +1243,15 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             reference_mp = @verificar_pagamento_mp[0]["reference_mp"]  
             equipe_mp = @verificar_pagamento_mp[0]["equipe_mp"] 
             user_mp = @verificar_pagamento_mp[0]["user_mp"]
+            @resp_teste = RestClient::Request.execute( method: :get, url: "https://api.mercadopago.com/v1/payments/search?access_token=TEST-4686041618151195-042516-bf590b3cbc27e7b61ed4802c2402e3f4-198441614&external_reference=#{reference_mp}", verify_ssl: false)   
+            resp_verificar = JSON.parse(@resp_teste.body)["results"]
+            
 
-            if reference_mp == params["external_reference"]
-                unless status_pagamento.blank?
-                    unless status_pagamento == "null"
-                    paymentInfo = $mp.get_payment(id_pagamento) 
-                    status_pagamento_mp = paymentInfo["response"]["status"] 
+            unless resp_verificar.blank?
+                status_pagamento_mp = resp_verificar[0]["status"]
+                id_pagamento = resp_verificar[0]["id"]
+                unless status_pagamento_mp.blank?
+                    unless status_pagamento_mp == "null"
 
                         if status_pagamento_mp == "approved"
                             equipe_verificar_salvar = Equipe.all.where(id: equipe_mp)
@@ -1281,8 +1283,8 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
                             excluir_reference_mp.destroy
                         end
 
-                        if status_pagamento_mp == "pending" || status_pagamento == "in_process"
-                            preapproval = $mp.cancel_payment(id_pagamento)                    
+                        if status_pagamento_mp == "pending" || status_pagamento_mp == "in_process"
+                            preapproval = $mp.cancel_payment("#{id_pagamento}")                       
                             flash[:danger] = "Seu pagamento pendente foi cancelado automaticamente, favor tentar novamente."
                             redirect_to "/users_backoffice/rodada_ddprox"
                             excluir_reference_mp = VerificarPagamentoMp.find(id_mp)
