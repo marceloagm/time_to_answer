@@ -1,0 +1,2 @@
+class TesteIpn < ApplicationRecord
+end

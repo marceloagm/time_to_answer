@@ -1,12 +1,5 @@
 <h1 class="text-center">MEUS TIMES</h1>
 
-
-
-    
-
-
-
-
 <!-- Button trigger modal -->
 <div style="text-align: center;">
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#timeModal">
@@ -35,10 +28,10 @@
             </div>
         </div>
 
-
 <% end %>
 <% end %>
 </div>
+
 
 
 <!-- Modal -->
@@ -46,25 +39,38 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Pesquisar Time</h5>
-        
-        </button>
+     
       </div>
       <div class="modal-body">
-      
+      <h4 class="text-center" style="color:#0669de;"><b> Conta Globo </b> </h4>
 
-        <%= form_with(local: true, html: {id: :pesquisar_time}) do |form| %>
+        <%= form_with(url: users_backoffice_time_cartola_path, model: @time_cartola ) do |form| %>
         
-        <p style="color:red;" > Obs: Digitar o nome do time ou cartoleiro igual está no cartola, porém sem os acentos (caso tenha). </p>           
+        <p style="" > Conecte a sua conta GLOBO para adicionar seu time. </p>           
         <div class="row">
               <div class="col-sm-12">
-                  <div class="input-group input-group-button">
-                      <%= form.text_field :time_cartola, class:"form-control", placeholder:"Digite o nome do time", id:"time_cartola" %>
-                      <span class="input-group-addon btn btn-primary">
-                        <%= link_to "Pesquisar", users_backoffice_time_cartola_path, remote:true, class:"btn btn-primary", id:"time-cartola-link" %>
+                  <div class="">
+                      <div class="form-group form-primary">
+                      <h6>E-mail</h6>
+                      <%= form.email_field :email, autofocus: true, class:"form-control", style:"" %>
+                      <div class="text-center">
+                    <%= link_to "Esqueceu seu login?","https://login.globo.com/recuperacaoLogin/6870?url=https%3A%2F%2Fid.globo.com%2Fauth%2Frealms%2Fglobo.com%2Flogin-actions%2Fauthenticate%3Fsession_code%3D36-yT5btGfyIjlUS5nisq3Bm1y-ij_NvT93t49DwBCs%26execution%3D1c219005-5ee2-474e-841b-8439de30d406%26client_id%3Dbarra%2540apps.globoid%26tab_id%3DcxW516xEkbI&error=", style:"color:#0669de; font-weight: 600;" %>
+                      </div>
 
-                          
-                      </span>
+                          <span class="form-bar"></span>
+                      </div>
+                       <div class="form-group form-primary">
+                       <h6>Senha</h6>
+                                <%= form.password_field :password, autofocus: true,  class:"form-control"%>
+                         <div class="text-center">       
+                                <%= link_to "Esqueceu sua senha?","https://login.globo.com/recuperacaoSenha/6870?url=https%3A%2F%2Fid.globo.com%2Fauth%2Frealms%2Fglobo.com%2Flogin-actions%2Fauthenticate%3Fsession_code%3D36-yT5btGfyIjlUS5nisq3Bm1y-ij_NvT93t49DwBCs%26execution%3D1c219005-5ee2-474e-841b-8439de30d406%26client_id%3Dbarra%2540apps.globoid%26tab_id%3DcxW516xEkbI&error=", style:"color:#0669de; font-weight: 600;" %>
+                         </div>
+                          <span class="form-bar"></span>
+                      </div>
+                    
+                      <%= form.submit "ENTRAR", class:"btn", style:"color: white; width: 100%; background-color:#0669de;  font-weight: bolder;" %>
+                                  
+                  
                   </div>
               </div>
           </div>
@@ -72,90 +78,54 @@
            
         <% end %>
         <!-- desabilitar enter no formulario de pesquisar time   -->
-        <script>
-         
-        document.getElementById("pesquisar_time").onsubmit = function () {
-            return false;
-        };
-        
-        let time_cartola_input = document.getElementById("time_cartola");
-            var time_cartola_link = document.getElementById("time-cartola-link");
-
-            time_cartola_input.addEventListener("change", function(){
-              time_cartola_link.href = '<%= users_backoffice_time_cartola_path %>/?time_cartola='+time_cartola_input.value;
-
-              
-        });
-
-
-        </script>     
-           
-          
-          
-        
+       
 
         <!-- REVER QUESTÃO DO TAMANHO DA DIV QUE BUSCAR O TIME (ESCUDO)-->
-       
-       <h5 id="time_encontrado" for="exemplo" style="text-align: center; font-weight: bold;"></h5>
+      <p style="color:white; font-size:1px">.</p>
+       <p id="time_encontrado" for="exemplo" style="text-align: center; font-weight: bold; font-size:15px;"></p>
        
         <%= form_with(url: users_backoffice_equipes_path, scope: :equipe, model: @equipe , local: true) do |f| %>
         
-        <div class="card mb-3", style="background: white" >
-        <div class="row no-gutters">
-            <div class="col-md-4">
-            <div style="margin: 10%">
-
-             
+            <div class="row justify-content-center" >
+                    <div class="col-12 col-md-12 col-sm-12 col-xs-12" >
+                                             
+                                <div class="card py-3 py-md-3 text-white" >
+                                
+                                    <div class="d-flex px-2 px-md-4" >
+                                
+                                        <div class="align-self-baseline mr-2 mr-md-4 ">
+                                        <img id="escudo2" src="" height="47px" width="47px" alt="" class="" style="border-color: black"> </div>
+                                        <div>
+                                          
+                                            <h6 clas="ml-auto"style="color:black; font-weight: bold;" id="nome_time2"></h6>
+                                            <h6 class="ml-auto" style="color:black;" class="light" id="cartoleiro2"></h6>
+                                        </div>
+                                        <div class="align-self-center d-flex ml-auto">
+                                            <h6>.</h6>
+                                           
+                                        </div>
+                                    </div>                                    
+                                </div>
+                       </div>
+                 </div>
+            </div>
+            
 
              <%= f.hidden_field :escudo, class:"form-control bg-info",readonly: true, style:"background: white;
                   border: transparent;", id:"escudo" %>       
             
-            <%= image_tag "/assets/fundo_time.png" , style: "width:80%;", alt:"User-Image", id:"escudo2"%>
-            
-            <!--
-            <%= image_tag 'logo.png', alt:'', style:"width: 95px; height: 95px;" %>
-            <h1> TIME</h1> -->
-            </div>
-            </div>
-            <div class="col-md-6">
-            <div class="card-body">                
-                <h6 class="card-title" id="titulo_time" style="font-weight: bold;"><b></b></h6>
                 
                 <%= f.hidden_field :nome_time, class:"form-control", readonly: true, style:"background: white;
                   border: transparent; outline: none;", id:"nome_time" %>
 
-                  
-
-                  <h6 class="card-title"  id="nome_time2"> </h6>
-
-                  <h6 style="color:white;">.</h5>
-
-
-                <h6 class="card-title" id="titulo_cartoleiro" style="font-weight: bold;"><b></b></h6>
                 
                 <%= f.hidden_field :cartoleiro, class:"form-control ",readonly: true,  style:"background: white;
                   border: transparent; width:100%;", id:"cartoleiro" %>  
 
-  
-
-                  <h6 class="card-title"  id="cartoleiro2"> </h6>
-
-                  <h6 style="color:white;">.</h6>
-
-
                   <%= f.hidden_field :user_id, :value => current_user.id %>
 
                   <%= f.hidden_field :slug, id:"slug" %>
-                  
-                                            
-            </div>
-            </div>
-        
-        </div>
-        </div>   
-        
-      
-      </div>
+     
       
       <div class="modal-footer">
          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="fechar-modal">Fechar</button>
@@ -175,8 +145,9 @@
         document.getElementById('nome_time2').innerHTML='';
         document.getElementById('cartoleiro').value='';
         document.getElementById('cartoleiro2').innerHTML='';
-        document.getElementById('time_cartola').value='';
         document.getElementById('time_encontrado').innerHTML='';
+        document.getElementById('email').value='';
+        document.getElementById('password').value='';
         });  
             
             

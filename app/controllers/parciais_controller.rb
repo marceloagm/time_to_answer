@@ -4,6 +4,19 @@ class ParciaisController < ApplicationController
     require 'uri'
     require 'json'
     require 'rest-client'
+
+
+
+
+    def index
+        @teste = params[:id]
+        teste = TesteIpn.find_or_create_by(id: 1)
+        teste.ipn = @teste
+        teste.save
+    end
+
+
+
     def rodada_atual
         
         resp = RestClient::Request.execute( method: :get, url: "https://api.cartolafc.globo.com/mercado/status", verify_ssl: false)   
@@ -247,6 +260,12 @@ def salvar_atletas_pontuados
         atletas_parcial.rodada = rodada_atual
         atletas_parcial.atletas = atletas
         atletas_parcial.save
+    else
+        atletas_verificar = AtletaPontuado.all
+        
+        if atletas_verificar != []
+            ActiveRecord::Base.connection.execute("TRUNCATE atleta_pontuados")
+        end
     end
 end
 
@@ -398,6 +417,12 @@ def parciais
 
         
 
+    else
+        parcial_verificar = Parcial.all
+        
+        if parcial_verificar != []
+            ActiveRecord::Base.connection.execute("TRUNCATE parcials")
+        end
     end
   
 

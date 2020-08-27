@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_20_192119) do
+ActiveRecord::Schema.define(version: 2020_08_26_114127) do
 
   create_table "admin_statistics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "event"
@@ -138,6 +138,12 @@ ActiveRecord::Schema.define(version: 2020_08_20_192119) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["equipe_id"], name: "index_status_pagamentos_on_equipe_id"
+  end
+
+  create_table "teste_ipns", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "ipn"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

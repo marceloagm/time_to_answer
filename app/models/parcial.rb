@@ -250,6 +250,12 @@
                 atletas_parcial.rodada = rodada_atual
                 atletas_parcial.atletas = atletas
                 atletas_parcial.save
+            else
+                atletas_verificar = AtletaPontuado.all
+                
+                if atletas_verificar != []
+                    ActiveRecord::Base.connection.execute("TRUNCATE atleta_pontuados")
+                end
             end
         end
         
@@ -401,6 +407,12 @@
         
                 
         
+            else
+                parcial_verificar = Parcial.all
+                
+                if parcial_verificar != []
+                    ActiveRecord::Base.connection.execute("TRUNCATE parcials")
+                end
             end
           
         
