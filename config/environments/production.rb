@@ -2,6 +2,23 @@ Rails.application.configure do
   config.exceptions_app = self.routes
   # Settings specified here will take precedence over those in config/application.rb.
 
+   # Devise Config
+   config.action_mailer.default_url_options = { host: 'app.ligasdocfc.com.br'}
+
+
+   #GMAIL CONFIG
+   
+   config.action_mailer.delivery_method = :smtp
+   config.action_mailer.smtp_settings = {
+     address:              'mail.ligasdocfc.com.br',
+     port:                 587,
+     domain:               'ligasdocfc.com.br',
+     user_name:            'contato@ligasdocfc.com.br',
+     password:             '|PP|pp1992',
+     authentication:       'plain',
+     enable_starttls_auto: true }
+
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 

@@ -70,7 +70,7 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
                 @foto_final = Array.new
                 @cartoleiro = Array.new
 
-                if @equipes_encontrar != []
+                if @equipes_encontrar != [] && @apostas.length == @equipes_encontrar.length
                     while b < @apostas.length 
 
 
@@ -101,7 +101,8 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
             end
 
 
-            if @mercado == "2" && @rodada != @rodada_atual
+            if @mercado == "2" && @rodada != @rodada_atual || @mercado == "4" && @rodada != @rodada_atual
+
                 @contador3 = 0
                 @contador4 = 0
                 @apostas = Apostum.all.where(rodada: @rodada)
@@ -115,7 +116,7 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
                 pontos_time_slug_inter = Array.new
                 @foto_final = Array.new
 
-                if @equipes_encontrar != []
+                if @equipes_encontrar != [] && @apostas.length == @equipes_encontrar.length
 
                     while b < @apostas.length 
                         
@@ -144,7 +145,7 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
             end
 
 
-            if @mercado == "2" && @rodada == @rodada_atual
+            if @mercado == "2" && @rodada == @rodada_atual || @mercado == "4" && @rodada == @rodada_atual 
 
                 @contador3 = 0
                 @contador4 = 0
@@ -164,7 +165,7 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
                
                 @equipes_encontrar = Parcial.all.where(rodada: @rodada)
 
-                if @equipes_encontrar != []
+                if @equipes_encontrar != [] && @apostas.length == @equipes_encontrar.length
                     while b < @apostas.length 
 
                         
@@ -192,6 +193,8 @@ class UsersBackoffice::ResultadosController < UsersBackofficeController
                 end
                
             end
+           
+            
         end
 
 

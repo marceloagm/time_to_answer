@@ -119,7 +119,7 @@ class UsersBackoffice::VisualizarTimeController < UsersBackofficeController
                
                end
 
-               if @mercado == "2" && @rodada != @rodada_atual
+               if @mercado == "2" && @rodada != @rodada_atual || @mercado == "4" && @rodada != @rodada_atual
                 
                 @contador = 0
                 nome_jogador_slug = Array.new
@@ -208,7 +208,7 @@ class UsersBackoffice::VisualizarTimeController < UsersBackofficeController
                end
 
 
-               if @mercado == "2" && @rodada == @rodada_atual
+               if @mercado == "2" && @rodada == @rodada_atual || @mercado == "4" && @rodada == @rodada_atual
 
                 @contador = 0
                 nome_jogador_slug = Array.new

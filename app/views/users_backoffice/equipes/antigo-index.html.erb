@@ -1,0 +1,195 @@
+<h1 class="text-center">MEUS TIMES</h1>
+<!-- Button trigger modal -->
+<div style="text-align: center;">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#timeModal">
+  Adicionar Time
+</button>
+</div>
+
+
+<h1></h1>
+<% if @equipes == [] %>
+    <h5 class="text-center" style="color: red;"> Ops! Você ainda não tem equipe adicionada a sua conta. </h5>
+<% else %>
+<div class="row">
+
+<% @equipes.each do |equipe| %>
+<div class="col-xl-4 col-md-6">
+    <div class="card social-card bg-simple-c-blue">
+        <div class="card-block">
+            <div class="row align-items-center">
+                <div class="col" >
+                  <div>
+                  <%= image_tag "#{equipe.escudo}" , style: "width:90%;", alt:"User-Image" %>
+                  </div>                     
+                </div>
+                <div class="col">
+                    <h6 class="m-b-0"><b>Time</b></h6>
+                    <p><%= equipe.nome_time%></p>
+
+                    <h6 class="m-b-0"><b>Cartoleiro</b></h6>
+                    <p><%= equipe.cartoleiro%></p>
+                </div>
+            </div>
+        </div>
+         <%= link_to users_backoffice_equipe_path(equipe), method: :delete, class:"download-icon red", style:"color:red;", data: {commit: 'Sim', cancel: 'Cancelar', title: 'Você tem certeza?', confirm: "Deseja realmente excluir o time: <b> #{equipe.nome_time} </b>" }  do %>
+      <i class="icofont icofont-error"></i>
+    <% end %>
+    </div>
+    
+</div>
+<% end %>
+<% end %>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="timeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Pesquisar Time</h5>
+        
+        </button>
+      </div>
+      <div class="modal-body">
+      
+
+        <%= form_with(local: true, html: {id: :pesquisar_time}) do |form| %>
+        
+        <p style="color:red;" > Obs: Digitar o nome do time ou cartoleiro igual está no cartola, porém sem os acentos (caso tenha). </p>           
+        <div class="row">
+              <div class="col-sm-12">
+                  <div class="input-group input-group-button">
+                      <%= form.text_field :time_cartola, class:"form-control", placeholder:"Digite o nome do time", id:"time_cartola" %>
+                      <span class="input-group-addon btn btn-primary">
+                        <%= link_to "Pesquisar", users_backoffice_time_cartola_path, remote:true, class:"btn btn-primary", id:"time-cartola-link" %>
+
+                          
+                      </span>
+                  </div>
+              </div>
+          </div>
+          
+           
+        <% end %>
+        <!-- desabilitar enter no formulario de pesquisar time   -->
+        <script>
+         
+        document.getElementById("pesquisar_time").onsubmit = function () {
+            return false;
+        };
+        
+        let time_cartola_input = document.getElementById("time_cartola");
+            var time_cartola_link = document.getElementById("time-cartola-link");
+
+            time_cartola_input.addEventListener("change", function(){
+              time_cartola_link.href = '<%= users_backoffice_time_cartola_path %>/?time_cartola='+time_cartola_input.value;
+
+              
+        });
+
+
+        </script>     
+           
+          
+          
+        
+
+        <!-- REVER QUESTÃO DO TAMANHO DA DIV QUE BUSCAR O TIME (ESCUDO)-->
+       
+       <h5 id="time_encontrado" for="exemplo" style="text-align: center; font-weight: bold;"></h5>
+       
+        <%= form_with(url: users_backoffice_equipes_path, scope: :equipe, model: @equipe , local: true) do |f| %>
+        
+        <div class="card mb-3", style="background: white" >
+        <div class="row no-gutters">
+            <div class="col-md-4">
+            <div style="margin: 10%">
+
+             
+
+             <%= f.hidden_field :escudo, class:"form-control bg-info",readonly: true, style:"background: white;
+                  border: transparent;", id:"escudo" %>       
+            
+            <%= image_tag "/assets/fundo_time.png" , style: "width:80%;", alt:"User-Image", id:"escudo2"%>
+            
+            <!--
+            <%= image_tag 'logo.png', alt:'', style:"width: 95px; height: 95px;" %>
+            <h1> TIME</h1> -->
+            </div>
+            </div>
+            <div class="col-md-6">
+            <div class="card-body">                
+                <h6 class="card-title" id="titulo_time" style="font-weight: bold;"><b></b></h6>
+                
+                <%= f.hidden_field :nome_time, class:"form-control", readonly: true, style:"background: white;
+                  border: transparent; outline: none;", id:"nome_time" %>
+
+                  
+
+                  <h6 class="card-title"  id="nome_time2"> </h6>
+
+                  <h6 style="color:white;">.</h5>
+
+
+                <h6 class="card-title" id="titulo_cartoleiro" style="font-weight: bold;"><b></b></h6>
+                
+                <%= f.hidden_field :cartoleiro, class:"form-control ",readonly: true,  style:"background: white;
+                  border: transparent; width:100%;", id:"cartoleiro" %>  
+
+  
+
+                  <h6 class="card-title"  id="cartoleiro2"> </h6>
+
+                  <h6 style="color:white;">.</h6>
+
+
+                  <%= f.hidden_field :user_id, :value => current_user.id %>
+
+                  <%= f.hidden_field :slug, id:"slug" %>
+                  
+                                            
+            </div>
+            </div>
+        
+        </div>
+        </div>   
+        
+      
+      </div>
+      
+      <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal" id="fechar-modal">Fechar</button>
+         <button type="submit" class="btn btn-primary">Adicionar</button>
+        
+      </div>
+    </div>
+      <% end %>
+
+      <script>
+
+      var botao = document.getElementById('fechar-modal');
+      botao.addEventListener("click", function(){
+        document.getElementById('escudo').value='';
+        document.getElementById('escudo2').src='/assets/fundo_time.png';
+        document.getElementById('nome_time').value='';
+        document.getElementById('nome_time2').innerHTML='';
+        document.getElementById('cartoleiro').value='';
+        document.getElementById('cartoleiro2').innerHTML='';
+        document.getElementById('time_cartola').value='';
+        document.getElementById('time_encontrado').innerHTML='';
+        });  
+            
+            
+        
+        </script>
+       
+  </div>
+  
+</div>
+
+
+ <div class="pagination justify-content-center">
+    <%= paginate @equipes %>
+ </div>

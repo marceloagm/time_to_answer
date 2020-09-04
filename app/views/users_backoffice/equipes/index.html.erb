@@ -69,7 +69,9 @@
                       </div>
                     
                       <%= form.submit "ENTRAR", class:"btn", style:"color: white; width: 100%; background-color:#0669de;  font-weight: bolder;" %>
-                                  
+                        <div class="text-center">       
+                                <%= link_to "Conecta pelo Facebook ou conta Google? Clique aqui e crie uma senha.","https://login.globo.com/recuperacaoSenha/4728?tam=widget&url=https%3A%2F%2Fintervencao.globo.com%2Fintervencoes%2Fshow.do%3Fpopin%3Dtrue%26servicoId%3D4728%26urlIntervencao%3Dhttps%3A%2F%2Fs.glbimg.com%2Fgl%2Fba%2Fbarra-globocom.callback.html%2523https%253A%252F%252Fgloboesporte.globo.com%252Fcartola-fc%252F", style:"color:#0669de; font-weight: 600;" %>
+                        </div>
                   
                   </div>
               </div>
@@ -94,7 +96,7 @@
                                     <div class="d-flex px-2 px-md-4" >
                                 
                                         <div class="align-self-baseline mr-2 mr-md-4 ">
-                                        <img id="escudo2" src="" height="47px" width="47px" alt="" class="" style="border-color: black"> </div>
+                                        <img id="escudo2" src="/assets/fundo_time.png" height="47px" width="47px" alt="" class="" style="border-color: black"> </div>
                                         <div>
                                           
                                             <h6 clas="ml-auto"style="color:black; font-weight: bold;" id="nome_time2"></h6>
@@ -140,7 +142,7 @@
       var botao = document.getElementById('fechar-modal');
       botao.addEventListener("click", function(){
         document.getElementById('escudo').value='';
-        document.getElementById('escudo2').src='/assets/fundo_time.png';
+        document.getElementById('escudo2').src='/assets/fundo_time2.png';
         document.getElementById('nome_time').value='';
         document.getElementById('nome_time2').innerHTML='';
         document.getElementById('cartoleiro').value='';

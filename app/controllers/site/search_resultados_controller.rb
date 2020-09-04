@@ -33,7 +33,7 @@ class Site::SearchResultadosController < SiteController
 
                     end
 
-                    if @mercado == "2" && @rodada != @rodada_atual
+                    if @mercado == "2" && @rodada != @rodada_atual || @mercado == "4" && @rodada != @rodada_atual
                         @cartoleiro = @equipes_total[0]["cartoleiro"]
                         @escudo = @equipes_total[0]["escudo"]
                         @equipe_slug = @equipes_total[0]["slug"]
@@ -43,7 +43,7 @@ class Site::SearchResultadosController < SiteController
                         @pontos_time_slug = number_with_precision(pontos, precision: 2, separator: '.')
                     end
 
-                    if @mercado == "2" && @rodada == @rodada_atual
+                    if @mercado == "2" && @rodada == @rodada_atual || @mercado == "4" && @rodada == @rodada_atual
                         @cartoleiro = @equipes_total[0]["cartoleiro"]
                         @escudo = @equipes_total[0]["escudo"]
                         @equipe_slug = @equipes_total[0]["slug"]

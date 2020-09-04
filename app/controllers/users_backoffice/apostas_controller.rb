@@ -13,13 +13,18 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
     def minhas_apostas        
         
         @pagamento = StatusPagamento.all.includes(:equipe).all.where(equipe_id: set_equipe).page(params[:page]).per(8)
-         
+        @rodada_apostas = @rodada_atual.to_s 
     end
 
     def teste
         @teste = "OI"
     end
     def rodada_atual
+        
+        unless @mercado == "1"
+            redirect_to users_backoffice_welcome_index_path #redirect para tela de resultados dessa aposta
+        end  
+
         @buscar_fechamento = SalvarRodadaMercado.all
       
 
@@ -254,9 +259,7 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         end
 
 
-        unless @mercado == "1"
-            redirect_to users_backoffice_welcome_index_path #redirect para tela de resultados dessa aposta
-        end  
+        
                 
       
 
@@ -360,26 +363,20 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
 
         # descobre quais equipes do usuario já está na aposta
         @equipes_total = Equipe.all.where(user_id: @user)
-
+        @equipes_final = Array.new
+       
+        x = 0
         y = 0  
-        @equipes_nome = Array.new
-        while y < @equipes_total.length 
-            @equipes_nome[y] = @equipes_total[y]["nome_time"]
-            y = y + 1
-        end
-                        
-        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_nome: @equipes_nome)
-      
-        x = 0  
-        @equipes_aposta = Array.new
-        while x < @apostador.length 
-            @equipes_aposta[x] = @apostador[x]["equipe_nome"]
-            x = x + 1
+        while x < @equipes_total.length
+
+            unless Apostum.exists?(slug: @equipes_total[x]["slug"], rodada: @rodada)
+              
+                @equipes_final[y] = @equipes_total[x]       
+             y = y + 1
+            end
+        x = x + 1
         end
 
-        @equipe_resultado = Equipe.all.where(nome_time: @equipes_aposta)
-
-        @equipes_final = @equipes_total - @equipe_resultado
 
         
         #verificação para a tela JS
@@ -681,26 +678,19 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         
         # descobre quais equipes do usuario já está na aposta
         @equipes_total = Equipe.all.where(user_id: @user)
-
+        @equipes_final = Array.new
+       
+        x = 0
         y = 0  
-        @equipes_nome = Array.new
-        while y < @equipes_total.length 
-            @equipes_nome[y] = @equipes_total[y]["nome_time"]
-            y = y + 1
-        end
-                        
-        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_nome: @equipes_nome)
-      
-        x = 0  
-        @equipes_aposta = Array.new
-        while x < @apostador.length 
-            @equipes_aposta[x] = @apostador[x]["equipe_nome"]
-            x = x + 1
-        end
+        while x < @equipes_total.length
 
-        @equipe_resultado = Equipe.all.where(nome_time: @equipes_aposta)
-
-        @equipes_final = @equipes_total - @equipe_resultado
+            unless Apostum.exists?(slug: @equipes_total[x]["slug"], rodada: @rodada)
+              
+                @equipes_final[y] = @equipes_total[x]       
+             y = y + 1
+            end
+        x = x + 1
+        end
         
           #verificação para a tela JS
         @equipe_verificar = params[:equipe_id]
@@ -1003,28 +993,21 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
             @contador = (params["page"].to_i * 20) - 19
         end
         
-        # descobre quais equipes do usuario já está na aposta
-        @equipes_total = Equipe.all.where(user_id: @user)
-
-        y = 0  
-        @equipes_nome = Array.new
-        while y < @equipes_total.length 
-            @equipes_nome[y] = @equipes_total[y]["nome_time"]
-            y = y + 1
-        end
-                        
-        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_nome: @equipes_nome)
+       # descobre quais equipes do usuario já está na aposta
+       @equipes_total = Equipe.all.where(user_id: @user)
+       @equipes_final = Array.new
       
-        x = 0  
-        @equipes_aposta = Array.new
-        while x < @apostador.length 
-            @equipes_aposta[x] = @apostador[x]["equipe_nome"]
-            x = x + 1
-        end
+       x = 0
+       y = 0  
+       while x < @equipes_total.length
 
-        @equipe_resultado = Equipe.all.where(nome_time: @equipes_aposta)
-
-        @equipes_final = @equipes_total - @equipe_resultado
+           unless Apostum.exists?(slug: @equipes_total[x]["slug"], rodada: @rodada)
+             
+               @equipes_final[y] = @equipes_total[x]       
+            y = y + 1
+           end
+       x = x + 1
+       end
 
         
         #verificação para a tela JS
@@ -1329,26 +1312,19 @@ class UsersBackoffice::ApostasController < UsersBackofficeController
         
         # descobre quais equipes do usuario já está na aposta
         @equipes_total = Equipe.all.where(user_id: @user)
-
+        @equipes_final = Array.new
+       
+        x = 0
         y = 0  
-        @equipes_nome = Array.new
-        while y < @equipes_total.length 
-            @equipes_nome[y] = @equipes_total[y]["nome_time"]
-            y = y + 1
-        end
-                        
-        @apostador = Apostum.includes(:equipe).all.where(rodada: @rodada, equipe_nome: @equipes_nome)
-      
-        x = 0  
-        @equipes_aposta = Array.new
-        while x < @apostador.length 
-            @equipes_aposta[x] = @apostador[x]["equipe_nome"]
-            x = x + 1
-        end
+        while x < @equipes_total.length
 
-        @equipe_resultado = Equipe.all.where(nome_time: @equipes_aposta)
-
-        @equipes_final = @equipes_total - @equipe_resultado
+            unless Apostum.exists?(slug: @equipes_total[x]["slug"], rodada: @rodada)
+              
+                @equipes_final[y] = @equipes_total[x]       
+             y = y + 1
+            end
+        x = x + 1
+        end
 
         
          #verificação para a tela JS

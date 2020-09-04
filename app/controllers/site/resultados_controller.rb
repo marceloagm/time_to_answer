@@ -47,7 +47,7 @@ class Site::ResultadosController < SiteController
          #time
           
         if @rodada > @rodada_atual ||  @rodada < 4
-            redirect_to site_resultados_index_path
+            redirect_to users_backoffice_resultados_index_path
         else
             if @mercado == "1" && @rodada == @rodada_atual
 
@@ -70,7 +70,7 @@ class Site::ResultadosController < SiteController
                 @foto_final = Array.new
                 @cartoleiro = Array.new
 
-                if @equipes_encontrar != []
+                if @equipes_encontrar != [] && @apostas.length == @equipes_encontrar.length
                     while b < @apostas.length 
 
 
@@ -101,7 +101,8 @@ class Site::ResultadosController < SiteController
             end
 
 
-            if @mercado == "2" && @rodada != @rodada_atual
+            if @mercado == "2" && @rodada != @rodada_atual || @mercado == "4" && @rodada != @rodada_atual
+
                 @contador3 = 0
                 @contador4 = 0
                 @apostas = Apostum.all.where(rodada: @rodada)
@@ -115,7 +116,7 @@ class Site::ResultadosController < SiteController
                 pontos_time_slug_inter = Array.new
                 @foto_final = Array.new
 
-                if @equipes_encontrar != []
+                if @equipes_encontrar != [] && @apostas.length == @equipes_encontrar.length
 
                     while b < @apostas.length 
                         
@@ -144,7 +145,7 @@ class Site::ResultadosController < SiteController
             end
 
 
-            if @mercado == "2" && @rodada == @rodada_atual
+            if @mercado == "2" && @rodada == @rodada_atual || @mercado == "4" && @rodada == @rodada_atual 
 
                 @contador3 = 0
                 @contador4 = 0
@@ -164,7 +165,7 @@ class Site::ResultadosController < SiteController
                
                 @equipes_encontrar = Parcial.all.where(rodada: @rodada)
 
-                if @equipes_encontrar != []
+                if @equipes_encontrar != [] && @apostas.length == @equipes_encontrar.length
                     while b < @apostas.length 
 
                         
@@ -192,6 +193,8 @@ class Site::ResultadosController < SiteController
                 end
                
             end
+           
+            
         end
 
 
@@ -330,5 +333,4 @@ class Site::ResultadosController < SiteController
         @mercado = buscar_mercado_rodada[0]["mercado"]
 
     end
-    
 end

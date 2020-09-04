@@ -14,7 +14,7 @@ class Site::VisualizarTimeController < SiteController
         
 
         if @rodada > @rodada_atual ||  @rodada < 4
-            redirect_to site_resultados_index_path
+            redirect_to users_backoffice_resultados_index_path
         else 
 
 
@@ -23,7 +23,7 @@ class Site::VisualizarTimeController < SiteController
                 time = params["time"]
                 @times = Equipe.all.where(id: time)   
                     if @times.blank?
-                        redirect_to site_resultados_index_path
+                        redirect_to users_backoffice_resultados_index_path
                     end
             end
            
@@ -119,7 +119,7 @@ class Site::VisualizarTimeController < SiteController
                
                end
 
-               if @mercado == "2" && @rodada != @rodada_atual
+               if @mercado == "2" && @rodada != @rodada_atual || @mercado == "4" && @rodada != @rodada_atual
                 
                 @contador = 0
                 nome_jogador_slug = Array.new
@@ -208,7 +208,7 @@ class Site::VisualizarTimeController < SiteController
                end
 
 
-               if @mercado == "2" && @rodada == @rodada_atual
+               if @mercado == "2" && @rodada == @rodada_atual || @mercado == "4" && @rodada == @rodada_atual
 
                 @contador = 0
                 nome_jogador_slug = Array.new

@@ -64,25 +64,25 @@ namespace :dev do
     desc "Adiciona Equipes na Aposta"
     task add_default_equipe_aposta: :environment do
       
-       for contador in 1..130 do 
+       for contador in 1..1008 do 
 
         equipe_verificar_salvar = Equipe.all.where(id: contador)
         equipe_nome_salvar = equipe_verificar_salvar[0]["nome_time"]
         equipe_slug_salvar = equipe_verificar_salvar[0]["slug"]
       
         Apostum.create!(
-           rodada: "5",
+           rodada: "8",
            equipe_id: contador,
            equipe_nome: equipe_nome_salvar,
            slug: equipe_slug_salvar
         )
         Parcial.create!(
-          rodada: "5",
+          rodada: "8",
           equipe_nome: equipe_nome_salvar,
           slug: equipe_slug_salvar,
           pontos: 0
        )
-        aposta_statistic = ApostaStatistic.find_or_create_by(rodada: "5")
+        aposta_statistic = ApostaStatistic.find_or_create_by(rodada: "8")
         aposta_statistic.total += 1
         aposta_statistic.save
      end

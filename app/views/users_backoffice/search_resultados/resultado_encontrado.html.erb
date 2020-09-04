@@ -3,7 +3,7 @@
 
 
 <% unless @equipes_total.blank? %>
-  <h1 class="text-center"> EQUIPE ENCONTRADA RODADA <%= params["rodada"] %></h1>
+  <h1 class="text-center"> RESULTADO RODADA <%= params["rodada"] %></h1>
     <% if @mercado == "1" && @rodada == @rodada_atual %>
   
         <% @apostas.each do |aposta| %>

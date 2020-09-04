@@ -10,12 +10,8 @@
           def self.rodada_atual
         
                 resp = RestClient::Request.execute( method: :get, url: "https://api.cartolafc.globo.com/mercado/status", verify_ssl: false)   
-                mercado_verificar = JSON.parse(resp.body)["status_mercado"]
-                if mercado_verificar == 4
-                    mercado = 2
-                else
-                    mercado = mercado_verificar
-                end
+                mercado = JSON.parse(resp.body)["status_mercado"]
+                
 
                 rodada_atual = JSON.parse(resp.body)["rodada_atual"]
     
@@ -62,6 +58,7 @@
                     foto_atleta = Array.new
                     foto_format = Array.new
                     foto_final = Array.new
+                    foto_atleta_format = Array.new
         
         
                     while b < apostas.length
@@ -84,8 +81,15 @@
                             posicao_atleta[a] = JSON.parse(times_slug.body)["atletas"][a]["posicao_id"]
                             
                             foto_atleta[a] = JSON.parse(times_slug.body)["atletas"][a]["foto"]
-                            foto_format[a] = foto_atleta[a].slice! "FORMATO.png"
-                            foto_final[a] = "#{foto_atleta[a]}140x140.png"
+                            foto_atleta_format[a] = foto_atleta[a].slice! ".png"
+
+                            unless foto_atleta_format[a].blank?
+                                foto_format[a] = foto_atleta[a].slice! "FORMATO"
+                                foto_final[a] = "#{foto_atleta[a]}140x140.png"
+                            else
+                                foto_format[a] = foto_atleta[a].slice! "FORMATO.jpeg"
+                                foto_final[a] = "#{foto_atleta[a]}140x140.jpeg"
+                            end
                             
                             a = a + 1
                             end
@@ -121,6 +125,7 @@
                         foto_atleta.clear
                         foto_format.clear
                         foto_final.clear
+                        foto_atleta_format.clear
                         
                     
                     b = b + 1
@@ -144,6 +149,7 @@
                     foto_final = Array.new
                     pontos_atleta = Array.new
                     pontos_inter = Array.new
+                    foto_atleta_format = Array.new
         
             
         
@@ -173,9 +179,16 @@
                           else
                             pontos_inter[a] = pontos_atleta[a]
                           end
-                        foto_atleta[a] = JSON.parse(times_slug.body)["atletas"][a]["foto"]
-                        foto_format[a] = foto_atleta[a].slice! "FORMATO.png"
-                        foto_final[a] = "#{foto_atleta[a]}140x140.png"
+                          foto_atleta[a] = JSON.parse(times_slug.body)["atletas"][a]["foto"]
+                          foto_atleta_format[a] = foto_atleta[a].slice! ".png"
+
+                          unless foto_atleta_format[a].blank?
+                              foto_format[a] = foto_atleta[a].slice! "FORMATO"
+                              foto_final[a] = "#{foto_atleta[a]}140x140.png"
+                          else
+                              foto_format[a] = foto_atleta[a].slice! "FORMATO.jpeg"
+                              foto_final[a] = "#{foto_atleta[a]}140x140.jpeg"
+                          end
         
                         a = a + 1
                         end
@@ -219,6 +232,7 @@
                         foto_atleta.clear
                         foto_format.clear
                         foto_final.clear
+                        foto_atleta_format.clear
                         
                     
                     b = b + 1
@@ -404,19 +418,19 @@
         
                         b = b + 1                             
                 end
-        
+            end
                 
         
-            else
+            if mercado == "1"
                 parcial_verificar = Parcial.all
                 
                 if parcial_verificar != []
                     ActiveRecord::Base.connection.execute("TRUNCATE parcials")
                 end
             end
-          
-        
         end
+        
+        
     end
     
       
